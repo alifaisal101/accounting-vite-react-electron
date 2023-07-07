@@ -98,7 +98,7 @@ setTimeout(removeLoading, 4999);
 contextBridge.exposeInMainWorld('e_data', {
   event: (cb: any) => {
     ipcRenderer.send('fetch');
-    ipcRenderer.on('receive', (event, data) => {
+    ipcRenderer.on('receive', (_event, data) => {
       cb(data);
     });
   },

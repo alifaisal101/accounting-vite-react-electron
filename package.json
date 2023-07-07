@@ -1,10 +1,11 @@
 {
-  "name": "accounting-vite-react",
+  "name": "al-muhandis-for-accounting",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
+    "build:win:64": "tsc && vite build && electron-builder --win --x64",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -28,5 +29,6 @@
     "vite-plugin-electron": "^0.11.2",
     "vite-plugin-electron-renderer": "^0.14.5"
   },
+  "author": "Ali Faisal",
   "main": "dist-electron/main.js"
 }
