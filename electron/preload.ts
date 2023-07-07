@@ -81,13 +81,21 @@ function useLoading() {
       safeDOM.remove(document.head, oStyle);
       safeDOM.remove(document.body, oDiv);
     },
+    informMain() {
+      ipcRenderer.send('ready');
+      ipcRenderer.on('alert_exit_error', (_event, message: string) => {
+        alert(message);
+        ipcRenderer.send('exit_error');
+      });
+    },
   };
 }
 
 // ----------------------------------------------------------------------
 
-const { appendLoading, removeLoading } = useLoading();
+const { appendLoading, removeLoading, informMain } = useLoading();
 domReady().then(appendLoading);
+domReady().then(informMain);
 
 window.onmessage = (ev) => {
   ev.data.payload === 'removeLoading' && removeLoading();
