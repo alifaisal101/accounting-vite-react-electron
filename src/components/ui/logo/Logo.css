@@ -1,0 +1,16 @@
+.logo {
+  font-family: jenine;
+  font-size: 2em;
+  color: aliceblue;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+  text-align: center;
+}
+
+.logo_special {
+  background: -webkit-linear-gradient(#face87, #e55118);
+  font-size: 1.8em;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

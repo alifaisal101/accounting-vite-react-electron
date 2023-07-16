@@ -1,0 +1,30 @@
+.sidenav {
+    background-color: rgba(252, 252, 252, 0.959);
+    margin-top: 2rem;
+    height: 88%;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.sidenav li {
+    font-size: 1.65em;
+    padding: 15px 5px;
+    border-bottom: 1px rgb(202, 202, 202) solid;
+    text-align: center;
+    cursor: pointer;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.sidenav li:hover {
+    background-color: rgb(236,127,65);
+    color: aliceblue;
+    border-bottom: 0;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
+}
+
+.sidenav li:active {
+    box-shadow:none;
+
+}

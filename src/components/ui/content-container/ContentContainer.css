@@ -1,0 +1,10 @@
+.content-container {
+  background-color: rgb(245, 249, 253);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 4px;
+  padding: 5px 15px;
+  height: 80%;
+  position: relative;
+  right: 120%;
+  transition: right 0.1s ease-in-out;
+}
