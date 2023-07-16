@@ -1,8 +1,6 @@
 import { machineIdSync } from 'node-machine-id';
-import { dirname, join } from 'path';
-import { writeFileSync } from 'fs';
 
-const rootFs = dirname(__dirname);
+import InitalModel from './models/inital';
 
 export default async () => {
   const machineId = machineIdSync();
@@ -24,8 +22,7 @@ export default async () => {
     throw new Error('Failed to send an activation request');
   }
 
-  const secret_buffer = Buffer.from(secret.data);
+  const key = new InitalModel({ define: 'key', key: machineId });
 
-  writeFileSync(join(rootFs, '.define.key'), privateKey);
-  writeFileSync(join(rootFs, '.define.secret'), secret_buffer);
+  await key.save();
 };

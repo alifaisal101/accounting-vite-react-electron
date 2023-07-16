@@ -2,14 +2,15 @@ import 'dotenv/config';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import mongoose from 'mongoose';
-import { dirname, join } from 'path';
+import InitalModel from './models/inital';
+import { dirname } from 'path';
 
 import activationReqest from './activation-request';
 import activation from './activation';
-import { readFileSync } from 'fs';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const rootFs = dirname(__dirname);
+console.log(rootFs);
 
 const messages = {
   noMongodbURIFound: `
@@ -37,16 +38,11 @@ const bootstrap = async () => {
       await mongoose.connect(process.env.MONGODB_URI);
 
       try {
-        try {
-          readFileSync(join(rootFs, '.define.key'));
-          readFileSync(join(rootFs, '.define.secret'));
-        } catch (err) {
-          // @ts-ignore
-          if (err.errno == -2) {
-            await activationReqest();
-          } else {
-            throw err;
-          }
+        const key = await InitalModel.findOne({ define: 'key' });
+
+        // If key does not exist than send an activation request
+        if (!key) {
+          await activationReqest();
         }
 
         // Check activation status

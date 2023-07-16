@@ -8,7 +8,7 @@
   directories: {
     output: 'release/${version}',
   },
-  files: ['dist-electron', 'dist'],
+  files: ['dist-electron', 'dist', 'activate.js'],
   win: {
     icon: 'icons/icon.ico',
     target: [
