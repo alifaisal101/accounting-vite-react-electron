@@ -3,14 +3,17 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import mongoose from 'mongoose';
 import InitalModel from './models/inital';
-import { dirname } from 'path';
+import { dirname, join } from 'path';
 
 import activationReqest from './activation-request';
 import activation from './activation';
+import { writeFileSync } from 'fs';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const rootFs = dirname(__dirname);
 console.log(rootFs);
+
+writeFileSync(join(rootFs, 'testttttttt'), 'aaa');
 
 const messages = {
   noMongodbURIFound: `
