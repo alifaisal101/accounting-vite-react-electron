@@ -19,6 +19,11 @@
     margin-bottom: 1.2em;
 }
 
+.image-dragndrop_container {
+    height: fit-content;
+    width: 100%;
+}
+
 .image-dragndrop {
     background-color: rgb(192, 192, 192);
     width: 100%;
@@ -34,4 +39,15 @@
 
 .unvalid {
     border: 2px red solid;
+}
+
+.image-placeholder {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(192, 192, 192);
+    text-align: center;
+}
+
+.image-placeholder .image-placeholder_delete {
+    font-size: 1.4em;
 }

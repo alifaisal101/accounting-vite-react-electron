@@ -15,6 +15,7 @@ function ProductForm(props) {
     image: null,
   });
 
+  const [imageName, setImageName] = useState('');
   const [triedToAdd, setTriedToAdd] = useState(false);
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -41,14 +42,11 @@ function ProductForm(props) {
       reader.onerror = () => console.log('file reading has failed');
 
       reader.onload = () => {
-        console.log(31231231212);
-        // Do whatever you want with the file contents
         const binaryStr = reader.result;
-        console.log(binaryStr);
+        setImageName(image.name);
         setProduct((_product) => {
-          return { ...product, image: binaryStr };
+          return { ..._product, image: binaryStr };
         });
-        console.log(Buffer.from(binaryStr));
       };
 
       reader.readAsArrayBuffer(image);
@@ -78,6 +76,15 @@ function ProductForm(props) {
     ) {
       return alert('تأكد من ادخال المعلومات بشكل صحيح');
     }
+
+    e_products.addProduct(product);
+  };
+
+  const deleteImage = () => {
+    setProduct((_product) => {
+      return { ..._product, image: null };
+    });
+    setImageName('');
   };
 
   return (
@@ -103,7 +110,7 @@ function ProductForm(props) {
         <div className="input-contianer">
           <label htmlFor="price">السعر: </label>
           <input
-            type="text"
+            type="number"
             id="price"
             name="price"
             value={product.price}
@@ -157,7 +164,7 @@ function ProductForm(props) {
         <div className="input-container">
           <label htmlFor="periodicalPaymentAmount">القسط: </label>
           <input
-            type="text"
+            type="number"
             id="periodicalPaymentAmount"
             name="periodicalPaymentAmount"
             value={product.periodicalPaymentAmount}
@@ -194,12 +201,20 @@ function ProductForm(props) {
         rows="10"
       ></textarea>
 
-      <div className="image-dragndrop" {...getRootProps()}>
-        <input {...getInputProps()} />
-        {isDragActive ? (
-          <p>ضع الصورة هنا</p>
+      <div className="image-dragndrop_container">
+        {product.image ? (
+          <p className="image-placeholder" onDoubleClick={deleteImage}>
+            {imageName}
+          </p>
         ) : (
-          <p>اسحب صورة للسلعة وضعها هنا (اختياري)</p>
+          <div className="image-dragndrop" {...getRootProps()}>
+            <input {...getInputProps()} />
+            {isDragActive ? (
+              <p>ضع الصورة هنا</p>
+            ) : (
+              <p>اسحب صورة للسلعة وضعها هنا (اختياري)</p>
+            )}
+          </div>
         )}
       </div>
 

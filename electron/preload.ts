@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
+import { InProduct } from './models/product';
 
 function domReady(
   condition: DocumentReadyState[] = ['complete', 'interactive']
@@ -103,11 +104,16 @@ window.onmessage = (ev) => {
 
 setTimeout(removeLoading, 4999);
 
-contextBridge.exposeInMainWorld('e_data', {
-  event: (cb: any) => {
-    ipcRenderer.send('fetch');
-    ipcRenderer.on('receive', (_event, data) => {
-      cb(data);
+contextBridge.exposeInMainWorld('e_products', {
+  addProduct: (product: InProduct, cb: Function) => {
+    console.log(product);
+    ipcRenderer.send('add-product', product);
+    ipcRenderer.on('result', (_event, result) => {
+      cb(result);
     });
+    // ipcRenderer.send('fetch');
+    // ipcRenderer.on('receive', (_event, data) => {
+    //   cb(data);
+    // });
   },
 });
