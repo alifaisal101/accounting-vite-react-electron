@@ -10,6 +10,7 @@ function ProductForm(props) {
     title: '',
     price: 0,
     payPeriodType: 'monthly',
+    upFrontPaymentAmount: 0,
     periodicalPaymentAmount: 0,
     desc: '',
     image: null,
@@ -72,7 +73,9 @@ function ProductForm(props) {
       !product.title ||
       !product.price ||
       !product.periodicalPaymentAmount ||
-      product.periodicalPaymentAmount > product.price
+      !product.upFrontPaymentAmount ||
+      product.periodicalPaymentAmount > product.price ||
+      product.upFrontPaymentAmount > product.price
     ) {
       return alert('تأكد من ادخال المعلومات بشكل صحيح');
     }
@@ -117,7 +120,51 @@ function ProductForm(props) {
             className={!product.price && triedToAdd ? 'unvalid' : ''}
             onChange={(e) => {
               setProduct((_product) => {
-                return { ...product, price: e.target.value };
+                return { ...product, price: Number(e.target.value) };
+              });
+            }}
+          />
+        </div>
+      </div>
+      <div className="inputs-control upFront-inputs">
+        <div className="input-container">
+          <label htmlFor="payPersentage">المقدم (نسبة): </label>
+          <select
+            id="payPersentage"
+            onChange={(e) => {
+              setProduct((_product) => {
+                console.log(_product);
+                return {
+                  ..._product,
+                  upFrontPaymentAmount: Math.round(
+                    _product.price * e.target.value
+                  ),
+                };
+              });
+            }}
+          >
+            {payPersentageOptions}
+          </select>
+        </div>
+        <div className="input-continer">
+          <label htmlFor="upFrontPaymentAmount">المقدم: </label>
+          <input
+            type="number"
+            id="upFrontPaymentAmount"
+            name="upFrontPaymentAmount"
+            value={product.upFrontPaymentAmount}
+            className={
+              (!product.upFrontPaymentAmount && triedToAdd) ||
+              product.upFrontPaymentAmount > product.price
+                ? 'unvalid'
+                : ''
+            }
+            onChange={(e) => {
+              setProduct((_product) => {
+                return {
+                  ...product,
+                  upFrontPaymentAmount: Number(e.target.value),
+                };
               });
             }}
           />
@@ -178,7 +225,7 @@ function ProductForm(props) {
               setProduct((_product) => {
                 return {
                   ...product,
-                  periodicalPaymentAmount: Math.round(e.target.value),
+                  periodicalPaymentAmount: Number(e.target.value),
                 };
               });
             }}

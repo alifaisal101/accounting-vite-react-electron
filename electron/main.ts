@@ -8,6 +8,7 @@ import { dirname } from 'path';
 import activationReqest from './activation-request';
 import activation from './activation';
 import { InProduct } from './models/product';
+import { createProduct } from './controllers/product.con';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const rootFs = dirname(__dirname);
@@ -115,7 +116,8 @@ const bootstrap = async () => {
   });
 
   // Products Handling IPC
-  ipcMain.on('add-product', (event, product: InProduct) => {
+  ipcMain.on('add-product', async (event, product: InProduct) => {
+    await createProduct(product);
     console.log(event, product);
   });
 };

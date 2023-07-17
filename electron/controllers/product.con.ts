@@ -1,19 +1,17 @@
 import ProductModel, { InProduct } from '../models/product';
 
-export const createProduct = async (body: any) => {
-  const productData = {
-    title: body.title,
-    price: body.price,
-    payPeriodType: body.payPeriodType, //Weekly, monthly, or yearly
-    periodicalPaymentAmount: body.periodicalPaymentAmount,
-    desc: body.desc,
-    image: body.image,
+export const createProduct = async (product_body: InProduct) => {
+  const product_data = {
+    ...product_body,
     createdAt: new Date(),
   };
 
-  if (!productData.image) {
-    delete productData.image;
+  if (!product_data.image) {
+    delete product_data.image;
   }
 
-  const product = await new ProductModel(productData);
+  try {
+    const product = new ProductModel(product_data);
+    return await product.save();
+  } catch (err) {}
 };

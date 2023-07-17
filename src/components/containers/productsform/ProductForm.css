@@ -51,3 +51,7 @@
 .image-placeholder .image-placeholder_delete {
     font-size: 1.4em;
 }
+
+.upFront-inputs {
+    justify-content: space-around;
+}
