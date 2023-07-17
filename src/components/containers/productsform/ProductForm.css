@@ -32,3 +32,6 @@
     margin-bottom: 1.2em;
 }
 
+.unvalid {
+    border: 2px red solid;
+}

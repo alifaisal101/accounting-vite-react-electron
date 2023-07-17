@@ -15,8 +15,47 @@ function ProductForm(props) {
     image: null,
   });
 
+  const [triedToAdd, setTriedToAdd] = useState(false);
+
   const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
+    const image = acceptedFiles[0];
+    console.log(image);
+
+    try {
+      if (
+        image.type !== 'image/png' &&
+        image.type !== 'image/jpg' &&
+        image.type !== 'image/jpeg' &&
+        image.type !== 'image/bmp'
+      ) {
+        throw new Error('يجب ان يكون الملف صورة');
+      }
+
+      if (image.size > 15000000) {
+        throw new Error('حجم الصورة لا يتجاوز ال12 ميكا بايت');
+      }
+
+      const reader = new FileReader();
+
+      reader.onabort = () => console.log('file reading was aborted');
+      reader.onerror = () => console.log('file reading has failed');
+
+      reader.onload = () => {
+        console.log(31231231212);
+        // Do whatever you want with the file contents
+        const binaryStr = reader.result;
+        console.log(binaryStr);
+        setProduct((_product) => {
+          return { ...product, image: binaryStr };
+        });
+        console.log(Buffer.from(binaryStr));
+      };
+
+      reader.readAsArrayBuffer(image);
+    } catch (err) {
+      console.log(err);
+      alert(err.message);
+    }
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -29,6 +68,18 @@ function ProductForm(props) {
     );
   }
 
+  const addProduct = () => {
+    setTriedToAdd(true);
+    if (
+      !product.title ||
+      !product.price ||
+      !product.periodicalPaymentAmount ||
+      product.periodicalPaymentAmount > product.price
+    ) {
+      return alert('تأكد من ادخال المعلومات بشكل صحيح');
+    }
+  };
+
   return (
     <div className="products-form">
       <h2 className="title">اضافة سلعة</h2>
@@ -39,6 +90,7 @@ function ProductForm(props) {
             type="text"
             id="title"
             name="title"
+            className={!product.title && triedToAdd ? 'unvalid' : ''}
             value={product.title}
             onChange={(e) => {
               setProduct((_product) => {
@@ -55,6 +107,7 @@ function ProductForm(props) {
             id="price"
             name="price"
             value={product.price}
+            className={!product.price && triedToAdd ? 'unvalid' : ''}
             onChange={(e) => {
               setProduct((_product) => {
                 return { ...product, price: e.target.value };
@@ -90,7 +143,9 @@ function ProductForm(props) {
                 console.log(_product);
                 return {
                   ..._product,
-                  periodicalPaymentAmount: _product.price * e.target.value,
+                  periodicalPaymentAmount: Math.round(
+                    _product.price * e.target.value
+                  ),
                 };
               });
             }}
@@ -106,6 +161,12 @@ function ProductForm(props) {
             id="periodicalPaymentAmount"
             name="periodicalPaymentAmount"
             value={product.periodicalPaymentAmount}
+            className={
+              (!product.periodicalPaymentAmount && triedToAdd) ||
+              product.periodicalPaymentAmount > product.price
+                ? 'unvalid'
+                : ''
+            }
             onChange={(e) => {
               setProduct((_product) => {
                 return {
@@ -138,11 +199,11 @@ function ProductForm(props) {
         {isDragActive ? (
           <p>ضع الصورة هنا</p>
         ) : (
-          <p>احسب صورة للسلعة وضعها هنا (اختياري)</p>
+          <p>اسحب صورة للسلعة وضعها هنا (اختياري)</p>
         )}
       </div>
 
-      <Btn>اضافة</Btn>
+      <Btn onClick={addProduct}>اضافة</Btn>
     </div>
   );
 }
