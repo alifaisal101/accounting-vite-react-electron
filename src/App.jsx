@@ -17,6 +17,7 @@ import CustomersForm from './components/containers/customersform/CustomersForm';
 
 import { useState } from 'react';
 import DropdownContainer from './components/ui/dropdown-container/DropdownContainer';
+import ProductForm from './components/containers/productsform/ProductForm';
 
 function App() {
   // Page Handling
@@ -33,7 +34,7 @@ function App() {
   switch (page) {
     case 'productsMenu':
       console.log('adsa');
-      PageComp = <Products />;
+      PageComp = <Products action={() => dropdownHandler('add-product')} />;
       break;
     case 'customersMenu':
       PageComp = <Customers />;
@@ -49,14 +50,14 @@ function App() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownContent, setDropdownContent] = useState('');
 
-  function actionHandler(_dropdownContent) {
+  function dropdownHandler(_dropdownContent) {
     setDisplayOverlay(true);
     setShowDropdown(true);
     setDropdownContent(_dropdownContent);
     document.body.style.overflow = 'hidden';
   }
 
-  function cancelActionHandler() {
+  function cancelDropdownHandler() {
     setDisplayOverlay(false);
     setShowDropdown(false);
     document.body.style.overflow = 'auto';
@@ -67,7 +68,8 @@ function App() {
     case 'customerForm':
       DropdownContentComp = <CustomersForm />;
       break;
-    case '':
+    case 'add-product':
+      DropdownContentComp = <ProductForm />;
       break;
   }
 
@@ -80,12 +82,12 @@ function App() {
         </ContentContainer>
       </div>
       <div className="main-nav">
-        <ActionButton action={() => actionHandler('customerForm')} />
+        <ActionButton action={() => dropdownHandler('customerForm')} />
         <SideNav setPage={contentHandler} />
       </div>
       {displayOverlay ? <Overlay /> : null}
       <DropdownContainer
-        closeHandler={cancelActionHandler}
+        closeHandler={cancelDropdownHandler}
         className={showDropdown ? 'bringFromTheTop' : ''}
       >
         {DropdownContentComp}

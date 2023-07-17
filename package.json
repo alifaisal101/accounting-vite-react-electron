@@ -16,7 +16,8 @@
     "mongoose": "^7.3.2",
     "node-machine-id": "^1.1.12",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3"
   },
   "devDependencies": {
     "@mui/material": "^5.14.0",
