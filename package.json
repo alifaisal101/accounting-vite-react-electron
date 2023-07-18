@@ -28,6 +28,7 @@
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
     "@vitejs/plugin-react": "^4.0.0",
+    "Buffer": "^0.0.0",
     "electron": "^24.4.0",
     "electron-builder": "^23.6.0",
     "eslint": "^8.38.0",

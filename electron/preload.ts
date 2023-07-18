@@ -106,14 +106,24 @@ setTimeout(removeLoading, 4999);
 
 contextBridge.exposeInMainWorld('e_products', {
   addProduct: (product: InProduct, cb: Function) => {
-    console.log(product);
+    if (product.image) {
+      const imageJSON = JSON.stringify({
+        name: 'product_image',
+        data: Array.from(new Uint8Array(product.image)),
+      });
+
+      // @ts-ignore
+      product.image = imageJSON;
+    }
     ipcRenderer.send('add-product', product);
-    ipcRenderer.on('result', (_event, result) => {
-      cb(result);
+    ipcRenderer.on('result', (_event, productResult) => {
+      if (productResult.image) {
+        productResult.image = Buffer.from(JSON.parse(productResult.image).data);
+      }
+      cb(productResult);
     });
-    // ipcRenderer.send('fetch');
-    // ipcRenderer.on('receive', (_event, data) => {
-    //   cb(data);
-    // });
+    ipcRenderer.on('failed', () => {
+      alert('فشل تسجيل السلعة');
+    });
   },
 });

@@ -6,12 +6,29 @@ export const createProduct = async (product_body: InProduct) => {
     createdAt: new Date(),
   };
 
-  if (!product_data.image) {
+  if (!product_data?.image) {
     delete product_data.image;
+  } else {
+    // @ts-ignore
+    product_data.image = Buffer.from(JSON.parse(product_data.image).data);
   }
 
-  try {
-    const product = new ProductModel(product_data);
-    return await product.save();
-  } catch (err) {}
+  const product = new ProductModel(product_data);
+
+  // @ts-ignore
+  const result = { ...(await product.save())._doc };
+
+  result._id = result._id.toString();
+
+  if (result.image) {
+    const imageJSON = JSON.stringify({
+      name: 'product_image',
+      data: Array.from(new Uint8Array(result.image)),
+    });
+
+    // @ts-ignore
+    result.image = imageJSON;
+  }
+
+  return result;
 };

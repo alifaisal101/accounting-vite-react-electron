@@ -19,7 +19,7 @@ const schema = new Schema<InProduct>({
   payPeriodType: { type: String, required: true },
   upFrontPaymentAmount: { type: Number, required: true },
   periodicalPaymentAmount: { type: Number, required: true },
-  desc: { type: String, required: true },
+  desc: { type: String, required: false },
   image: { type: Buffer, required: false },
   createdAt: { type: Date, required: true },
 });

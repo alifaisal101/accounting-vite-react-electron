@@ -116,9 +116,14 @@ const bootstrap = async () => {
   });
 
   // Products Handling IPC
-  ipcMain.on('add-product', async (event, product: InProduct) => {
-    await createProduct(product);
-    console.log(event, product);
+  ipcMain.on('add-product', async (event, product) => {
+    try {
+      const productResult = await createProduct(product);
+      event.reply('result', productResult);
+    } catch (err) {
+      console.log(err, 'WHY             ');
+      event.reply('failed');
+    }
   });
 };
 

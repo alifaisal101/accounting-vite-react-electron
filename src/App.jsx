@@ -33,7 +33,6 @@ function App() {
   let PageComp;
   switch (page) {
     case 'productsMenu':
-      console.log('adsa');
       PageComp = <Products action={() => dropdownHandler('add-product')} />;
       break;
     case 'customersMenu':

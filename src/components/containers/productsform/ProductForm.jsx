@@ -21,7 +21,6 @@ function ProductForm(props) {
 
   const onDrop = useCallback((acceptedFiles) => {
     const image = acceptedFiles[0];
-    console.log(image);
 
     try {
       if (
@@ -52,7 +51,6 @@ function ProductForm(props) {
 
       reader.readAsArrayBuffer(image);
     } catch (err) {
-      console.log(err);
       alert(err.message);
     }
   }, []);
@@ -80,7 +78,11 @@ function ProductForm(props) {
       return alert('تأكد من ادخال المعلومات بشكل صحيح');
     }
 
-    e_products.addProduct(product);
+    e_products.addProduct(product, (result) => {
+      if (result) {
+        console.log('THIS IS THE RESULT', result);
+      }
+    });
   };
 
   const deleteImage = () => {
@@ -133,7 +135,6 @@ function ProductForm(props) {
             id="payPersentage"
             onChange={(e) => {
               setProduct((_product) => {
-                console.log(_product);
                 return {
                   ..._product,
                   upFrontPaymentAmount: Math.round(
@@ -194,7 +195,6 @@ function ProductForm(props) {
             id="payPersentage"
             onChange={(e) => {
               setProduct((_product) => {
-                console.log(_product);
                 return {
                   ..._product,
                   periodicalPaymentAmount: Math.round(
