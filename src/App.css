@@ -52,7 +52,7 @@ body,
 
 .main-content {
   background-color: rgb(49, 49, 49);
-  width: 68%;
+  width: 75%;
 }
 
 .main-content,
@@ -63,7 +63,7 @@ body,
 }
 
 .main-nav {
-  width: 30%;
+  width: 25%;
 }
 
 .bringFromTheLeft {

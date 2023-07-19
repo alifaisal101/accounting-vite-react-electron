@@ -1,4 +1,5 @@
 import ProductModel, { InProduct } from '../models/product';
+import { mappayPeriodType } from '../utils/locale';
 
 export const createProduct = async (product_body: InProduct) => {
   const product_data = {
@@ -19,6 +20,7 @@ export const createProduct = async (product_body: InProduct) => {
   const result = { ...(await product.save())._doc };
 
   result._id = result._id.toString();
+  result.payPeriodType = mappayPeriodType(result.payPeriodType);
 
   if (result.image) {
     const imageJSON = JSON.stringify({
@@ -39,7 +41,8 @@ export const fetchProducts = async () => {
 
   for (let i = 0; i < result.length; i++) {
     //@ts-ignore
-    const product = { ...result[i]._doc };
+    const product = { ...result[i]._doc, _id: result[i]._id.toString() };
+    product.payPeriodType = mappayPeriodType(product.payPeriodType);
 
     if (product.image) {
       //@ts-ignore
