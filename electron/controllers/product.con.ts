@@ -32,3 +32,12 @@ export const createProduct = async (product_body: InProduct) => {
 
   return result;
 };
+
+export const fetchProducts = async () => {
+  console.log('hey');
+  // @ts-ignore
+  const result = { ...(await ProductModel.find())._doc };
+
+  console.log(result);
+  return 1;
+};

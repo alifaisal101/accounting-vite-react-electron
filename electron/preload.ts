@@ -120,10 +120,14 @@ contextBridge.exposeInMainWorld('e_products', {
       if (productResult.image) {
         productResult.image = Buffer.from(JSON.parse(productResult.image).data);
       }
-      cb(productResult);
+      cb(null, productResult);
     });
     ipcRenderer.on('failed', () => {
-      alert('فشل تسجيل السلعة');
+      cb(new Error('failed to register'), null);
     });
+  },
+
+  fetchProducts: (cb: Function) => {
+    ipcRenderer.send('fetch-products');
   },
 });

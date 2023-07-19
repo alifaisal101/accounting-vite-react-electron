@@ -3,6 +3,7 @@ import {
   requiredDate,
   requiredNumber,
   requiredString,
+  unRequiredString,
 } from '../utils/mongoose-options';
 
 // Document interface
@@ -24,7 +25,7 @@ const schema = new Schema<InProduct>({
   payPeriodType: requiredString,
   upFrontPaymentAmount: requiredNumber,
   periodicalPaymentAmount: requiredNumber,
-  desc: requiredString,
+  desc: unRequiredString,
   image: { type: Buffer, required: false },
   createdAt: requiredDate,
 });

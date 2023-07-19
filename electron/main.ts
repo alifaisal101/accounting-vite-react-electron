@@ -8,7 +8,7 @@ import { dirname } from 'path';
 import activationReqest from './activation-request';
 import activation from './activation';
 import { InProduct } from './models/product';
-import { createProduct } from './controllers/product.con';
+import { createProduct, fetchProducts } from './controllers/product.con';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const rootFs = dirname(__dirname);
@@ -119,9 +119,21 @@ const bootstrap = async () => {
   ipcMain.on('add-product', async (event, product) => {
     try {
       const productResult = await createProduct(product);
-      event.reply('result', productResult);
+      setTimeout(() => {
+        event.reply('result', productResult);
+      }, 3000);
     } catch (err) {
-      console.log(err, 'WHY             ');
+      console.log(err);
+      event.reply('failed');
+    }
+  });
+
+  ipcMain.on('fetch-products', async (event) => {
+    try {
+      const products = await fetchProducts();
+
+      // event.reply('result', products);
+    } catch (err) {
       event.reply('failed');
     }
   });

@@ -1,12 +1,13 @@
 import './ProductForm.css';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, Fragment } from 'react';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Btn from '../../ui/btn/Btn';
+import Loader from '../../ui/loader/Loader';
 
 function ProductForm(props) {
-  const [product, setProduct] = useState({
+  const initalProduct = {
     title: '',
     price: 0,
     payPeriodType: 'monthly',
@@ -14,10 +15,12 @@ function ProductForm(props) {
     periodicalPaymentAmount: 0,
     desc: '',
     image: null,
-  });
+  };
+  const [product, setProduct] = useState(initalProduct);
 
   const [imageName, setImageName] = useState('');
   const [triedToAdd, setTriedToAdd] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onDrop = useCallback((acceptedFiles) => {
     const image = acceptedFiles[0];
@@ -78,9 +81,20 @@ function ProductForm(props) {
       return alert('تأكد من ادخال المعلومات بشكل صحيح');
     }
 
-    e_products.addProduct(product, (result) => {
+    setLoading(true);
+
+    return e_products.addProduct(product, (err, result) => {
+      setProduct(initalProduct);
+      setImageName('');
+      setLoading(false);
+      setTriedToAdd(false);
+
+      if (err) {
+        return alert('فشلت اضافة السلعة');
+      }
+
       if (result) {
-        console.log('THIS IS THE RESULT', result);
+        return alert('تمت اضافة السلعة');
       }
     });
   };
@@ -94,178 +108,184 @@ function ProductForm(props) {
 
   return (
     <div className="products-form">
-      <h2 className="title">اضافة سلعة</h2>
-      <div className="inputs-control">
-        <div className="input-continaer">
-          <label htmlFor="title">عنوان السلعة: </label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            className={!product.title && triedToAdd ? 'unvalid' : ''}
-            value={product.title}
-            onChange={(e) => {
-              setProduct((_product) => {
-                return { ...product, title: e.target.value };
-              });
-            }}
-          />
-        </div>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Fragment>
+          <h2 className="title">اضافة سلعة</h2>
+          <div className="inputs-control">
+            <div className="input-continaer">
+              <label htmlFor="title">عنوان السلعة: </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                className={!product.title && triedToAdd ? 'unvalid' : ''}
+                value={product.title}
+                onChange={(e) => {
+                  setProduct((_product) => {
+                    return { ...product, title: e.target.value };
+                  });
+                }}
+              />
+            </div>
 
-        <div className="input-contianer">
-          <label htmlFor="price">السعر: </label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            value={product.price}
-            className={!product.price && triedToAdd ? 'unvalid' : ''}
-            onChange={(e) => {
-              setProduct((_product) => {
-                return { ...product, price: Number(e.target.value) };
-              });
-            }}
-          />
-        </div>
-      </div>
-      <div className="inputs-control upFront-inputs">
-        <div className="input-container">
-          <label htmlFor="payPersentage">المقدم (نسبة): </label>
-          <select
-            id="payPersentage"
-            onChange={(e) => {
-              setProduct((_product) => {
-                return {
-                  ..._product,
-                  upFrontPaymentAmount: Math.round(
-                    _product.price * e.target.value
-                  ),
-                };
-              });
-            }}
-          >
-            {payPersentageOptions}
-          </select>
-        </div>
-        <div className="input-continer">
-          <label htmlFor="upFrontPaymentAmount">المقدم: </label>
-          <input
-            type="number"
-            id="upFrontPaymentAmount"
-            name="upFrontPaymentAmount"
-            value={product.upFrontPaymentAmount}
-            className={
-              (!product.upFrontPaymentAmount && triedToAdd) ||
-              product.upFrontPaymentAmount > product.price
-                ? 'unvalid'
-                : ''
-            }
+            <div className="input-contianer">
+              <label htmlFor="price">السعر: </label>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                value={product.price}
+                className={!product.price && triedToAdd ? 'unvalid' : ''}
+                onChange={(e) => {
+                  setProduct((_product) => {
+                    return { ...product, price: Number(e.target.value) };
+                  });
+                }}
+              />
+            </div>
+          </div>
+          <div className="inputs-control upFront-inputs">
+            <div className="input-container">
+              <label htmlFor="payPersentage">المقدم (نسبة): </label>
+              <select
+                id="payPersentage"
+                onChange={(e) => {
+                  setProduct((_product) => {
+                    return {
+                      ..._product,
+                      upFrontPaymentAmount: Math.round(
+                        _product.price * e.target.value
+                      ),
+                    };
+                  });
+                }}
+              >
+                {payPersentageOptions}
+              </select>
+            </div>
+            <div className="input-continer">
+              <label htmlFor="upFrontPaymentAmount">المقدم: </label>
+              <input
+                type="number"
+                id="upFrontPaymentAmount"
+                name="upFrontPaymentAmount"
+                value={product.upFrontPaymentAmount}
+                className={
+                  (!product.upFrontPaymentAmount && triedToAdd) ||
+                  product.upFrontPaymentAmount > product.price
+                    ? 'unvalid'
+                    : ''
+                }
+                onChange={(e) => {
+                  setProduct((_product) => {
+                    return {
+                      ...product,
+                      upFrontPaymentAmount: Number(e.target.value),
+                    };
+                  });
+                }}
+              />
+            </div>
+          </div>
+          <div className="inputs-control">
+            <div className="input-container">
+              <label htmlFor="payPeriodType">نوع القسط: </label>
+              <select
+                name="payPeriodType"
+                id="payPeriodType"
+                value={product.payPeriodType}
+                onChange={(e) => {
+                  setProduct((_product) => {
+                    return { ...product, payPeriodType: e.target.value };
+                  });
+                }}
+              >
+                <option value="weekly">اسبوعيا</option>
+                <option value="monthly">شهريا</option>
+                <option value="yearly">سنويا</option>
+              </select>
+            </div>
+            <div className="input-container">
+              <label htmlFor="payPersentage">القسط (نسبة): </label>
+              <select
+                id="payPersentage"
+                onChange={(e) => {
+                  setProduct((_product) => {
+                    return {
+                      ..._product,
+                      periodicalPaymentAmount: Math.round(
+                        _product.price * e.target.value
+                      ),
+                    };
+                  });
+                }}
+              >
+                {payPersentageOptions}
+              </select>
+            </div>
+
+            <div className="input-container">
+              <label htmlFor="periodicalPaymentAmount">القسط: </label>
+              <input
+                type="number"
+                id="periodicalPaymentAmount"
+                name="periodicalPaymentAmount"
+                value={product.periodicalPaymentAmount}
+                className={
+                  (!product.periodicalPaymentAmount && triedToAdd) ||
+                  product.periodicalPaymentAmount > product.price
+                    ? 'unvalid'
+                    : ''
+                }
+                onChange={(e) => {
+                  setProduct((_product) => {
+                    return {
+                      ...product,
+                      periodicalPaymentAmount: Number(e.target.value),
+                    };
+                  });
+                }}
+              />
+            </div>
+          </div>
+          <p>الملاحظات: </p>
+          <textarea
+            name="desc"
+            value={product.desc}
             onChange={(e) => {
               setProduct((_product) => {
                 return {
                   ...product,
-                  upFrontPaymentAmount: Number(e.target.value),
+                  desc: e.target.value,
                 };
               });
             }}
-          />
-        </div>
-      </div>
-      <div className="inputs-control">
-        <div className="input-container">
-          <label htmlFor="payPeriodType">نوع القسط: </label>
-          <select
-            name="payPeriodType"
-            id="payPeriodType"
-            value={product.payPeriodType}
-            onChange={(e) => {
-              setProduct((_product) => {
-                return { ...product, payPeriodType: e.target.value };
-              });
-            }}
-          >
-            <option value="weekly">اسبوعيا</option>
-            <option value="monthly">شهريا</option>
-            <option value="yearly">سنويا</option>
-          </select>
-        </div>
-        <div className="input-container">
-          <label htmlFor="payPersentage">القسط (نسبة): </label>
-          <select
-            id="payPersentage"
-            onChange={(e) => {
-              setProduct((_product) => {
-                return {
-                  ..._product,
-                  periodicalPaymentAmount: Math.round(
-                    _product.price * e.target.value
-                  ),
-                };
-              });
-            }}
-          >
-            {payPersentageOptions}
-          </select>
-        </div>
+            id="desc"
+            rows="10"
+          ></textarea>
 
-        <div className="input-container">
-          <label htmlFor="periodicalPaymentAmount">القسط: </label>
-          <input
-            type="number"
-            id="periodicalPaymentAmount"
-            name="periodicalPaymentAmount"
-            value={product.periodicalPaymentAmount}
-            className={
-              (!product.periodicalPaymentAmount && triedToAdd) ||
-              product.periodicalPaymentAmount > product.price
-                ? 'unvalid'
-                : ''
-            }
-            onChange={(e) => {
-              setProduct((_product) => {
-                return {
-                  ...product,
-                  periodicalPaymentAmount: Number(e.target.value),
-                };
-              });
-            }}
-          />
-        </div>
-      </div>
-      <p>الملاحظات: </p>
-      <textarea
-        name="desc"
-        value={product.desc}
-        onChange={(e) => {
-          setProduct((_product) => {
-            return {
-              ...product,
-              desc: e.target.value,
-            };
-          });
-        }}
-        id="desc"
-        rows="10"
-      ></textarea>
-
-      <div className="image-dragndrop_container">
-        {product.image ? (
-          <p className="image-placeholder" onDoubleClick={deleteImage}>
-            {imageName}
-          </p>
-        ) : (
-          <div className="image-dragndrop" {...getRootProps()}>
-            <input {...getInputProps()} />
-            {isDragActive ? (
-              <p>ضع الصورة هنا</p>
+          <div className="image-dragndrop_container">
+            {product.image ? (
+              <p className="image-placeholder" onDoubleClick={deleteImage}>
+                {imageName}
+              </p>
             ) : (
-              <p>اسحب صورة للسلعة وضعها هنا (اختياري)</p>
+              <div className="image-dragndrop" {...getRootProps()}>
+                <input {...getInputProps()} />
+                {isDragActive ? (
+                  <p>ضع الصورة هنا</p>
+                ) : (
+                  <p>اسحب صورة للسلعة وضعها هنا (اختياري)</p>
+                )}
+              </div>
             )}
           </div>
-        )}
-      </div>
 
-      <Btn onClick={addProduct}>اضافة</Btn>
+          <Btn onClick={addProduct}>اضافة</Btn>
+        </Fragment>
+      )}
     </div>
   );
 }
