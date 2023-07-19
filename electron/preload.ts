@@ -129,5 +129,21 @@ contextBridge.exposeInMainWorld('e_products', {
 
   fetchProducts: (cb: Function) => {
     ipcRenderer.send('fetch-products');
+
+    ipcRenderer.on('result', (_event, products) => {
+      for (let i = 0; i < products.length; i++) {
+        if (products[i].image) {
+          const imageBuffer = Buffer.from(JSON.parse(products[i].image).data);
+          delete products[i].image;
+
+          products[i].imageBuffer = imageBuffer;
+        }
+      }
+      cb(null, products);
+    });
+
+    ipcRenderer.on('failed', () => {
+      cb(new Error('failed to fetch'), null);
+    });
   },
 });

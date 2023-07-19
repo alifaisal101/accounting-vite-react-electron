@@ -34,10 +34,22 @@ export const createProduct = async (product_body: InProduct) => {
 };
 
 export const fetchProducts = async () => {
-  console.log('hey');
-  // @ts-ignore
-  const result = { ...(await ProductModel.find())._doc };
+  const result = await ProductModel.find();
+  const products = [];
 
-  console.log(result);
-  return 1;
+  for (let i = 0; i < result.length; i++) {
+    //@ts-ignore
+    const product = { ...result[i]._doc };
+
+    if (product.image) {
+      //@ts-ignore
+      product.image = JSON.stringify({
+        name: 'product_image',
+        data: Array.from(new Uint8Array(product.image)),
+      });
+    }
+    products.push(product);
+  }
+
+  return products;
 };

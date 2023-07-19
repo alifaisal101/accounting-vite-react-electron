@@ -1,8 +1,15 @@
 .products-page {
     padding: 8px 5px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .add-product-btn {
+    margin-bottom: 2em;
+}
+
+.products-table {
+    width: 100%;
 }

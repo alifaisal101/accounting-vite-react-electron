@@ -3,16 +3,14 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import mongoose from 'mongoose';
 import InitalModel from './models/inital';
-import { dirname } from 'path';
+// import { dirname } from 'path';
 
 import activationReqest from './activation-request';
 import activation from './activation';
-import { InProduct } from './models/product';
 import { createProduct, fetchProducts } from './controllers/product.con';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-const rootFs = dirname(__dirname);
-console.log(rootFs);
+// const rootFs = dirname(__dirname);
 
 const messages = {
   noMongodbURIFound: `
@@ -119,9 +117,7 @@ const bootstrap = async () => {
   ipcMain.on('add-product', async (event, product) => {
     try {
       const productResult = await createProduct(product);
-      setTimeout(() => {
-        event.reply('result', productResult);
-      }, 3000);
+      event.reply('result', productResult);
     } catch (err) {
       console.log(err);
       event.reply('failed');
@@ -131,8 +127,7 @@ const bootstrap = async () => {
   ipcMain.on('fetch-products', async (event) => {
     try {
       const products = await fetchProducts();
-
-      // event.reply('result', products);
+      event.reply('result', products);
     } catch (err) {
       event.reply('failed');
     }
