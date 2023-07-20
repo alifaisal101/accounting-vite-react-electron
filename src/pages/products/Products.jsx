@@ -29,8 +29,26 @@ function Products(props) {
   }, []);
 
   const deleteProduct = (_id) => {
+    if (!confirm('هل انت متأكد من حذف السلعة ؟')) {
+      return 0;
+    }
+    setLoading(true);
+
     e_products.deleteProduct(_id, (err, result) => {
-      setLoading(true);
+      setLoading(false);
+      if (err) {
+        return alert('فشل حذف السلعة');
+      } else if (result) {
+        setProducts((_products) => {
+          for (let i = 0; i < _products.length; i++) {
+            if (_products[i]._id === _id) {
+              _products.splice(i, 1);
+              break;
+            }
+          }
+          return _products;
+        });
+      }
     });
   };
 

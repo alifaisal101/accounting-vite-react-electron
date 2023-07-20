@@ -1,4 +1,5 @@
 import ProductModel, { InProduct } from '../models/product';
+import { arrayBufferToJson, jsonToBuffer } from '../utils/data';
 import { mappayPeriodType } from '../utils/locale';
 
 export const createProduct = async (product_body: InProduct) => {
@@ -11,7 +12,7 @@ export const createProduct = async (product_body: InProduct) => {
     delete product_data.image;
   } else {
     // @ts-ignore
-    product_data.image = Buffer.from(JSON.parse(product_data.image).data);
+    product_data.image = jsonToBuffer(product_data.image);
   }
 
   const product = new ProductModel(product_data);
@@ -23,13 +24,8 @@ export const createProduct = async (product_body: InProduct) => {
   result.payPeriodType = mappayPeriodType(result.payPeriodType);
 
   if (result.image) {
-    const imageJSON = JSON.stringify({
-      name: 'product_image',
-      data: Array.from(new Uint8Array(result.image)),
-    });
-
     // @ts-ignore
-    result.image = imageJSON;
+    result.image = arrayBufferToJson(result.image);
   }
 
   return result;
@@ -46,10 +42,7 @@ export const fetchProducts = async () => {
 
     if (product.image) {
       //@ts-ignore
-      product.image = JSON.stringify({
-        name: 'product_image',
-        data: Array.from(new Uint8Array(product.image)),
-      });
+      product.image = arrayBufferToJson(product.image);
     }
     //@ts-ignore
     products.push(product);
@@ -58,9 +51,6 @@ export const fetchProducts = async () => {
   return products;
 };
 
-export const deleteProduct = async (_id) => {
-  const deleteResult = await ProductModel.findByIdAndRemove(_id);
-
-  console.log('mio');
-  console.log(deleteResult);
+export const deleteProduct = async (_id: string) => {
+  return await ProductModel.deleteOne({ _id });
 };

@@ -137,8 +137,13 @@ const bootstrap = async () => {
     }
   });
 
-  ipcMain.on('delete-product', async (_event, _id) => {
-    const deleteResult = await deleteProduct(_id);
+  ipcMain.on('delete-product', async (event, _id) => {
+    try {
+      const deleteResult = await deleteProduct(_id);
+      event.reply('delete-product-result', deleteResult);
+    } catch (err) {
+      event.reply('failed-delete-product');
+    }
   });
 };
 

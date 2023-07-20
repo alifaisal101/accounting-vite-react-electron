@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { InProduct } from './models/product';
+import { arrayBufferToJson, jsonToBase64Url } from './utils/data';
 
 function domReady(
   condition: DocumentReadyState[] = ['complete', 'interactive']
@@ -107,18 +108,14 @@ setTimeout(removeLoading, 4999);
 contextBridge.exposeInMainWorld('e_products', {
   addProduct: (product: InProduct, cb: Function) => {
     if (product.image) {
-      const imageJSON = JSON.stringify({
-        name: 'product_image',
-        data: Array.from(new Uint8Array(product.image)),
-      });
-
       // @ts-ignore
-      product.image = imageJSON;
+      product.image = arrayBufferToJson(product.image);
     }
     ipcRenderer.send('add-product', product);
     ipcRenderer.on('add-product-result', (_event, productResult) => {
       if (productResult.image) {
-        productResult.image = Buffer.from(JSON.parse(productResult.image).data);
+        productResult.imageUrl = jsonToBase64Url(productResult.image);
+        delete productResult.image;
       }
       cb(null, productResult);
       ipcRenderer.removeAllListeners('add-product-result');
@@ -135,16 +132,8 @@ contextBridge.exposeInMainWorld('e_products', {
     ipcRenderer.on('products-result', (_event, products) => {
       for (let i = 0; i < products.length; i++) {
         if (products[i].image) {
-          const typed_array = JSON.parse(products[i].image).data;
-          const STRING_CHAR = typed_array.reduce((data: any, byte: any) => {
-            return data + String.fromCharCode(byte);
-          }, '');
-          let base64String = btoa(STRING_CHAR);
-          const imageUrl = `data:image/jpg;base64, ` + base64String;
+          products[i].imageUrl = jsonToBase64Url(products[i].image);
           delete products[i].image;
-
-          console.log(imageUrl);
-          products[i].imageUrl = imageUrl;
         }
       }
       cb(null, products);
@@ -160,10 +149,11 @@ contextBridge.exposeInMainWorld('e_products', {
   deleteProduct: (_id: string, cb: Function) => {
     ipcRenderer.send('delete-product', _id);
     ipcRenderer.on('delete-product-result', (_event, deleteResult) => {
+      cb(null, deleteResult);
       ipcRenderer.removeAllListeners('delete-product-result');
     });
     ipcRenderer.on('failed-delete-product', (_event) => {
-      cb(new Error('Failed to delete product', null));
+      cb(new Error('Failed to delete product'), null);
       ipcRenderer.removeAllListeners('failed-delete-product');
     });
   },
