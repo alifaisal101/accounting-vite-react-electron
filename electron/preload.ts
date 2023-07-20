@@ -121,9 +121,11 @@ contextBridge.exposeInMainWorld('e_products', {
         productResult.image = Buffer.from(JSON.parse(productResult.image).data);
       }
       cb(null, productResult);
+      ipcRenderer.removeAllListeners('add-product-result');
     });
     ipcRenderer.on('failed-add-product', () => {
       cb(new Error('failed to register'), null);
+      ipcRenderer.removeAllListeners('failed-add-product');
     });
   },
 
@@ -146,10 +148,23 @@ contextBridge.exposeInMainWorld('e_products', {
         }
       }
       cb(null, products);
+      ipcRenderer.removeAllListeners('products-result');
     });
 
     ipcRenderer.on('failed-fetch-products', () => {
       cb(new Error('failed to fetch'), null);
+      ipcRenderer.removeAllListeners('failed-fetch-products');
+    });
+  },
+
+  deleteProduct: (_id: string, cb: Function) => {
+    ipcRenderer.send('delete-product', _id);
+    ipcRenderer.on('delete-product-result', (_event, deleteResult) => {
+      ipcRenderer.removeAllListeners('delete-product-result');
+    });
+    ipcRenderer.on('failed-delete-product', (_event) => {
+      cb(new Error('Failed to delete product', null));
+      ipcRenderer.removeAllListeners('failed-delete-product');
     });
   },
 });

@@ -10,6 +10,13 @@ function Products(props) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  props.onAddProduct((product) => {
+    setProducts((_products) => {
+      _products.push(product);
+      return _products;
+    });
+  });
+
   useEffect(() => {
     setLoading(true);
     e_products.fetchProducts((err, result) => {
@@ -20,6 +27,12 @@ function Products(props) {
       setProducts(result);
     });
   }, []);
+
+  const deleteProduct = (_id) => {
+    e_products.deleteProduct(_id, (err, result) => {
+      setLoading(true);
+    });
+  };
 
   const productsComponents = [];
   for (let i = 0; i < products.length; i++) {
@@ -55,7 +68,13 @@ function Products(props) {
           {moment(product.createdAt).format('YYYY/MM/DD')}
         </div>
         <div className="col col-9 delete-btn">
-          <img src={deleteBtn} alt="Delete" />
+          <img
+            src={deleteBtn}
+            alt="Delete"
+            onClick={() => {
+              deleteProduct(product._id);
+            }}
+          />
         </div>
       </li>
     );

@@ -7,7 +7,11 @@ import InitalModel from './models/inital';
 
 import activationReqest from './activation-request';
 import activation from './activation';
-import { createProduct, fetchProducts } from './controllers/product.con';
+import {
+  createProduct,
+  deleteProduct,
+  fetchProducts,
+} from './controllers/product.con';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // const rootFs = dirname(__dirname);
@@ -131,6 +135,10 @@ const bootstrap = async () => {
     } catch (err) {
       event.reply('failed-fetch-products');
     }
+  });
+
+  ipcMain.on('delete-product', async (_event, _id) => {
+    const deleteResult = await deleteProduct(_id);
   });
 };
 

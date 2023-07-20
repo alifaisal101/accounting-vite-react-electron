@@ -51,8 +51,16 @@ export const fetchProducts = async () => {
         data: Array.from(new Uint8Array(product.image)),
       });
     }
+    //@ts-ignore
     products.push(product);
   }
 
   return products;
+};
+
+export const deleteProduct = async (_id) => {
+  const deleteResult = await ProductModel.findByIdAndRemove(_id);
+
+  console.log('mio');
+  console.log(deleteResult);
 };

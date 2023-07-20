@@ -24,6 +24,8 @@ function App() {
   const [showContent, setShowContent] = useState(false);
   const [page, setPage] = useState('');
 
+  let onSaveProduct = () => {};
+
   function contentHandler(page) {
     setShowContent(false);
     setTimeout(() => setShowContent(true), 250);
@@ -33,7 +35,14 @@ function App() {
   let PageComp;
   switch (page) {
     case 'productsMenu':
-      PageComp = <Products action={() => dropdownHandler('add-product')} />;
+      PageComp = (
+        <Products
+          action={() => dropdownHandler('add-product')}
+          onAddProduct={(cb) => {
+            onSaveProduct = cb;
+          }}
+        />
+      );
       break;
     case 'customersMenu':
       PageComp = <Customers />;
@@ -68,7 +77,13 @@ function App() {
       DropdownContentComp = <CustomersForm />;
       break;
     case 'add-product':
-      DropdownContentComp = <ProductForm />;
+      DropdownContentComp = (
+        <ProductForm
+          onSaveProduct={(product) => {
+            onSaveProduct(product);
+          }}
+        />
+      );
       break;
   }
 

@@ -7,6 +7,7 @@ import Btn from '../../ui/btn/Btn';
 import Loader from '../../ui/loader/Loader';
 
 function ProductForm(props) {
+  let alreadyAddedProduct = false;
   const initalProduct = {
     title: '',
     price: 0,
@@ -94,6 +95,7 @@ function ProductForm(props) {
       }
 
       if (result) {
+        props.onSaveProduct(result);
         return alert('تمت اضافة السلعة');
       }
     });
