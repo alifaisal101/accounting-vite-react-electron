@@ -1,16 +1,16 @@
 import './Products.css';
+import deleteBtn from './../../assets/Delete-button.svg';
 
 import { useEffect, useState } from 'react';
 import Btn from '../../components/ui/btn/Btn';
 import Loader from '../../components/ui/loader/Loader';
-import reactimg from './../../assets/react.jpg';
+import moment from 'moment/moment';
 
 function Products(props) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log("I'm running");
     setLoading(true);
     e_products.fetchProducts((err, result) => {
       setLoading(false);
@@ -24,11 +24,14 @@ function Products(props) {
   const productsComponents = [];
   for (let i = 0; i < products.length; i++) {
     const product = products[i];
-    console.log(product);
     productsComponents.push(
-      <li className="table-row">
+      <li className="table-row" key={product._id}>
         <div className="col col-1 img-col" data-label="Image">
-          <img src={reactimg} alt="" srcset="" />
+          {product.imageUrl ? (
+            <img src={product.imageUrl} alt="Product Image" />
+          ) : (
+            <h4>لا صورة</h4>
+          )}
         </div>
         <div className="col col-2" data-label="Product Title">
           {product.title}
@@ -48,8 +51,11 @@ function Products(props) {
         <div className="col col-7" data-label="Up Front Payment Amount">
           Pending
         </div>
-        <div className="col col-8" data-label="Up Front Payment Amount">
-          Pending
+        <div className="col col-8" data-label="Created At">
+          {moment(product.createdAt).format('YYYY/MM/DD')}
+        </div>
+        <div className="col col-9 delete-btn">
+          <img src={deleteBtn} alt="Delete" />
         </div>
       </li>
     );
@@ -64,9 +70,6 @@ function Products(props) {
         <Loader />
       ) : products.length > 0 ? (
         <div className="products-table">
-          <h2>
-            Responsive Tables Using LI <small>Triggers on 767px</small>
-          </h2>
           <ul className="responsive-table">
             <li className="table-header">
               <div className="col col-1">الصورة</div>
@@ -77,6 +80,7 @@ function Products(props) {
               <div className="col col-6">القسط</div>
               <div className="col col-7">المقدم</div>
               <div className="col col-8">تاريخ الاضافة</div>
+              <div className="col col-9">الحذف</div>
             </li>
             <div className="products-list">{productsComponents}</div>
           </ul>

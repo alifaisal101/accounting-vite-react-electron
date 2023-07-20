@@ -8,5 +8,5 @@
   position: relative;
   right: 120%;
   transition: right 0.1s ease-in-out;
-  overflow-y: auto;
+  overflow-y: hidden;
 }

@@ -117,19 +117,19 @@ const bootstrap = async () => {
   ipcMain.on('add-product', async (event, product) => {
     try {
       const productResult = await createProduct(product);
-      event.reply('result', productResult);
+      event.reply('add-product-result', productResult);
     } catch (err) {
       console.log(err);
-      event.reply('failed');
+      event.reply('failed-add-product');
     }
   });
 
   ipcMain.on('fetch-products', async (event) => {
     try {
       const products = await fetchProducts();
-      event.reply('result', products);
+      event.reply('products-result', products);
     } catch (err) {
-      event.reply('failed');
+      event.reply('failed-fetch-products');
     }
   });
 };

@@ -10,6 +10,11 @@
   margin-bottom: 2em;
 }
 
+.delete-btn img {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
 .products-table {
   width: 100%;
   margin-left: auto;
@@ -18,7 +23,8 @@
   padding-right: 10px;
 }
 .products-list {
-  max-height: 22rem;
+  height: 25em;
+  max-height: 80%;
   overflow-y: auto;
 }
 .products-table h2 {
@@ -52,7 +58,7 @@
 }
 
 .products-table .col-1 {
-  flex-basis: 30%;
+  flex-basis: 28%;
 }
 .products-table .col-2 {
   flex-basis: 10%;
@@ -74,6 +80,9 @@
 }
 .products-table .col-8 {
   flex-basis: 10%;
+}
+.products-table .col-9 {
+  flex-basis: 2%;
 }
 
 .img-col {

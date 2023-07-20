@@ -116,13 +116,13 @@ contextBridge.exposeInMainWorld('e_products', {
       product.image = imageJSON;
     }
     ipcRenderer.send('add-product', product);
-    ipcRenderer.on('result', (_event, productResult) => {
+    ipcRenderer.on('add-product-result', (_event, productResult) => {
       if (productResult.image) {
         productResult.image = Buffer.from(JSON.parse(productResult.image).data);
       }
       cb(null, productResult);
     });
-    ipcRenderer.on('failed', () => {
+    ipcRenderer.on('failed-add-product', () => {
       cb(new Error('failed to register'), null);
     });
   },
@@ -130,19 +130,25 @@ contextBridge.exposeInMainWorld('e_products', {
   fetchProducts: (cb: Function) => {
     ipcRenderer.send('fetch-products');
 
-    ipcRenderer.on('result', (_event, products) => {
+    ipcRenderer.on('products-result', (_event, products) => {
       for (let i = 0; i < products.length; i++) {
         if (products[i].image) {
-          const imageBuffer = Buffer.from(JSON.parse(products[i].image).data);
+          const typed_array = JSON.parse(products[i].image).data;
+          const STRING_CHAR = typed_array.reduce((data: any, byte: any) => {
+            return data + String.fromCharCode(byte);
+          }, '');
+          let base64String = btoa(STRING_CHAR);
+          const imageUrl = `data:image/jpg;base64, ` + base64String;
           delete products[i].image;
 
-          products[i].imageBuffer = imageBuffer;
+          console.log(imageUrl);
+          products[i].imageUrl = imageUrl;
         }
       }
       cb(null, products);
     });
 
-    ipcRenderer.on('failed', () => {
+    ipcRenderer.on('failed-fetch-products', () => {
       cb(new Error('failed to fetch'), null);
     });
   },
