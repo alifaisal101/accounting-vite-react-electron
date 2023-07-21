@@ -1,4 +1,5 @@
 import CustomerModel from '../models/customer';
+import PurchaseModel from '../models/purchase';
 
 export const getCustomersNames = async () => {
   const customersNames = await CustomerModel.find({}, { _id: 1, name: 1 });
@@ -20,4 +21,17 @@ export const getCustomersNames = async () => {
   }
 
   return result;
+};
+
+export const fetchCustomer = async (_id: string) => {
+  const customer = CustomerModel.findById(_id).populate(
+    'purchasesIds',
+    {},
+    PurchaseModel
+  );
+
+  //@ts-ignore
+  const customerData = customer._doc || {};
+
+  return customerData;
 };

@@ -172,6 +172,18 @@ contextBridge.exposeInMainWorld('e_customers', {
       ipcRenderer.removeAllListeners('failed-get-customers-names');
     });
   },
+
+  fetchCustomer: (_id: string, cb: Function) => {
+    ipcRenderer.send('fetch-customer', _id);
+    ipcRenderer.on('fetch-customer-result', (_event, result) => {
+      cb(null, result);
+      ipcRenderer.removeAllListeners('fetch-customer-result');
+    });
+    ipcRenderer.on('failed-fetch-customer', (_event) => {
+      cb(new Error('failed to fetch customer'), null);
+      ipcRenderer.removeAllListeners('failed-fetch-customer');
+    });
+  },
 });
 
 contextBridge.exposeInMainWorld('e_print', {
