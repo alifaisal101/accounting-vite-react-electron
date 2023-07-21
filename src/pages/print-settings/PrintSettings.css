@@ -1,0 +1,25 @@
+.print-settings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.print-settings_inputs-container {
+  width: 100%;
+  display: flex;
+  margin-bottom: 2em;
+}
+
+.print-settings_inputs-container input {
+  width: 80%;
+  font-size: larger;
+}
+
+.print-settings_inputs-container label {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
