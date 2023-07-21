@@ -22,11 +22,13 @@ const schema = new Schema<InCustomer>({
   purchasesIds: [
     {
       required: false,
-      type: {
-        ref: 'Purchase',
-        required: true,
-        type: Schema.Types.ObjectId,
-      },
+      type: [
+        {
+          ref: 'Purchase',
+          required: true,
+          type: Schema.Types.ObjectId,
+        },
+      ],
     },
   ],
   createdAt: requiredDate,

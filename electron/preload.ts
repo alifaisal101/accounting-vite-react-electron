@@ -160,6 +160,20 @@ contextBridge.exposeInMainWorld('e_products', {
   },
 });
 
+contextBridge.exposeInMainWorld('e_customers', {
+  getCustomersNames: (cb: Function) => {
+    ipcRenderer.send('get-customers-names');
+    ipcRenderer.on('get-customers-names-result', (_event, result) => {
+      cb(null, result);
+      ipcRenderer.removeAllListeners('get-customers-names-result');
+    });
+    ipcRenderer.on('failed-get-customers-names', (_event) => {
+      cb(new Error('Failed to fetch customers names'), null);
+      ipcRenderer.removeAllListeners('failed-get-customers-names');
+    });
+  },
+});
+
 contextBridge.exposeInMainWorld('e_print', {
   getPrintSettings: (cb: Function) => {
     ipcRenderer.send('get-printsettings');
