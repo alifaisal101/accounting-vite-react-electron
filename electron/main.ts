@@ -12,6 +12,10 @@ import {
   deleteProduct,
   fetchProducts,
 } from './controllers/product.con';
+import {
+  getPrintSettings,
+  savePrintSettings,
+} from './controllers/printsettings.con';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // const rootFs = dirname(__dirname);
@@ -143,6 +147,25 @@ const bootstrap = async () => {
       event.reply('delete-product-result', deleteResult);
     } catch (err) {
       event.reply('failed-delete-product');
+    }
+  });
+
+  // Print Handling
+  ipcMain.on('get-printsettings', async (event) => {
+    try {
+      const printSettingsResult = await getPrintSettings();
+      event.reply('get-printsettings-result', printSettingsResult);
+    } catch (err) {
+      event.reply('failed-get-printsettings');
+    }
+  });
+
+  ipcMain.on('set-printsettings', async (event, printsettings) => {
+    try {
+      const setPrintSettingsResult = await savePrintSettings(printsettings);
+      event.reply('set-printsettings-result', setPrintSettingsResult);
+    } catch (err) {
+      event.reply('failed-set-printsettings');
     }
   });
 };

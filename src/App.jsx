@@ -18,6 +18,7 @@ import CustomersForm from './components/containers/customersform/CustomersForm';
 import { useState } from 'react';
 import DropdownContainer from './components/ui/dropdown-container/DropdownContainer';
 import ProductForm from './components/containers/productsform/ProductForm';
+import PrintSettings from './pages/print-settings/PrintSettings';
 
 function App() {
   // Page Handling
@@ -50,6 +51,8 @@ function App() {
     case 'customersByDate':
       PageComp = <CustomersByDate />;
       break;
+    case 'printSettings':
+      PageComp = <PrintSettings />;
   }
 
   //Dropdown Handling

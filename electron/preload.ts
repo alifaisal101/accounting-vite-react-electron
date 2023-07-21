@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { InProduct } from './models/product';
 import { arrayBufferToJson, jsonToBase64Url } from './utils/data';
+import { InPrintSettings } from './models/printsettings';
 
 function domReady(
   condition: DocumentReadyState[] = ['complete', 'interactive']
@@ -155,6 +156,40 @@ contextBridge.exposeInMainWorld('e_products', {
     ipcRenderer.on('failed-delete-product', (_event) => {
       cb(new Error('Failed to delete product'), null);
       ipcRenderer.removeAllListeners('failed-delete-product');
+    });
+  },
+});
+
+contextBridge.exposeInMainWorld('e_print', {
+  getPrintSettings: (cb: Function) => {
+    ipcRenderer.send('get-printsettings');
+    ipcRenderer.on(
+      'get-printsettings-result',
+      (_event, printSettingsResult) => {
+        cb(null, printSettingsResult);
+        ipcRenderer.removeAllListeners('get-printsettings-result');
+      }
+    );
+    ipcRenderer.on('failed-get-printsettings', () => {
+      cb(new Error('failed to register'), null);
+      ipcRenderer.removeAllListeners('failed-get-printsettings');
+    });
+  },
+
+  setPrintSettings: (printSettings: InPrintSettings, cb: Function) => {
+    if (printSettings.image) {
+      // @ts-ignore
+      printSettings.image = arrayBufferToJson(printSettings.image);
+    }
+
+    ipcRenderer.send('set-printsettings', printSettings);
+    ipcRenderer.on('set-printsettings-result', (_event, result) => {
+      cb(null, result);
+      ipcRenderer.removeAllListeners('set-printsettings-result');
+    });
+    ipcRenderer.on('failed-set-printsettings', () => {
+      cb(new Error('Failed to save printsettings'), null);
+      ipcRenderer.removeAllListeners('failed-set-printsettings');
     });
   },
 });

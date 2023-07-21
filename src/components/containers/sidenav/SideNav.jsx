@@ -9,6 +9,7 @@ function SideNav(props) {
         <li onClick={() => props.setPage('customersByDate')}>
           الزبائن حسب التقويم
         </li>
+        <li onClick={() => props.setPage('printSettings')}>اعدادات الطباعة</li>
       </ul>
     </div>
   );

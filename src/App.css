@@ -73,3 +73,39 @@ body,
 .bringFromTheTop {
   bottom: 0 !important;
 }
+
+.inputs-control {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin-bottom: 1.5em;
+}
+
+.image-dragndrop_container {
+  height: fit-content;
+  width: 100%;
+}
+
+.image-dragndrop {
+  background-color: rgb(192, 192, 192);
+  width: 100%;
+  height: 10em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25em;
+  border: grey 2px dashed;
+  margin-bottom: 1.2em;
+}
+
+.image-placeholder {
+  display: flex;
+  justify-content: center;
+  background-color: rgb(192, 192, 192);
+  text-align: center;
+}
+
+.unvalid {
+  border: 2px red solid;
+}

@@ -7,7 +7,6 @@ import Btn from '../../ui/btn/Btn';
 import Loader from '../../ui/loader/Loader';
 
 function ProductForm(props) {
-  let alreadyAddedProduct = false;
   const initalProduct = {
     title: '',
     price: 0,
