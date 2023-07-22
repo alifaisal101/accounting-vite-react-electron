@@ -1,0 +1,109 @@
+.customer-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.customer-form h1 {
+  margin: 0 0;
+}
+
+.header {
+  font-size: 1.2em;
+  margin: 25px 5px;
+}
+.customersForm_inputs-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.customersForm_inputs-container .customersForm_input-controller {
+  width: 49%;
+  margin-right: 2em;
+  margin-bottom: 1em;
+}
+
+.customersForm_input-controller input {
+  width: 81%;
+  font-size: larger;
+  margin-left: 0.5em;
+}
+
+.customersForm_input-controller label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 0.75em;
+}
+
+.customersform_add-product-btn {
+  font-size: 1em;
+  padding: 20px 5px;
+  margin-bottom: 2em;
+}
+
+.product-form .names_suggestions_list {
+  position: absolute;
+  z-index: 10000;
+  width: 17em;
+  right: 10%;
+  height: 15em;
+  overflow-y: auto;
+}
+
+.product-form .names_suggestions_list li {
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  padding: 8px 1px;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  border-radius: 2px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.product-form .names_suggestions_list li:hover {
+  background-color: rgb(236, 127, 65);
+  font-weight: 600;
+  color: white;
+  width: 100%;
+  padding: 8px 1px;
+  box-shadow: rgb(255, 94, 0) 0px 0px 0px 3px;
+  text-align: center;
+}
+
+.customer-form .products-table {
+  width: 80%;
+  height: 5em;
+  transform: scale(0.9);
+}
+
+.customer-form .products-table li {
+  padding: 5px 10px;
+}
+
+.product_suggestion_list {
+  position: absolute;
+  z-index: 10000;
+  width: 30em;
+  overflow-y: auto;
+  display: flex;
+  background-color: white;
+}
+
+.product_suggestion_list .product_suggestion_item {
+  margin: 0px 15px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.product_suggestion_list .product_suggestion_item:hover {
+  background-color: rgb(236, 127, 65);
+  color: white;
+  font-weight: 600;
+}
+
+.product_suggestion_list .product_suggestion_item .img-col img {
+  object-fit: contain;
+}

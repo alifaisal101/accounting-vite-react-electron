@@ -1,24 +1,17 @@
 import { ObjectId, Schema, model } from 'mongoose';
-import {
-  requiredDate,
-  requiredNumber,
-  requiredString,
-  unRequiredString,
-} from '../utils/mongoose-options';
+import { requiredDate, requiredString } from '../utils/mongoose-options';
 
 // Document interface
 export interface InCustomer {
   name: string;
-  phoneNumber: number;
-  email?: string;
+  phoneNumber: string;
   createdAt: Date;
   purchasesIds?: ObjectId[];
 }
 
 const schema = new Schema<InCustomer>({
   name: requiredString,
-  phoneNumber: requiredNumber,
-  email: unRequiredString,
+  phoneNumber: requiredString,
   purchasesIds: [
     {
       required: false,

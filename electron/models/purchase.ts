@@ -6,44 +6,64 @@ import {
 } from '../utils/mongoose-options';
 
 export interface InPurchasedProduct {
-  productId: ObjectId;
+  productId?: ObjectId;
   title: string;
   price: number;
-  payPeriodType: string; //Weekly, monthly, or yearly
-  upFrontPaymentAmount: number;
-  periodicalPaymentAmount: number;
-  desc: string;
-  createdAt: Date;
+}
+
+export interface InPurchasePayment {
+  amount: number;
+  date: Date;
+  paidUp: number;
+  status: string; // unpaid, partial, full
 }
 
 // Document interface
 export interface InPurchase {
-  purchasedProduct: InPurchasedProduct;
+  purchasedProducts: InPurchasedProduct[];
+  payments: InPurchasePayment[];
   debt: number;
-  purchaseDate: string;
+  totalCost: number;
+  purchaseDate: Date;
   payStartDate: Date;
+  upFrontPaymentAmount: number;
+  payPeriodType: string;
+  periodicalPaymentAmount: number;
 }
 
 const schema = new Schema<InPurchase>({
-  purchasedProduct: {
-    required: true,
-    type: {
-      productId: {
-        ref: 'Product',
-        type: Schema.Types.ObjectId,
-        required: true,
+  purchasedProducts: {
+    type: [
+      {
+        productId: {
+          ref: 'Product',
+          type: Schema.Types.ObjectId,
+          required: false,
+        },
+        title: requiredString,
+        price: requiredNumber,
       },
-      title: requiredString,
-      price: requiredNumber,
-      payPeriodType: requiredString,
-      upFrontPaymentAmount: requiredNumber,
-      periodicalPaymentAmount: requiredNumber,
-      desc: requiredString,
-      createdAt: requiredDate,
-    },
+    ],
+    required: true,
+  },
+  payments: {
+    type: [
+      {
+        amount: requiredNumber,
+        date: requiredDate,
+        paidUp: requiredNumber,
+        status: requiredString,
+      },
+    ],
+    required: true,
   },
   debt: requiredNumber,
+  totalCost: requiredNumber,
+  purchaseDate: requiredDate,
   payStartDate: requiredDate,
+  upFrontPaymentAmount: requiredNumber,
+  payPeriodType: requiredString,
+  periodicalPaymentAmount: requiredNumber,
 });
 
 const PurchaseModel = model('Purchase', schema);
