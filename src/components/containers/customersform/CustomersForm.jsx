@@ -5,6 +5,7 @@ import Loader from '../../ui/loader/Loader';
 import './CustomersForm.css';
 
 import { Fragment, useEffect, useState } from 'react';
+import moment from 'moment/moment';
 
 function CustomerForm() {
   const [customersNames, setCustomersNames] = useState([]);
@@ -33,6 +34,20 @@ function CustomerForm() {
   const [product, setProduct] = useState(product_inital);
   const [triedToAddProduct, setTriedToAddProduct] = useState(false);
   const [productsList, setProductsList] = useState([]);
+
+  // Purchases
+  const [triedToAddPurchase, setTriedToAddPurchase] = useState(false);
+  const purchase_inital = {
+    purchasedProducts: [],
+    totalCost: 0,
+    upFrontPaymentAmount: 0,
+    periodicalPaymentAmount: 0,
+    purchaseDate: new Date(),
+    payStartDate: moment(new Date()).add(1, 'M'),
+    payPeriodType: 'monthly',
+  };
+  const [purchase, setPurchase] = useState(purchase_inital);
+  const [purchases, setPurchases] = useState([]);
 
   // Get customers names, get products
   useEffect(() => {
@@ -322,7 +337,7 @@ function CustomerForm() {
                 value={product.price}
                 onChange={(e) => {
                   setProduct((_product) => {
-                    return { ..._product, price: e.target.value };
+                    return { ..._product, price: +e.target.value };
                   });
                 }}
               />
@@ -341,6 +356,71 @@ function CustomerForm() {
               </li>
               <div className="products-list">{productsListComponent}</div>
             </ul>
+          </div>
+          <h3 className="header">بيانات المشتريات</h3>
+          <div className="customersForm_inputs-container">
+            <div className="customersForm_input-controller">
+              <label htmlFor="totalcost">مجموع التكلفة: </label>
+              <input
+                className={
+                  !purchase.totalCost && triedToAddPurchase ? 'unvalid' : ''
+                }
+                type="number"
+                id="totalcost"
+                name="totalcost"
+                value={purchase.totalCost}
+                onChange={(e) => {
+                  setPurchase((_purchase) => {
+                    return { ..._purchase, totalCost: +e.target.value };
+                  });
+                }}
+              />
+            </div>
+
+            <div className="customersForm_input-controller">
+              <label htmlFor="upFrontPaymentAmount">المقدم :</label>
+              <input
+                className={
+                  !purchase.upFrontPaymentAmount && triedToAddPurchase
+                    ? 'unvalid'
+                    : ''
+                }
+                type="text"
+                id="upFrontPaymentAmount"
+                name="upFrontPaymentAmount"
+                value={purchase.upFrontPaymentAmount}
+                onChange={(e) => {
+                  setPurchase((_purchase) => {
+                    return {
+                      ..._purchase,
+                      upFrontPaymentAmount: +e.target.value,
+                    };
+                  });
+                }}
+              />
+            </div>
+            <div className="customersForm_input-controller">
+              <label htmlFor="periodicalPaymentAmount">القسط :</label>
+              <input
+                className={
+                  !purchase.periodicalPaymentAmount && triedToAddPurchase
+                    ? 'unvalid'
+                    : ''
+                }
+                type="text"
+                id="periodicalPaymentAmount"
+                name="periodicalPaymentAmount"
+                value={purchase.periodicalPaymentAmount}
+                onChange={(e) => {
+                  setPurchase((_purchase) => {
+                    return {
+                      ..._purchase,
+                      periodicalPaymentAmount: +e.target.value,
+                    };
+                  });
+                }}
+              />
+            </div>
           </div>
         </Fragment>
       )}

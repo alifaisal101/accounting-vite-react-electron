@@ -75,7 +75,8 @@
 
 .customer-form .products-table {
   width: 80%;
-  height: 5em;
+  height: 15em;
+  overflow-y: auto;
   transform: scale(0.9);
 }
 
