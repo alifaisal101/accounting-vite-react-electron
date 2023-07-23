@@ -14,7 +14,7 @@ const schema = new Schema<InCustomer>({
   phoneNumber: requiredString,
   purchasesIds: [
     {
-      required: false,
+      required: true,
       type: [
         {
           ref: 'Purchase',

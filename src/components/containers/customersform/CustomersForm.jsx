@@ -42,9 +42,11 @@ function CustomerForm() {
     totalCost: 0,
     upFrontPaymentAmount: 0,
     periodicalPaymentAmount: 0,
-    purchaseDate: new Date(),
-    payStartDate: moment(new Date()).add(1, 'M'),
+    purchaseDate: moment().format('yyyy-MM-DD'),
+    payStartDate: moment().add(1, 'M').format('yyyy-MM-DD'),
     payPeriodType: 'monthly',
+    key: Math.random(),
+    _id: '',
   };
   const [purchase, setPurchase] = useState(purchase_inital);
   const [purchases, setPurchases] = useState([]);
@@ -82,7 +84,7 @@ function CustomerForm() {
     for (let i = 0; i < productsList.length; i++) {
       const product = productsList[i];
       productsListComponent.push(
-        <li className="table-row" key={product.key}>
+        <li className="table-row" key={product.key ? product.key : product._id}>
           <div className="col col-1 img-col" data-label="Image">
             {product.imageUrl ? (
               <img src={product.imageUrl} alt="Product Image" />
@@ -114,10 +116,13 @@ function CustomerForm() {
   const addProduct = () => {
     setTriedToAddProduct(true);
     if (!product.title || !product.price) {
-      return alert('يجب وضع سعر واسم للسعلة');
+      return alert('يجب وضع سعر واسم للسلعة');
     }
 
-    product.key = product._id ? product._id : Math.random();
+    setProduct((_product) => {
+      return { ..._product, key: _product._id ? product.key : Math.random() };
+    });
+
     setProductsList((_productsList) => {
       if (!_productsList?.length) {
         _productsList.push(product);
@@ -137,12 +142,54 @@ function CustomerForm() {
       setProduct(product_inital);
       return _productsList;
     });
+    setPurchase((_purchase) => {
+      const _purchasedProducts = [];
+      let _purchaseTotalCost = 0;
+      for (let i = 0; i < productsList.length; i++) {
+        _purchaseTotalCost += productsList[i].price;
+        let _purchasedProduct = {
+          productId: productsList[i]._id,
+          title: productsList[i].title,
+          price: productsList[i].price,
+        };
+
+        if (!_purchasedProduct.productId) {
+          delete _purchasedProduct.productId;
+        }
+
+        _purchasedProducts.push(_purchasedProduct);
+      }
+
+      if (productsList.length == 1) {
+        _purchase.upFrontPaymentAmount = productsList[0].upFrontPaymentAmount;
+        _purchase.periodicalPaymentAmount =
+          productsList[0].periodicalPaymentAmount;
+
+        const payPeriodType_arr = productsList[0].payPeriodType;
+        switch (payPeriodType_arr) {
+          case 'أسبوعيا':
+            _purchase.payPeriodType = 'weekly';
+            break;
+          case 'شهريا':
+            _purchase.payPeriodType = 'monthly';
+            break;
+          case 'سنويا':
+            _purchase.payPeriodType = 'yearly';
+        }
+      } else {
+        _purchase.upFrontPaymentAmount = 0;
+        _purchase.periodicalPaymentAmount = 0;
+      }
+
+      _purchase.totalCost = _purchaseTotalCost;
+      _purchase.purchasedProducts = _purchasedProducts;
+      return _purchase;
+    });
   };
 
   // Use one of the matching products and fill the product state with it
   const useMatchingProduct = (product) => {
     setProduct(product);
-    console.log(product);
   };
 
   // find matching products titles
@@ -190,7 +237,115 @@ function CustomerForm() {
 
   //// PRODUCTS END  ////
 
+  //// PURCHASE START ////
+
+  const PurchasesList_component = [];
+  if (purchases) {
+    for (let i = 0; i < purchases.length; i++) {
+      const _purchase = purchases[i];
+
+      PurchasesList_component.push(
+        <li
+          className={`table-row  ${_purchase._id == '' ? '' : 'unmodifiable'}`}
+          key={_purchase.key ? _purchase.key : _purchase._id}
+        >
+          <div className="col col-2" data-label="products">
+            السلع
+          </div>
+          <div className="col col-3" data-label="Total cost">
+            {_purchase.totalCost}
+          </div>
+          <div className="col col-4" data-label="Upfront Payment">
+            {_purchase.upFrontPaymentAmount}
+          </div>
+          <div className="col col-5" data-label="Periodical Payment Amount">
+            {_purchase.periodicalPaymentAmount}
+          </div>
+          <div className="col col-6" data-label="Purchase Date">
+            {_purchase.purchaseDate}
+          </div>
+          <div className="col col-7" data-label="Payment Start Date">
+            {_purchase.payStartDate}
+          </div>
+          <div className="col col-8" data-label="Pay type">
+            {_purchase.payPeriodType}
+          </div>
+          <div className="col col-8 delete-btn">
+            {_purchase._id == '' ? (
+              <img
+                src={deleteBtn}
+                alt="Delete"
+                onClick={() => {
+                  deleteProduct(product._id);
+                }}
+              />
+            ) : null}
+          </div>
+        </li>
+      );
+    }
+  }
+
+  const addPurchase = () => {
+    setTriedToAddPurchase(true);
+
+    if (
+      !purchase.totalCost ||
+      !purchase.upFrontPaymentAmount ||
+      !purchase.periodicalPaymentAmount ||
+      purchase.periodicalPaymentAmount > purchase.totalCost ||
+      purchase.upFrontPaymentAmount > purchase.totalCost
+    ) {
+      return alert('تأكد من ملئ المعلومات بشكل صحيح');
+    }
+
+    if (purchase.purchasedProducts.length == 0) {
+      return alert('يجب على الأقل اضافة سلعة واحدة');
+    }
+
+    if (moment(purchase.purchaseDate).isAfter(moment(purchase.payStartDate))) {
+      return alert('يجب ان يكون تاريخ بدء الدفع بعد تاريخ الشراء');
+    }
+
+    setPurchases((_purchases) => {
+      if (!purchase?.length) {
+        _purchases.push(purchase);
+      } else {
+        let doesPurchaseExist = false;
+        for (let i = 0; i < purchases.length; i++) {
+          if ((purchase.key == _purchases[i], key)) {
+            doesPurchaseExist = true;
+          }
+        }
+
+        if (!doesPurchaseExist) {
+          _purchases.push(purchase);
+        }
+      }
+
+      setTriedToAddPurchase(false);
+      setProductsList([]);
+      setPurchase(purchase_inital);
+      return _purchases;
+    });
+  };
+
+  //// PURCHASE END ////
+
   //// CUSTOMER START ////
+
+  const addCustoemr = () => {
+    e_customers.addCustomer({ ...customer, purchases }, (err, result) => {
+      console.log(1);
+      if (err) {
+        return alert('فشل حفظ الزبون');
+      }
+
+      if (result) {
+        console.log(result);
+      }
+    });
+  };
 
   // Function to go fetch a customer
   const fetchUseCustomer = (_id) => {
@@ -381,7 +536,9 @@ function CustomerForm() {
               <label htmlFor="upFrontPaymentAmount">المقدم :</label>
               <input
                 className={
-                  !purchase.upFrontPaymentAmount && triedToAddPurchase
+                  (!purchase.upFrontPaymentAmount ||
+                    purchase.upFrontPaymentAmount > purchase.totalCost) &&
+                  triedToAddPurchase
                     ? 'unvalid'
                     : ''
                 }
@@ -403,7 +560,9 @@ function CustomerForm() {
               <label htmlFor="periodicalPaymentAmount">القسط :</label>
               <input
                 className={
-                  !purchase.periodicalPaymentAmount && triedToAddPurchase
+                  (!purchase.periodicalPaymentAmount ||
+                    purchase.periodicalPaymentAmount > purchase.totalCost) &&
+                  triedToAddPurchase
                     ? 'unvalid'
                     : ''
                 }
@@ -422,6 +581,75 @@ function CustomerForm() {
               />
             </div>
           </div>
+          <div className="customersForm_inputs-container">
+            <div className="customersForm_input-controller">
+              <label htmlFor="totalcost">تاريخ الشراء: </label>
+              <input
+                type="date"
+                id="purchaseDate"
+                name="purchaseDate"
+                value={purchase.purchaseDate}
+                onChange={(e) => {
+                  setPurchase((_purchase) => {
+                    return { ..._purchase, purchaseDate: e.target.value };
+                  });
+                }}
+              />
+            </div>
+            <div className="customersForm_input-controller">
+              <label htmlFor="payStartDate">تاريخ بدء الدفع: </label>
+              <input
+                type="date"
+                id="payStartDate"
+                name="payStartDate"
+                value={purchase.payStartDate}
+                onChange={(e) => {
+                  setPurchase((_purchase) => {
+                    return { ..._purchase, payStartDate: e.target.value };
+                  });
+                }}
+              />
+            </div>
+            <div className="customersForm_input-controller">
+              <label htmlFor="payStartDate">نوع القسط: </label>
+              <select
+                name="payPeriodType"
+                id="payPeriodType"
+                value={purchase.payPeriodType}
+                onChange={(e) => {
+                  setPurchase((_purchase) => {
+                    return { ..._purchase, payPeriodType: e.target.value };
+                  });
+                }}
+              >
+                <option value="weekly">أسبوعيا</option>
+                <option value="monthly">شهريا</option>
+                <option value="yearly">سنويا</option>
+              </select>
+            </div>
+          </div>
+
+          <Btn onClick={addPurchase} className="customersform_add-product-btn">
+            اضافة الى المشتريات
+          </Btn>
+          <div className="products-table">
+            <ul className="responsive-table">
+              <li className="table-header">
+                <div className="col col-2">السلع</div>
+                <div className="col col-3">السعر الكامل</div>
+                <div className="col col-4">المقدم</div>
+                <div className="col col-5">القسط</div>
+                <div className="col col-6">تاريخ الشراء</div>
+                <div className="col col-7">تاريخ بدء الدفع</div>
+                <div className="col col-8">نوع الدفع</div>
+                <div className="col col-8">حذف</div>
+              </li>
+              <div className="products-list">{PurchasesList_component}</div>
+            </ul>
+          </div>
+          <Btn onClick={addCustoemr} className="customersform_add-product-btn">
+            اضافة الزبون
+          </Btn>
         </Fragment>
       )}
     </div>

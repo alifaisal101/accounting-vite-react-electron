@@ -16,7 +16,11 @@ import {
   getPrintSettings,
   savePrintSettings,
 } from './controllers/printsettings.con';
-import { fetchCustomer, getCustomersNames } from './controllers/customer.con';
+import {
+  fetchCustomer,
+  getCustomersNames,
+  saveCustomer,
+} from './controllers/customer.con';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // const rootFs = dirname(__dirname);
@@ -176,6 +180,7 @@ const bootstrap = async () => {
       const result = await getCustomersNames();
       event.reply('get-customers-names-result', result);
     } catch (err) {
+      console.log(err);
       event.reply('failed-get-customers-names');
     }
   });
@@ -186,6 +191,16 @@ const bootstrap = async () => {
       event.reply('fetch-customer-result', result);
     } catch (err) {
       event.reply('failed-fetch-customer');
+    }
+  });
+
+  ipcMain.on('add-customer', async (event, customer) => {
+    try {
+      const result = await saveCustomer(customer);
+      event.reply('add-customer-result');
+    } catch (err) {
+      console.log(err);
+      event.reply('failed-add-customer');
     }
   });
 };

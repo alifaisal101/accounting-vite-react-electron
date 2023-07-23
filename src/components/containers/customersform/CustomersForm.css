@@ -75,8 +75,8 @@
 
 .customer-form .products-table {
   width: 80%;
-  height: 15em;
-  overflow-y: auto;
+  height: fit-content;
+  border: 1px solid grey;
   transform: scale(0.9);
 }
 
@@ -107,4 +107,8 @@
 
 .product_suggestion_list .product_suggestion_item .img-col img {
   object-fit: contain;
+}
+
+.unmodifiable {
+  background-color: rgb(204, 204, 204);
 }

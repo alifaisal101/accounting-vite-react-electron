@@ -184,6 +184,19 @@ contextBridge.exposeInMainWorld('e_customers', {
       ipcRenderer.removeAllListeners('failed-fetch-customer');
     });
   },
+
+  addCustomer: (customer: any, cb: Function) => {
+    ipcRenderer.send('add-customer', customer);
+    ipcRenderer.on('add-customer-result', (_event, result) => {
+      cb(null, result);
+      ipcRenderer.removeAllListeners('add-customer-result');
+    });
+
+    ipcRenderer.on('failed-add-customer', (_event) => {
+      cb(new Error('failed to add customer'), null);
+      ipcRenderer.removeAllListeners('failed-add-customer');
+    });
+  },
 });
 
 contextBridge.exposeInMainWorld('e_print', {
