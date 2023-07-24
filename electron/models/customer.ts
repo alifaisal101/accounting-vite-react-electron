@@ -12,18 +12,16 @@ export interface InCustomer {
 const schema = new Schema<InCustomer>({
   name: requiredString,
   phoneNumber: requiredString,
-  purchasesIds: [
-    {
-      required: true,
-      type: [
-        {
-          ref: 'Purchase',
-          required: true,
-          type: Schema.Types.ObjectId,
-        },
-      ],
-    },
-  ],
+  purchasesIds: {
+    required: true,
+    type: [
+      {
+        ref: 'Purchase',
+        required: true,
+        type: Schema.Types.ObjectId,
+      },
+    ],
+  },
   createdAt: requiredDate,
 });
 

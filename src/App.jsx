@@ -10,7 +10,6 @@ import Overlay from './components/ui/overlay/Overlay';
 // Pages main content
 import Products from './pages/products/Products';
 import Customers from './pages/customers/Customers';
-import CustomersByDate from './pages/customers-by-date/CustomersByDate';
 
 // components dropdown
 import CustomersForm from './components/containers/customersform/CustomersForm';
@@ -48,9 +47,7 @@ function App() {
     case 'customersMenu':
       PageComp = <Customers />;
       break;
-    case 'customersByDate':
-      PageComp = <CustomersByDate />;
-      break;
+
     case 'printSettings':
       PageComp = <PrintSettings />;
   }

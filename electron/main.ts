@@ -18,6 +18,7 @@ import {
 } from './controllers/printsettings.con';
 import {
   fetchCustomer,
+  fetchCustomers,
   getCustomersNames,
   saveCustomer,
 } from './controllers/customer.con';
@@ -191,6 +192,15 @@ const bootstrap = async () => {
       event.reply('fetch-customer-result', result);
     } catch (err) {
       event.reply('failed-fetch-customer');
+    }
+  });
+
+  ipcMain.on('fetch-customers', async (event) => {
+    try {
+      const result = await fetchCustomers();
+      event.reply('fetch-customers-result', result);
+    } catch (err) {
+      event.reply('failed-fetch-customers');
     }
   });
 

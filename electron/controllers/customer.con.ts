@@ -121,3 +121,24 @@ export const saveCustomer = async (customer: any) => {
 
   console.log(result);
 };
+
+export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
+  const result = await CustomerModel.find();
+  const _customers = [];
+
+  for (let i = 0; i < result.length; i++) {
+    //@ts-ignore
+    const _customer = result[i]._doc;
+    _customer._id = _customer._id.toString();
+
+    const _purchasesIds = [];
+    for (let i = 0; i < _customer.purchasesIds.length; i++) {
+      console.log(_customer.purchasesIds[0]);
+      _purchasesIds.push();
+    }
+    _customers.push(_customer);
+  }
+
+  console.log(_customers);
+  return _customers;
+};
