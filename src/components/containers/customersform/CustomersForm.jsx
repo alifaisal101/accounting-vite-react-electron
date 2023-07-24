@@ -12,6 +12,7 @@ function CustomerForm() {
   const [matchingCustomersNames, setMatchingCustomersNames] = useState([]);
   const [nameIsFocused, setNameIsFocused] = useState(false);
   const [customer, setCustomer] = useState({
+    _id: '',
     name: '',
     phoneNumber: '',
   });

@@ -191,6 +191,7 @@ const bootstrap = async () => {
       const result = await fetchCustomer(_id);
       event.reply('fetch-customer-result', result);
     } catch (err) {
+      console.log(err);
       event.reply('failed-fetch-customer');
     }
   });

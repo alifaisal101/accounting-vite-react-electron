@@ -187,14 +187,14 @@ contextBridge.exposeInMainWorld('e_customers', {
 
   fetchCustomers: (dates: any, cb: Function) => {
     ipcRenderer.send('fetch-customers');
-    // ipcRenderer.on('fetch-customers-result', (result) => {
-    //   cb(null, result);
-    //   ipcRenderer.removeAllListeners('fetch-customers-result');
-    // });
-    // ipcRenderer.on('failed-fetch-customers', () => {
-    //   cb(new Error('Failed to fetch customer'), null);
-    //   ipcRenderer.removeAllListeners('failed-fetch-customers');
-    // });
+    ipcRenderer.on('fetch-customers-result', (_event, result) => {
+      cb(null, result);
+      ipcRenderer.removeAllListeners('fetch-customers-result');
+    });
+    ipcRenderer.on('failed-fetch-customers', () => {
+      cb(new Error('Failed to fetch customer'), null);
+      ipcRenderer.removeAllListeners('failed-fetch-customers');
+    });
   },
 
   addCustomer: (customer: any, cb: Function) => {

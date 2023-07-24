@@ -2,7 +2,7 @@ import moment from 'moment';
 
 import CustomerModel from '../models/customer';
 import PurchaseModel from '../models/purchase';
-import { addPurchases } from './purchase.con';
+import { addPurchases, fetchPurchases } from './purchase.con';
 
 export const getCustomersNames = async () => {
   const customersNames = await CustomerModel.find({}, { _id: 1, name: 1 });
@@ -27,14 +27,18 @@ export const getCustomersNames = async () => {
 };
 
 export const fetchCustomer = async (_id: string) => {
-  const customer = CustomerModel.findById(_id).populate(
-    'purchasesIds',
-    {},
-    PurchaseModel
-  );
+  const customer = await CustomerModel.findById(_id);
 
   //@ts-ignore
-  const customerData = customer._doc || {};
+  const customerData = customer._doc;
+  customerData._id = customerData._id.toString();
+
+  const purchases = await fetchPurchases(customerData.purchasesIds, {
+    payments: 0,
+  });
+  customerData.purchases = purchases;
+
+  delete customerData.purchasesIds;
 
   return customerData;
 };
@@ -133,12 +137,12 @@ export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
 
     const _purchasesIds = [];
     for (let i = 0; i < _customer.purchasesIds.length; i++) {
-      console.log(_customer.purchasesIds[0]);
-      _purchasesIds.push();
+      _purchasesIds.push(_customer.purchasesIds[0].toString());
     }
+
+    _customer.purchasesIds = _purchasesIds;
     _customers.push(_customer);
   }
 
-  console.log(_customers);
   return _customers;
 };

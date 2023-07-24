@@ -18,11 +18,13 @@ import { useState } from 'react';
 import DropdownContainer from './components/ui/dropdown-container/DropdownContainer';
 import ProductForm from './components/containers/productsform/ProductForm';
 import PrintSettings from './pages/print-settings/PrintSettings';
+import CustomerView from './components/containers/customer-view/CustomerView';
 
 function App() {
   // Page Handling
   const [showContent, setShowContent] = useState(false);
   const [page, setPage] = useState('');
+  const [customerId, setCustomerId] = useState('');
 
   let onSaveProduct = () => {};
 
@@ -45,11 +47,19 @@ function App() {
       );
       break;
     case 'customersMenu':
-      PageComp = <Customers />;
+      PageComp = (
+        <Customers
+          action={(_id) => {
+            setCustomerId(_id);
+            dropdownHandler('view-customer');
+          }}
+        />
+      );
       break;
 
     case 'printSettings':
       PageComp = <PrintSettings />;
+      break;
   }
 
   //Dropdown Handling
@@ -84,6 +94,10 @@ function App() {
           }}
         />
       );
+      break;
+    case 'view-customer':
+      console.log(customerId);
+      DropdownContentComp = <CustomerView _id={customerId} />;
       break;
   }
 

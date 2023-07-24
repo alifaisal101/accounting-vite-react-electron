@@ -44,16 +44,15 @@
   margin-bottom: 2em;
 }
 
-.product-form .names_suggestions_list {
+.customer-form .names_suggestions_list {
   position: absolute;
   z-index: 10000;
   width: 17em;
   right: 10%;
   height: 15em;
-  overflow-y: auto;
 }
 
-.product-form .names_suggestions_list li {
+.customer-form .names_suggestions_list li {
   background-color: rgb(255, 255, 255);
   width: 100%;
   padding: 8px 1px;
@@ -63,7 +62,7 @@
   cursor: pointer;
 }
 
-.product-form .names_suggestions_list li:hover {
+.customer-form .names_suggestions_list li:hover {
   background-color: rgb(236, 127, 65);
   font-weight: 600;
   color: white;
