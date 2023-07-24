@@ -351,7 +351,7 @@ function CustomerForm() {
   // Function to go fetch a customer
   const fetchUseCustomer = (_id) => {
     setLoading(true);
-    e_customers.fetchCustomer(_id, (err, result) => {
+    e_customers.fetchCustomer(false, _id, (err, result) => {
       if (err) {
         return alert('فشل سحب معلومات الزبون');
       }

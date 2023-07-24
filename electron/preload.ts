@@ -173,8 +173,8 @@ contextBridge.exposeInMainWorld('e_customers', {
     });
   },
 
-  fetchCustomer: (_id: string, cb: Function) => {
-    ipcRenderer.send('fetch-customer', _id);
+  fetchCustomer: (full: boolean, _id: string, cb: Function) => {
+    ipcRenderer.send('fetch-customer', full, _id);
     ipcRenderer.on('fetch-customer-result', (_event, result) => {
       cb(null, result);
       ipcRenderer.removeAllListeners('fetch-customer-result');

@@ -80,6 +80,8 @@ const bootstrap = async () => {
 
   function createWindow() {
     win = new BrowserWindow({
+      width: 1366,
+      height: 768,
       icon: path.join(process.env.PUBLIC, 'electron-vite.svg'),
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
@@ -186,9 +188,9 @@ const bootstrap = async () => {
     }
   });
 
-  ipcMain.on('fetch-customer', async (event, _id) => {
+  ipcMain.on('fetch-customer', async (event, full, _id) => {
     try {
-      const result = await fetchCustomer(_id);
+      const result = await fetchCustomer(_id, full);
       event.reply('fetch-customer-result', result);
     } catch (err) {
       console.log(err);

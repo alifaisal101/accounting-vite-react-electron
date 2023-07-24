@@ -26,16 +26,16 @@ export const getCustomersNames = async () => {
   return result;
 };
 
-export const fetchCustomer = async (_id: string) => {
+export const fetchCustomer = async (_id: string, full: boolean) => {
   const customer = await CustomerModel.findById(_id);
 
   //@ts-ignore
   const customerData = customer._doc;
   customerData._id = customerData._id.toString();
 
-  const purchases = await fetchPurchases(customerData.purchasesIds, {
-    payments: 0,
-  });
+  const proj = full ? {} : { payments: 0 };
+
+  const purchases = await fetchPurchases(customerData.purchasesIds, proj);
   customerData.purchases = purchases;
 
   delete customerData.purchasesIds;
