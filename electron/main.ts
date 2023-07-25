@@ -210,7 +210,7 @@ const bootstrap = async () => {
   ipcMain.on('add-customer', async (event, customer) => {
     try {
       const result = await saveCustomer(customer);
-      event.reply('add-customer-result');
+      event.reply('add-customer-result', result);
     } catch (err) {
       console.log(err);
       event.reply('failed-add-customer');

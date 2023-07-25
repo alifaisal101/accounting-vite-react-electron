@@ -217,6 +217,11 @@ contextBridge.exposeInMainWorld('e_print', {
     ipcRenderer.on(
       'get-printsettings-result',
       (_event, printSettingsResult) => {
+        if (printSettingsResult?.image) {
+          printSettingsResult.imageUrl = jsonToBase64Url(
+            printSettingsResult.image
+          );
+        }
         cb(null, printSettingsResult);
         ipcRenderer.removeAllListeners('get-printsettings-result');
       }

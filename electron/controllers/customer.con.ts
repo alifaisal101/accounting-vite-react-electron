@@ -32,6 +32,7 @@ export const fetchCustomer = async (_id: string, full: boolean) => {
   //@ts-ignore
   const customerData = customer._doc;
   customerData._id = customerData._id.toString();
+  customerData.createdAt = moment(customerData.createdAt).format('yyyy-MM-DD');
 
   const proj = full ? {} : { payments: 0 };
 

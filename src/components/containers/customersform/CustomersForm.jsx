@@ -357,7 +357,11 @@ function CustomerForm() {
       }
 
       console.log(result);
-      // setLoading(false);
+      setLoading(false);
+      if (result) {
+        setPurchases(result.purchases);
+        setCustomer(result);
+      }
       // console.log(result);
     });
   };

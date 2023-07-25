@@ -78,6 +78,7 @@ function App() {
   function cancelDropdownHandler() {
     setDisplayOverlay(false);
     setShowDropdown(false);
+    setDropdownContent();
     document.body.style.overflow = 'auto';
   }
 

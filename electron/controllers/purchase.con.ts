@@ -1,5 +1,6 @@
 import { ObjectId, ProjectionType } from 'mongoose';
 import PurchaseModel, { InPurchase } from '../models/purchase';
+import moment from 'moment';
 
 export const addPurchases = async (purchases: InPurchase[]) => {
   const result = await PurchaseModel.insertMany(purchases);
@@ -28,6 +29,12 @@ export const fetchPurchases = async (
     //@ts-ignore
     const _purchase = result[i]._doc;
     _purchase._id = _purchase._id.toString();
+    _purchase.purchaseDate = moment(_purchase.purchaseDate).format(
+      'yyyy-MM-DD'
+    );
+    _purchase.payStartDate = moment(_purchase.payStartDate).format(
+      'yyyy-MM-DD'
+    );
 
     // Purchased Products
     const _purchasedProducts = [];
@@ -48,6 +55,7 @@ export const fetchPurchases = async (
         const _payment = _purchase.payments[i]._doc;
         //@ts-ignore
         _payment._id = _payment._id.toString();
+        _payment.date = moment(_payment.date).format('yyyy-MM-DD');
         _payments.push(_payment);
       }
       _purchase.payments = _payments;
