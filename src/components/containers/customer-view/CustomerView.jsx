@@ -16,6 +16,17 @@ function CustomerView(props) {
       }
 
       if (result) {
+        if (result?.purchases) {
+          let totalPurchasesCosts = 0;
+          let totalDebt = 0;
+          for (let i = 0; i < result.purchases.length; i++) {
+            const _purchase = result.purchases[i];
+            totalPurchasesCosts += _purchase.totalCost;
+            totalDebt += _purchase.debt;
+          }
+          result.totalDebt = totalDebt;
+          result.totalPurchasesCosts = totalPurchasesCosts;
+        }
         setCustomer(result);
         return e_print.getPrintSettings((err, result) => {
           if (err) {

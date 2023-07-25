@@ -2,27 +2,27 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 90%;
+  height: 101vh;
   width: 100%;
-  background-color: grey;
-  padding: 20px 10px;
+  padding: 5px 10px;
+  font-family: readex;
 }
 
 .printed-customer_officeInfo,
-.printed-customer_clientPersonalInfo {
+.printed-customer_customerInfo,
+.printed-customer_purchases,
+.printed-customer_sub-title {
   width: 100%;
 }
 
 .printed-customer_officeInfo {
-  background-color: aqua;
-  height: 30%;
+  height: 25%;
   display: flex;
   align-items: center;
   flex-direction: column;
 }
 
 .printed-customer_officeInfo_imageContainer {
-  background-color: blue;
   height: 70%;
   width: 50%;
 }
@@ -34,4 +34,153 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.printed-customer_officeInfo_name-location {
+  height: 30%;
+  width: 100%;
+  display: flex;
+}
+
+.printed-customer_officeInfo_name-location_name,
+.printed-customer_officeInfo_name-location_location {
+  height: 100%;
+  width: 100%;
+  padding: 4px 20px;
+}
+
+.printed-customer_officeInfo_name-location_name {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  font-weight: 600;
+}
+
+.printed-customer_officeInfo_name-location_location {
+  font-size: 10px;
+}
+
+.printed-customer_customerInfo {
+  height: 5%;
+  font-size: 11.5px;
+  font-weight: 600;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-bottom: 5px;
+}
+
+.printed-customer_customerInfo_item {
+  height: fit-content;
+  padding: 2px;
+  margin: 3px 0px;
+  width: 49%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.printed-customer_sub-title {
+  font-weight: 600;
+  text-align: right;
+  height: 2%;
+  padding-right: 2rem;
+}
+
+.printed-customer_purchases {
+  height: 68%;
+
+  display: flex;
+  justify-content: center;
+}
+
+.printed-customer_purchases_list {
+  width: 95%;
+  height: fit-content;
+  overflow: hidden;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.printed-customer_purchases_list_row {
+  display: flex;
+  height: fit-content;
+}
+
+.printed-customer_purchases_list_cell {
+  border: 1px grey solid;
+  font-size: 8.5px;
+  width: 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.printed-customer_purchases_list_cell_col-1 {
+  width: 12%;
+}
+
+.printed-customer_purchases_list_cell_col-2,
+.printed-customer_purchases_list_cell_col-8 {
+  width: 7%;
+}
+
+.printed-customer_purchases_list_cell_col-3,
+.printed-customer_purchases_list_cell_col-4,
+.printed-customer_purchases_list_cell_col-5,
+.printed-customer_purchases_list_cell_col-6,
+.printed-customer_purchases_list_cell_col-7,
+.printed-customer_purchases_list_cell_col-9,
+.printed-customer_purchases_list_cell_col-10,
+.printed-customer_purchases_list_cell_col-11,
+.printed-customer_purchases_list_cell_col-12 {
+  width: 7.8%;
+}
+
+.printed-customer_purchases_list_cell_product-list,
+.printed-customer_purchases_list_cell_product-price-list {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.printed-customer_purchases_list_cell_product-item,
+.printed-customer_purchases_list_cell_product-price-item {
+  font-size: 8px;
+  margin-bottom: 2px;
+  height: 20px;
+}
+
+.printed-customer_purchases_list_cell_product-price-item {
+  font-size: 9px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.printed-customer_purchases_list_cell_payment-date-list,
+.printed-customer_purchases_list_cell_payment-amount-list,
+.printed-customer_purchases_list_cell_payment-paidup-list,
+.printed-customer_purchases_list_cell_payment-status-list {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.printed-customer_purchases_list_cell_payment-date-item,
+.printed-customer_purchases_list_cell_payment-amount-item,
+.printed-customer_purchases_list_cell_payment-paidup-item,
+.printed-customer_purchases_list_cell_payment-status-item {
+  width: 100%;
 }

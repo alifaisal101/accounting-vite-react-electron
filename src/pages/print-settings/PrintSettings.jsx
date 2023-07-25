@@ -90,6 +90,7 @@ function PrintSettings() {
 
       if (result) {
         setImageName('logo.png');
+        console.log(result.image);
         return setPrintSettings({
           shopName: result.shopName,
           firstPhoneNumber: result.firstPhoneNumber,
