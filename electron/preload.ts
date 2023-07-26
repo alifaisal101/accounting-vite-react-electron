@@ -234,8 +234,10 @@ contextBridge.exposeInMainWorld('e_print', {
 
   setPrintSettings: (printSettings: InPrintSettings, cb: Function) => {
     if (printSettings.image) {
-      // @ts-ignore
-      printSettings.image = arrayBufferToJson(printSettings.image);
+      if (typeof printSettings?.image != 'string') {
+        // @ts-ignore
+        printSettings.image = arrayBufferToJson(printSettings.image);
+      }
     }
 
     ipcRenderer.send('set-printsettings', printSettings);
