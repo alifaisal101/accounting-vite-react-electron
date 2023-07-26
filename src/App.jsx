@@ -85,7 +85,16 @@ function App() {
   let DropdownContentComp;
   switch (dropdownContent) {
     case 'customerForm':
-      DropdownContentComp = <CustomersForm />;
+      DropdownContentComp = (
+        <CustomersForm
+          unmountContentContainer={() => {
+            contentHandler('');
+            setTimeout(() => {
+              contentHandler('customersMenu');
+            }, 250);
+          }}
+        />
+      );
       break;
     case 'add-product':
       DropdownContentComp = (
@@ -97,7 +106,6 @@ function App() {
       );
       break;
     case 'view-customer':
-      console.log(customerId);
       DropdownContentComp = <CustomerView _id={customerId} />;
       break;
   }

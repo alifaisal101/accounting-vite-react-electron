@@ -7,15 +7,16 @@ import './CustomersForm.css';
 import { Fragment, useEffect, useState } from 'react';
 import moment from 'moment/moment';
 
-function CustomerForm() {
+function CustomerForm(props) {
   const [customersNames, setCustomersNames] = useState([]);
   const [matchingCustomersNames, setMatchingCustomersNames] = useState([]);
   const [nameIsFocused, setNameIsFocused] = useState(false);
-  const [customer, setCustomer] = useState({
+  const customer_inital = {
     _id: '',
     name: '',
     phoneNumber: '',
-  });
+  };
+  const [customer, setCustomer] = useState(customer_inital);
 
   const [loading, setLoading] = useState(false);
   const [triedToAdd, setTriedToAdd] = useState(false);
@@ -61,6 +62,7 @@ function CustomerForm() {
       }
 
       if (result) {
+        console.log(result.customersNames);
         setCustomersNames(result.customersNames);
       }
 
@@ -85,7 +87,7 @@ function CustomerForm() {
     for (let i = 0; i < productsList.length; i++) {
       const product = productsList[i];
       productsListComponent.push(
-        <li className="table-row" key={product.key ? product.key : product._id}>
+        <li className="table-row" key={Math.random()}>
           <div className="col col-1 img-col" data-label="Image">
             {product.imageUrl ? (
               <img src={product.imageUrl} alt="Product Image" />
@@ -120,24 +122,8 @@ function CustomerForm() {
       return alert('يجب وضع سعر واسم للسلعة');
     }
 
-    setProduct((_product) => {
-      return { ..._product, key: _product._id ? product.key : Math.random() };
-    });
-
     setProductsList((_productsList) => {
-      if (!_productsList?.length) {
-        _productsList.push(product);
-      } else {
-        let doesProductExist = false;
-        for (let i = 0; i < _productsList.length; i++) {
-          if (product.key == _productsList[i].key) {
-            doesProductExist = true;
-          }
-        }
-        if (!doesProductExist) {
-          _productsList.push(product);
-        }
-      }
+      _productsList.push(product);
 
       setTriedToAddProduct(false);
       setProduct(product_inital);
@@ -336,14 +322,38 @@ function CustomerForm() {
   //// CUSTOMER START ////
 
   const addCustoemr = () => {
+    setTriedToAdd(true);
+    if (!customer.name || !customer.phoneNumber) {
+      return alert('تأكد من المعلومات قبل اضافة الزبون');
+    }
+
+    if (!purchases?.length) {
+      return alert('يجب اضافة مشترى واحد على الأقل');
+    }
+
+    setLoading(true);
+
     e_customers.addCustomer({ ...customer, purchases }, (err, result) => {
-      console.log(1);
+      setLoading(false);
       if (err) {
         return alert('فشل حفظ الزبون');
       }
 
       if (result) {
-        console.log(result);
+        setCustomer(customer_inital);
+        setTriedToAdd(false);
+
+        setProduct(product_inital);
+        setProductsList([]);
+
+        setPurchase(purchase_inital);
+        setPurchases([]);
+
+        setCustomersNames((_customerNames) => {
+          _customerNames.push({ name: result.name, _id: result._id });
+        });
+
+        props.unmountContentContainer();
       }
     });
   };
@@ -356,13 +366,11 @@ function CustomerForm() {
         return alert('فشل سحب معلومات الزبون');
       }
 
-      console.log(result);
       setLoading(false);
       if (result) {
         setPurchases(result.purchases);
         setCustomer(result);
       }
-      // console.log(result);
     });
   };
 

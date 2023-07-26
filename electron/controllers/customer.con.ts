@@ -124,7 +124,13 @@ export const saveCustomer = async (customer: any) => {
   result = result._doc;
   result._id = result._id.toString();
 
-  console.log(result);
+  const _purchasesIds = [];
+  for (let i = 0; i < result.purchasesIds.length; i++) {
+    _purchasesIds.push(result.purchasesIds[i].toString());
+  }
+
+  result.purchasesIds = _purchasesIds;
+  return result;
 };
 
 export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
