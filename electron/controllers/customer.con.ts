@@ -155,3 +155,7 @@ export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
 
   return _customers;
 };
+
+export const deleteCustomer = async (_id: string) => {
+  return await CustomerModel.deleteOne({ _id });
+};

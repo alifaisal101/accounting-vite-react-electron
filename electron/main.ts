@@ -17,6 +17,7 @@ import {
   savePrintSettings,
 } from './controllers/printsettings.con';
 import {
+  deleteCustomer,
   fetchCustomer,
   fetchCustomers,
   getCustomersNames,
@@ -214,6 +215,15 @@ const bootstrap = async () => {
     } catch (err) {
       console.log(err);
       event.reply('failed-add-customer');
+    }
+  });
+
+  ipcMain.on('delete-customer', async (event, _id) => {
+    try {
+      const result = await deleteCustomer(_id);
+      event.reply('delete-customer-result', result);
+    } catch (err) {
+      event.reply('failed-customer-delete');
     }
   });
 };

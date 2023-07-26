@@ -106,7 +106,20 @@ function App() {
       );
       break;
     case 'view-customer':
-      DropdownContentComp = <CustomerView _id={customerId} />;
+      DropdownContentComp = (
+        <CustomerView
+          _id={customerId}
+          unmountContentContainer={() => {
+            contentHandler('');
+            setTimeout(() => {
+              contentHandler('customersMenu');
+            }, 250);
+          }}
+          unmountDropdown={() => {
+            cancelDropdownHandler();
+          }}
+        />
+      );
       break;
   }
 

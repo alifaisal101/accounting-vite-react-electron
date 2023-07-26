@@ -10,6 +10,28 @@ function CustomerView(props) {
   const [printSettings, setPrintSettings] = useState({});
   const [loading, setLoading] = useState(false);
 
+  const deleteCustomer = (_id) => {
+    if (!confirm('هل انت متأكد انك تريد حذف بيانات الزبون ؟')) {
+      return 0;
+    }
+
+    setLoading(true);
+    e_customers.deleteCustomer(_id, (err, result) => {
+      setLoading(false);
+
+      if (err) {
+        return alert('فشل حذف الزبون');
+      }
+
+      if (result) {
+        setCustomer({});
+        alert('تم حذف الزبون');
+        props.unmountContentContainer();
+        return props.unmountDropdown();
+      }
+    });
+  };
+
   useEffect(() => {
     setLoading(true);
     e_customers.fetchCustomer(true, props._id, (err, result) => {
@@ -74,7 +96,10 @@ function CustomerView(props) {
             <Btn className="customer-view_action-btns_container_save-data unclickable">
               حفظ التعديلات
             </Btn>
-            <Btn className="customer-view_action-btns_container_delete-customer-btn">
+            <Btn
+              className="customer-view_action-btns_container_delete-customer-btn"
+              onClick={() => deleteCustomer(customer._id)}
+            >
               ×
             </Btn>
           </div>

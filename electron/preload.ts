@@ -209,6 +209,16 @@ contextBridge.exposeInMainWorld('e_customers', {
       ipcRenderer.removeAllListeners('failed-add-customer');
     });
   },
+
+  deleteCustomer: (_id: any, cb: Function) => {
+    ipcRenderer.send('delete-customer', _id);
+    ipcRenderer.on('delete-customer-result', (_event, result) => {
+      cb(null, result);
+    });
+    ipcRenderer.on('failed-customer-delete', (_event) => {
+      cb(new Error('failed to delete customer'), null);
+    });
+  },
 });
 
 contextBridge.exposeInMainWorld('e_print', {
