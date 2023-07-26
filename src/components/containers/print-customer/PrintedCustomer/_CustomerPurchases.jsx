@@ -50,7 +50,7 @@ function _CustomerPurchases(props) {
 
         PaymentsStatusComponents.push(
           <div className="printed-customer_purchases_list_cell_payment-status-item">
-            غير مدفوع
+            {_payment.status}
           </div>
         );
       }

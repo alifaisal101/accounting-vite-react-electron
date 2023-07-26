@@ -1,0 +1,83 @@
+.customer-view_purchases-list {
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.customer-view_purchases-list_row {
+  height: fit-content;
+  display: flex;
+  width: 100%;
+  border: 1px rgba(0, 0, 0, 0.116) solid;
+}
+.customer-view_purchases-list_row-header {
+  background: #c3e5e7;
+  border-radius: 5px;
+}
+
+.customer-view_purchases-list_row_cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 2px;
+  font-size: 13px;
+}
+
+.customer-view_purchases-list_row_cell_col-1 {
+  width: 12%;
+}
+
+.customer-view_purchases-list_row_cell_col-2,
+.customer-view_purchases-list_row_cell_col-8 {
+  width: 7%;
+}
+
+.customer-view_purchases-list_row_cell_col-3,
+.customer-view_purchases-list_row_cell_col-4,
+.customer-view_purchases-list_row_cell_col-5,
+.customer-view_purchases-list_row_cell_col-6,
+.customer-view_purchases-list_row_cell_col-7,
+.customer-view_purchases-list_row_cell_col-9,
+.customer-view_purchases-list_row_cell_col-10,
+.customer-view_purchases-list_row_cell_col-11,
+.customer-view_purchases-list_row_cell_col-12 {
+  width: 7.8%;
+}
+
+.customer-view_purchases-list_row_cell_products-list,
+.customer-view_purchases-list_row_cell_products-prices-list,
+.customer-view_purchases-list_row_cell_payments-list {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.customer-view_purchases-list_row_cell_product-item {
+  overflow: hidden;
+}
+
+.customer-view_purchases-list_row_cell_product-price-item {
+}
+
+.customer-view_purchases-list_row_cell_product-price-item,
+.customer-view_purchases-list_row_cell_product-item,
+.customer-view_purchases-list_row_cell_payment-item {
+  margin-bottom: 3px;
+  width: 100%;
+  height: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.customer-view_purchases-list_row_cell input {
+  width: 100%;
+  padding: 10px 0px;
+  margin: 0;
+  border: 0;
+}

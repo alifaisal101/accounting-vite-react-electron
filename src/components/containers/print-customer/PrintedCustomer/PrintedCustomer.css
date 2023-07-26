@@ -8,6 +8,15 @@
   font-family: readex;
 }
 
+@media screen {
+  .printed-customer {
+    position: absolute;
+    visibility: hidden;
+    width: 1px;
+    height: 1px;
+  }
+}
+
 .printed-customer_officeInfo,
 .printed-customer_customerInfo,
 .printed-customer_purchases,

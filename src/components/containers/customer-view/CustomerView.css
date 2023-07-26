@@ -2,4 +2,56 @@
   justify-content: center;
   align-items: center;
   display: flex;
+  flex-direction: column;
+}
+
+.customer-view > div {
+  margin: 10px 0px;
+}
+
+.customer-view_action-btns_container {
+  width: 75%;
+  display: flex;
+  justify-content: space-evenly;
+  height: 3em;
+}
+
+.customer-view_action-btns_container_save-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-height: 100%;
+}
+
+.customer-view_action-btns_container_delete-customer-btn {
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 2.5em;
+  color: white;
+  background-color: rgb(255, 105, 105);
+
+  font-size: 1.4em;
+}
+
+.customer-view_customer-info {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 5em;
+}
+
+.customer-view_customer-info_item {
+  width: 40%;
+  margin: 2px;
+  height: 44%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
 }
