@@ -25,6 +25,7 @@ export const fetchPurchases = async (
 ) => {
   const result = await PurchaseModel.find({ _id: purchasesIds }, projection);
   const _purchases = [];
+
   for (let i = 0; i < result.length; i++) {
     //@ts-ignore
     const _purchase = result[i]._doc;
@@ -35,7 +36,6 @@ export const fetchPurchases = async (
     _purchase.payStartDate = moment(_purchase.payStartDate).format(
       'yyyy-MM-DD'
     );
-
     // Purchased Products
     const _purchasedProducts = [];
     for (let y = 0; y < _purchase.purchasedProducts.length; y++) {
@@ -52,7 +52,7 @@ export const fetchPurchases = async (
     if (_purchase?.payments?.length > 0) {
       const _payments = [];
       for (let y = 0; y < _purchase.payments.length; y++) {
-        const _payment = _purchase.payments[i]._doc;
+        const _payment = _purchase.payments[y]._doc;
         //@ts-ignore
         _payment._id = _payment._id.toString();
         _payment.date = moment(_payment.date).format('yyyy-MM-DD');
@@ -63,6 +63,5 @@ export const fetchPurchases = async (
 
     _purchases.push(_purchase);
   }
-
   return _purchases;
 };

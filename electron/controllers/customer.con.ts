@@ -3,6 +3,7 @@ import moment from 'moment';
 import CustomerModel from '../models/customer';
 import PurchaseModel from '../models/purchase';
 import { addPurchases, fetchPurchases } from './purchase.con';
+import mongoose from 'mongoose';
 
 export const getCustomersNames = async () => {
   const customersNames = await CustomerModel.find({}, { _id: 1, name: 1 });
@@ -46,6 +47,7 @@ export const fetchCustomer = async (_id: string, full: boolean) => {
 
 export const saveCustomer = async (customer: any) => {
   const { _id, name, phoneNumber, purchases } = customer;
+  const customerPurchasesIds = [];
 
   const purchases_data = [];
   for (let i = 0; i < purchases.length; i++) {
@@ -53,6 +55,7 @@ export const saveCustomer = async (customer: any) => {
     if (purchase._id == '') {
       delete purchase._id;
     } else if (purchase._id) {
+      customerPurchasesIds.push(purchase._id);
       continue;
     }
     if (purchase.key) {
@@ -100,14 +103,13 @@ export const saveCustomer = async (customer: any) => {
   const { purchases_docs, purchasesIds } = await addPurchases(purchases_data);
 
   let result;
-
   if (_id) {
     result = await CustomerModel.findByIdAndUpdate(
       _id,
       {
         name,
         phoneNumber,
-        purchasesIds,
+        purchasesIds: customerPurchasesIds.concat(purchasesIds),
       },
       { new: true }
     );

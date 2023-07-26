@@ -87,7 +87,7 @@ function CustomerForm(props) {
     for (let i = 0; i < productsList.length; i++) {
       const product = productsList[i];
       productsListComponent.push(
-        <li className="table-row" key={Math.random()}>
+        <li className="table-row" key={i}>
           <div className="col col-1 img-col" data-label="Image">
             {product.imageUrl ? (
               <img src={product.imageUrl} alt="Product Image" />
@@ -106,7 +106,7 @@ function CustomerForm(props) {
               src={deleteBtn}
               alt="Delete"
               onClick={() => {
-                deleteProduct(product._id);
+                deleteProduct(i);
               }}
             />
           </div>
@@ -114,6 +114,28 @@ function CustomerForm(props) {
       );
     }
   }
+
+  const deleteProduct = (index) => {
+    setProductsList((_productsList) => {
+      const newProductsList = [];
+      for (let i = 0; i < _productsList.length; i++) {
+        if (i == index) {
+          setPurchase((_purchase) => {
+            return {
+              ..._purchase,
+              totalCost: _purchase.totalCost - _productsList[i].price,
+              upFrontPaymentAmount: 0,
+              periodicalPaymentAmount: 0,
+            };
+          });
+          continue;
+        } else {
+          newProductsList.push(_productsList[i]);
+        }
+      }
+      return newProductsList;
+    });
+  };
 
   // Function to add a new product
   const addProduct = () => {
@@ -351,6 +373,7 @@ function CustomerForm(props) {
 
         setCustomersNames((_customerNames) => {
           _customerNames.push({ name: result.name, _id: result._id });
+          return _customerNames;
         });
 
         props.unmountContentContainer();
@@ -379,14 +402,16 @@ function CustomerForm(props) {
     const _matchingCustomersNames = [];
 
     setMatchingCustomersNames([]);
-    for (let i = 0; i < customersNames.length; i++) {
-      const indexMatchedAt = customersNames[i].name.search(customerName);
-      if (indexMatchedAt != -1 && customerName != '') {
-        _matchingCustomersNames.push(customersNames[i]);
+    if (customersNames) {
+      for (let i = 0; i < customersNames.length; i++) {
+        const indexMatchedAt = customersNames[i].name.search(customerName);
+        if (indexMatchedAt != -1 && customerName != '') {
+          _matchingCustomersNames.push(customersNames[i]);
+        }
       }
-    }
 
-    setMatchingCustomersNames(_matchingCustomersNames);
+      setMatchingCustomersNames(_matchingCustomersNames);
+    }
   };
 
   const CustomersNamesSuggestionsComponents_itemlist = [];
