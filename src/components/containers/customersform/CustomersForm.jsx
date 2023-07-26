@@ -62,7 +62,6 @@ function CustomerForm(props) {
       }
 
       if (result) {
-        console.log(result.customersNames);
         setCustomersNames(result.customersNames);
       }
 
@@ -255,7 +254,7 @@ function CustomerForm(props) {
 
       PurchasesList_component.push(
         <li
-          className={`table-row  ${_purchase._id == '' ? '' : 'unmodifiable'}`}
+          className={`table-row`}
           key={_purchase.key ? _purchase.key : _purchase._id}
         >
           <div className="col col-2" data-label="products">
@@ -280,20 +279,47 @@ function CustomerForm(props) {
             {_purchase.payPeriodType}
           </div>
           <div className="col col-8 delete-btn">
-            {_purchase._id == '' ? (
-              <img
-                src={deleteBtn}
-                alt="Delete"
-                onClick={() => {
-                  deleteProduct(product._id);
-                }}
-              />
-            ) : null}
+            <img
+              src={deleteBtn}
+              alt="Delete"
+              onClick={() => {
+                deletePurchase(i);
+              }}
+            />
           </div>
         </li>
       );
     }
   }
+
+  const deletePurchase = (index) => {
+    setPurchases((_purchases) => {
+      if (_purchases[index]._id) {
+        if (
+          !confirm(
+            'هل انت متأكد من حذف المعلومات ؟ بعدما تضغط على "اضافة" سيتم أزالة بيانات هذا المشترى من قاعدة البيانات.'
+          )
+        ) {
+          return _purchases;
+        }
+      }
+
+      const newPurchases = [];
+      if (_purchases) {
+        for (let i = 0; i < _purchases.length; i++) {
+          if (i == index) {
+            continue;
+          }
+
+          newPurchases.push(_purchases[i]);
+        }
+
+        return newPurchases;
+      } else {
+        return _purchases;
+      }
+    });
+  };
 
   const addPurchase = () => {
     setTriedToAddPurchase(true);
