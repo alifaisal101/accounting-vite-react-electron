@@ -61,10 +61,10 @@ class PrintedCustomer extends React.PureComponent {
             الهاتف: {this.customer.phoneNumber}
           </div>
           <div className="printed-customer_customerInfo_item">
-            مجموع كلفة المشتريات: {this.customer.totalDebt} دينار
+            مجموع كلفة المشتريات: {this.customer.totalPurchasesCosts} دينار
           </div>
           <div className="printed-customer_customerInfo_item">
-            مجموع الديون: {this.customer.totalPurchasesCosts} دينار
+            مجموع الديون: {this.customer.totalDebt} دينار
           </div>
         </div>
 

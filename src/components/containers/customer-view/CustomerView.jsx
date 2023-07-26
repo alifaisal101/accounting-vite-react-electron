@@ -23,23 +23,27 @@ function CustomerView(props) {
           let totalDebt = 0;
           for (let i = 0; i < result.purchases.length; i++) {
             const _purchase = result.purchases[i];
+            console.log(_purchase);
             totalPurchasesCosts += _purchase.totalCost;
             totalDebt += _purchase.debt;
           }
+
           result.totalDebt = totalDebt;
           result.totalPurchasesCosts = totalPurchasesCosts;
         }
         setCustomer(result);
-        return e_print.getPrintSettings((err, result) => {
-          if (err) {
-            return alert('فشل سحب معلومات الطباعة');
-          }
+        return e_print.getPrintSettings(
+          (printsettingserr, printsettingsresult) => {
+            if (printsettingserr) {
+              return alert('فشل سحب معلومات الطباعة');
+            }
 
-          if (result) {
-            setPrintSettings(result);
-            return setLoading(false);
+            if (result) {
+              setPrintSettings(printsettingsresult);
+              return setLoading(false);
+            }
           }
-        });
+        );
       }
     });
   }, []);
@@ -57,7 +61,7 @@ function CustomerView(props) {
               رقم الهاتف: {customer.phoneNumber}
             </div>
             <div className="customer-view_customer-info_item customer-view_customer-info_totalcosts">
-              مجموع المشتريات: {customer.totalDebt}
+              مجموع المشتريات: {customer.totalPurchasesCosts}
             </div>
             <div className="customer-view_customer-info_item customer-view_customer-info_totaldebts">
               مجموع الديون: {customer.totalDebt}

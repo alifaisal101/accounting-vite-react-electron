@@ -1,11 +1,13 @@
 .printed-customer {
   display: flex;
-  align-items: center;
+  align-items: end;
   flex-direction: column;
   height: 101vh;
   width: 100%;
   padding: 5px 10px;
   font-family: readex;
+  font-weight: 600 !important;
+  font-size: 1.4em !important ;
 }
 
 @media screen {
@@ -21,7 +23,7 @@
 .printed-customer_customerInfo,
 .printed-customer_purchases,
 .printed-customer_sub-title {
-  width: 100%;
+  width: 95%;
 }
 
 .printed-customer_officeInfo {
@@ -29,6 +31,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  margin-bottom: 1em;
 }
 
 .printed-customer_officeInfo_imageContainer {
@@ -96,7 +99,7 @@
   font-weight: 600;
   text-align: right;
   height: 2%;
-  padding-right: 2rem;
+  width: 90%;
 }
 
 .printed-customer_purchases {
@@ -107,7 +110,7 @@
 }
 
 .printed-customer_purchases_list {
-  width: 95%;
+  width: 94%;
   height: fit-content;
   overflow: hidden;
   max-height: 100%;

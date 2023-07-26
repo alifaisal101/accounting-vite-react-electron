@@ -403,6 +403,7 @@ function CustomerForm(props) {
         });
 
         props.unmountContentContainer();
+        return alert('تم خزن البيانات بنجاح');
       }
     });
   };
