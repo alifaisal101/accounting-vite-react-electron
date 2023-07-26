@@ -53,6 +53,12 @@ function App() {
             setCustomerId(_id);
             dropdownHandler('view-customer');
           }}
+          unmountContentContainer={() => {
+            contentHandler('');
+            setTimeout(() => {
+              contentHandler('customersMenu');
+            }, 50);
+          }}
         />
       );
       break;

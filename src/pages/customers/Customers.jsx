@@ -1,9 +1,12 @@
 import './Customers.css';
 import React, { useEffect, useState, Fragment } from 'react';
-import DatePicker from 'react-date-picker';
-import 'react-date-picker/dist/DatePicker.css';
 import { DataGrid } from '@mui/x-data-grid';
 import Loader from './../../components/ui/loader/Loader';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import reloadIcon from './../../assets/reload.svg';
+import moment from 'moment';
 
 const columns = [
   {
@@ -27,9 +30,30 @@ const columns = [
 ];
 
 function Customers(props) {
-  const [dateValue, setDate] = useState(new Date());
+  const [dateValue, setDate] = useState(moment());
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const dateHandler = (date) => {
+    const momentDayObj = moment(date._d);
+
+    setDate(momentDayObj);
+    e_customers.fetchOnDates(momentDayObj.toISOString(), (err, result) => {
+      if (err) {
+        return alert('فشل سحب الزبائن');
+      }
+
+      if (result) {
+        setLoading(false);
+        result = result.map((customer) => {
+          {
+            return { ...customer, id: customer._id };
+          }
+        });
+        return setCustomers(result);
+      }
+    });
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -45,6 +69,7 @@ function Customers(props) {
             return { ...customer, id: customer._id };
           }
         });
+
         return setCustomers(result);
       }
     });
@@ -58,7 +83,20 @@ function Customers(props) {
         <Loader />
       ) : (
         <Fragment>
-          <DatePicker onChange={setDate} value={dateValue} locale="ar-AR" />
+          <div className="date-reload-container">
+            <div className="reload-icon-container">
+              <img
+                src={reloadIcon}
+                alt="Reload"
+                onClick={() => {
+                  props.unmountContentContainer();
+                }}
+              />
+            </div>
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <DatePicker value={dateValue} onChange={dateHandler} />
+            </LocalizationProvider>{' '}
+          </div>
           {customers.length == 0 ? (
             <h1>لم يتم العثور على اي زبائن</h1>
           ) : (
@@ -72,11 +110,11 @@ function Customers(props) {
                 initialState={{
                   pagination: {
                     paginationModel: {
-                      pageSize: 5,
+                      pageSize: 6,
                     },
                   },
                 }}
-                pageSizeOptions={[5]}
+                pageSizeOptions={[6]}
               />
             </div>
           )}

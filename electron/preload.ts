@@ -210,13 +210,27 @@ contextBridge.exposeInMainWorld('e_customers', {
     });
   },
 
+  fetchOnDates: (date: any, cb: Function) => {
+    ipcRenderer.send('fetch-ondate', date);
+    ipcRenderer.on('fetch-ondate-result', (_event, result) => {
+      cb(null, result);
+      ipcRenderer.removeAllListeners('fetch-ondate-result');
+    });
+    ipcRenderer.on('failed-fetch-ondate', (_event) => {
+      cb(new Error('failed to fetch on date'), null);
+      ipcRenderer.removeAllListeners('failed-fetch-ondate');
+    });
+  },
+
   deleteCustomer: (_id: any, cb: Function) => {
     ipcRenderer.send('delete-customer', _id);
     ipcRenderer.on('delete-customer-result', (_event, result) => {
       cb(null, result);
+      ipcRenderer.removeAllListeners('delete-customer-result');
     });
     ipcRenderer.on('failed-customer-delete', (_event) => {
       cb(new Error('failed to delete customer'), null);
+      ipcRenderer.removeAllListeners('failed-customer-delete');
     });
   },
 });

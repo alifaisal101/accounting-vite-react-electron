@@ -20,6 +20,7 @@ import {
   deleteCustomer,
   fetchCustomer,
   fetchCustomers,
+  fetchCustomersOnDate,
   getCustomersNames,
   saveCustomer,
 } from './controllers/customer.con';
@@ -205,6 +206,15 @@ const bootstrap = async () => {
       event.reply('fetch-customers-result', result);
     } catch (err) {
       event.reply('failed-fetch-customers');
+    }
+  });
+
+  ipcMain.on('fetch-ondate', async (event, date) => {
+    try {
+      const result = await fetchCustomersOnDate(date);
+      event.reply('fetch-ondate-result', result);
+    } catch (err) {
+      event.reply('failed-fetch-ondate');
     }
   });
 

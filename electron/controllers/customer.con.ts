@@ -156,6 +156,44 @@ export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
   return _customers;
 };
 
+export const fetchCustomersOnDate = async (date: any) => {
+  console.log(date);
+  const dateObject = new Date(
+    moment(moment(date).add(1, 'd').format('YYYY-MM-DD')).toISOString()
+  );
+  const purchasesIds = [];
+  const purchases = await PurchaseModel.find({ 'payments.date': dateObject });
+  for (let i = 0; i < purchases.length; i++) {
+    purchasesIds.push(purchases[i]._id);
+  }
+
+  if (purchases.length == 0) {
+    return [];
+  }
+
+  const customers = await CustomerModel.find({
+    purchasesIds: { $in: purchasesIds },
+  });
+
+  const _customers = [];
+
+  for (let i = 0; i < customers.length; i++) {
+    //@ts-ignore
+    const _customer = customers[i]._doc;
+    _customer._id = _customer._id.toString();
+
+    const _purchasesIds = [];
+    for (let i = 0; i < _customer.purchasesIds.length; i++) {
+      _purchasesIds.push(_customer.purchasesIds[0].toString());
+    }
+
+    _customer.purchasesIds = _purchasesIds;
+    _customers.push(_customer);
+  }
+
+  return _customers;
+};
+
 export const deleteCustomer = async (_id: string) => {
   return await CustomerModel.deleteOne({ _id });
 };
