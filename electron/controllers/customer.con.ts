@@ -60,10 +60,10 @@ export const saveCustomer = async (customer: any) => {
     }
 
     purchase.purchaseDate = new Date(
-      moment(purchase.purchaseDate).toISOString()
+      moment(purchase.purchaseDate).add(1, 'd').toISOString()
     );
     purchase.payStartDate = new Date(
-      moment(purchase.payStartDate).toISOString()
+      moment(purchase.payStartDate).add(1, 'd').toISOString()
     );
     purchase.debt = purchase.totalCost - purchase.upFrontPaymentAmount;
 
