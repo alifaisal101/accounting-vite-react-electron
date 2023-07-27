@@ -13,13 +13,19 @@ function _CustomerPurchases(props) {
       for (let y = 0; y < _purchase.purchasedProducts.length; y++) {
         const _purchasdProduct = _purchase.purchasedProducts[y];
         ProductItemsComponents.push(
-          <div className="printed-customer_purchases_list_cell_product-item">
+          <div
+            className="printed-customer_purchases_list_cell_product-item"
+            key={_purchasdProduct._id}
+          >
             {_purchasdProduct.title}
           </div>
         );
 
         ProductPricesComponents.push(
-          <div className="printed-customer_purchases_list_cell_product-item">
+          <div
+            className="printed-customer_purchases_list_cell_product-item"
+            key={_purchasdProduct._id}
+          >
             {_purchasdProduct.price}
           </div>
         );
@@ -34,25 +40,37 @@ function _CustomerPurchases(props) {
         const _payment = _purchase.payments[y];
 
         PaymentsAmountsComponents.push(
-          <div className="printed-customer_purchases_list_cell_payment-amount-item">
+          <div
+            className="printed-customer_purchases_list_cell_payment-amount-item"
+            key={_payment._id}
+          >
             {_payment.amount}
           </div>
         );
 
         PaymentsPayDateComponents.push(
-          <div className="printed-customer_purchases_list_cell_payment-date-item">
+          <div
+            className="printed-customer_purchases_list_cell_payment-date-item"
+            key={_payment._id}
+          >
             {_payment.date}
           </div>
         );
 
         PaymentsPaidUpComponents.push(
-          <div className="printed-customer_purchases_list_cell_payment-paidup-item">
+          <div
+            className="printed-customer_purchases_list_cell_payment-paidup-item"
+            key={_payment._id}
+          >
             {_payment.paidUp}
           </div>
         );
 
         PaymentsStatusComponents.push(
-          <div className="printed-customer_purchases_list_cell_payment-status-item">
+          <div
+            className="printed-customer_purchases_list_cell_payment-status-item"
+            key={_payment._id}
+          >
             {mapPaymentPayStatus(_payment.status)}
           </div>
         );
@@ -60,7 +78,10 @@ function _CustomerPurchases(props) {
 
       CustomerPurchasesComponents.push(
         <div className="printed-customer_purchases_list_row">
-          <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-1">
+          <div
+            className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-1"
+            key={1}
+          >
             <div className="printed-customer_purchases_list_cell_product-list">
               {ProductItemsComponents}
             </div>

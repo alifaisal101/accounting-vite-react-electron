@@ -1,9 +1,147 @@
 import './_PurchasesList.css';
 
-function _PurchasesList() {
+import { mappayPeriodType } from './../../../../electron/utils/locale';
+import { mapPaymentPayStatus } from './../../../../electron/utils/locale';
+
+import { useState } from 'react';
+
+function _PurchasesList(props) {
+  const [purchases, setPurchases] = useState(props.purchases);
+  const PurchasesRowsComponents = [];
+
+  if (purchases?.length > 0) {
+    for (let i = 0; i < purchases.length; i++) {
+      const _purchase = purchases[i];
+
+      const ProductItemsComponents = [];
+      const ProductPricesComponents = [];
+      for (let y = 0; y < _purchase.purchasedProducts.length; y++) {
+        const _purchasdProduct = _purchase.purchasedProducts[y];
+        ProductItemsComponents.push(
+          <div
+            className="customer-view_purchases-list_row_cell_product-item"
+            key={_purchasdProduct._id}
+          >
+            {_purchasdProduct.title}
+          </div>
+        );
+
+        ProductPricesComponents.push(
+          <div
+            className="customer-view_purchases-list_row_cell_product-price-item"
+            key={_purchasdProduct._id}
+          >
+            {_purchasdProduct.price}
+          </div>
+        );
+      }
+
+      const PaymentsAmountsComponents = [];
+      const PaymentsPayDateComponents = [];
+      const PaymentsPaidUpComponents = [];
+      const PaymentsStatusComponents = [];
+
+      for (let y = 0; y < _purchase.payments.length; y++) {
+        const _payment = _purchase.payments[y];
+
+        PaymentsAmountsComponents.push(
+          <div
+            className="customer-view_purchases-list_row_cell_payment-item"
+            key={_payment._id}
+          >
+            {_payment.amount}
+          </div>
+        );
+
+        PaymentsPayDateComponents.push(
+          <div
+            className="customer-view_purchases-list_row_cell_payment-item"
+            key={_payment._id}
+          >
+            {_payment.date}
+          </div>
+        );
+
+        PaymentsPaidUpComponents.push(
+          <div
+            className="customer-view_purchases-list_row_cell_payment-item"
+            key={_payment._id}
+          >
+            {_payment.paidUp}
+          </div>
+        );
+
+        PaymentsStatusComponents.push(
+          <div
+            className="customer-view_purchases-list_row_cell_payment-item"
+            key={_payment._id}
+          >
+            {mapPaymentPayStatus(_payment.status)}
+          </div>
+        );
+      }
+
+      PurchasesRowsComponents.push(
+        <div className="customer-view_purchases-list_row" key={_purchase._id}>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-1">
+            <div className="customer-view_purchases-list_row_cell_products-list">
+              {ProductItemsComponents}
+            </div>
+          </div>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-2">
+            <div className="customer-view_purchases-list_row_cell_products-prices-list">
+              {ProductPricesComponents}
+            </div>
+          </div>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-3">
+            {_purchase.totalCost}
+          </div>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-4">
+            {_purchase.debt}
+          </div>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-5">
+            {_purchase.purchaseDate}
+          </div>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-6">
+            {_purchase.upFrontPaymentAmount}
+          </div>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-7">
+            {_purchase.periodicalPaymentAmount}
+          </div>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-8">
+            {mappayPeriodType(_purchase.payPeriodType)}
+          </div>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-9">
+            <div className="customer-view_purchases-list_row_cell_payments-list">
+              {PaymentsAmountsComponents}
+            </div>
+          </div>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-10">
+            <div className="customer-view_purchases-list_row_cell_payments-list">
+              {PaymentsPayDateComponents}
+            </div>
+          </div>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-11">
+            <div className="customer-view_purchases-list_row_cell_payments-list">
+              {PaymentsPaidUpComponents}
+            </div>
+          </div>
+          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-12">
+            <div className="customer-view_purchases-list_row_cell_payments-list">
+              {PaymentsStatusComponents}
+            </div>
+          </div>
+        </div>
+      );
+    }
+  }
+
   return (
     <div className="customer-view_purchases-list">
-      <div className="customer-view_purchases-list_row customer-view_purchases-list_row-header">
+      <div
+        key={21}
+        className="customer-view_purchases-list_row customer-view_purchases-list_row-header"
+      >
         <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-1">
           السلع
         </div>
@@ -41,432 +179,7 @@ function _PurchasesList() {
           الحالة
         </div>
       </div>
-      <div className="customer-view_purchases-list_row">
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-1">
-          <div className="customer-view_purchases-list_row_cell_products-list">
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              epic
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              {' '}
-              IPoone 231 sa عربي 9023 نكبل
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              {' '}
-              مدري شنو 6
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              باور ف ج
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              هذات و شسهت 0ه{' '}
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              djas j9j
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-2">
-          <div className="customer-view_purchases-list_row_cell_products-prices-list">
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              1000000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              800000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              400000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              500000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              150000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              75000
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-3">
-          السعر الكامل
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-4">
-          الدين
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-5">
-          تاريخ الشراء
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-6">
-          المقدم
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-7">
-          القسط
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-8">
-          نوع القسط
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-9">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-10">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-11">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              <input value={1200000} />
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              <input value={1200000} />
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              <input value={1200000} />
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              <input value={1200000} />
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              <input value={1200000} />
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-12">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              مدفوع
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              غير مدفوع
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              مدفوع جزئيا
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              غير مدفوع
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              غير مدفوع
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="customer-view_purchases-list_row">
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-1">
-          <div className="customer-view_purchases-list_row_cell_products-list">
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              epic
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              {' '}
-              IPoone 231 sa عربي 9023 نكبل
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              {' '}
-              مدري شنو 6
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              باور ف ج
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              هذات و شسهت 0ه{' '}
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              djas j9j
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-2">
-          <div className="customer-view_purchases-list_row_cell_products-prices-list">
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              1000000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              800000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              400000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              500000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              150000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              75000
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-3">
-          السعر الكامل
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-4">
-          الدين
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-5">
-          تاريخ الشراء
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-6">
-          المقدم
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-7">
-          القسط
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-8">
-          نوع القسط
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-9">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-10">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-11">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1000000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1000000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1000000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1000000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1000000
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-12">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              مدفوع
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              غير مدفوع
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              مدفوع جزئيا
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              غير مدفوع
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              غير مدفوع
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="customer-view_purchases-list_row">
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-1">
-          <div className="customer-view_purchases-list_row_cell_products-list">
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              epic
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              {' '}
-              IPoone 231 sa عربي 9023 نكبل
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              {' '}
-              مدري شنو 6
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              باور ف ج
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              هذات و شسهت 0ه{' '}
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-item">
-              djas j9j
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-2">
-          <div className="customer-view_purchases-list_row_cell_products-prices-list">
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              1000000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              800000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              400000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              500000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              150000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_product-price-item">
-              75000
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-3">
-          السعر الكامل
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-4">
-          الدين
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-5">
-          تاريخ الشراء
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-6">
-          المقدم
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-7">
-          القسط
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-8">
-          نوع القسط
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-9">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1200000
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-10">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              2023/12/23
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-11">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1000000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1000000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1000000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1000000
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              1000000
-            </div>
-          </div>
-        </div>
-        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-12">
-          <div className="customer-view_purchases-list_row_cell_payments-list">
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              مدفوع
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              غير مدفوع
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              مدفوع جزئيا
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              غير مدفوع
-            </div>
-            <div className="customer-view_purchases-list_row_cell_payment-item">
-              غير مدفوع
-            </div>
-          </div>
-        </div>
-      </div>
+      {PurchasesRowsComponents}
     </div>
   );
 }
