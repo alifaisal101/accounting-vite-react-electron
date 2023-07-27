@@ -233,6 +233,19 @@ contextBridge.exposeInMainWorld('e_customers', {
       ipcRenderer.removeAllListeners('failed-customer-delete');
     });
   },
+
+  savePurchases: (purchases: any, cb: Function) => {
+    ipcRenderer.send('save-purchases', purchases);
+    ipcRenderer.on('save-purchases-result', (_event, result) => {
+      cb(null, result);
+      ipcRenderer.removeAllListeners('save-purchases-result');
+    });
+
+    ipcRenderer.on('failed-save-purchases', (_event) => {
+      cb(new Error('failed to save purchases'), null);
+      ipcRenderer.removeAllListeners('save-purchases-result');
+    });
+  },
 });
 
 contextBridge.exposeInMainWorld('e_print', {

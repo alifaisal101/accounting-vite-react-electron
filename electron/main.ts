@@ -24,6 +24,7 @@ import {
   getCustomersNames,
   saveCustomer,
 } from './controllers/customer.con';
+import { savePurchases } from './controllers/purchase.con';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // const rootFs = dirname(__dirname);
@@ -234,6 +235,16 @@ const bootstrap = async () => {
       event.reply('delete-customer-result', result);
     } catch (err) {
       event.reply('failed-customer-delete');
+    }
+  });
+
+  ipcMain.on('save-purchases', async (event, purchases) => {
+    try {
+      const result = await savePurchases(purchases);
+
+      event.reply('save-purchases-result', result);
+    } catch (err) {
+      event.reply('failed-save-purchases');
     }
   });
 };

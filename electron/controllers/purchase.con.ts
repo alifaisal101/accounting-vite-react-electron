@@ -65,3 +65,14 @@ export const fetchPurchases = async (
   }
   return _purchases;
 };
+
+export const savePurchases = async (purchases: InPurchase[]) => {
+  for (let i = 0; i < purchases.length; i++) {
+    const _purchase = purchases[i];
+
+    //@ts-ignore
+    await PurchaseModel.findByIdAndUpdate(_purchase._id, _purchase);
+  }
+
+  return true;
+};

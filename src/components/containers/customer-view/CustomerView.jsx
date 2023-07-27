@@ -11,7 +11,15 @@ function CustomerView(props) {
   const [loading, setLoading] = useState(false);
 
   const savePurchases = () => {
-    return props.unmountAndMountDropdown();
+    e_customers.savePurchases(customer.purchases, (err, result) => {
+      if (err) {
+        return alert('فشل حفظ البيانات');
+      }
+
+      if (result) {
+        return props.unmountAndMountDropdown();
+      }
+    });
   };
 
   const deleteCustomer = (_id) => {
