@@ -10,6 +10,10 @@ function CustomerView(props) {
   const [printSettings, setPrintSettings] = useState({});
   const [loading, setLoading] = useState(false);
 
+  const savePurchases = () => {
+    return props.unmountAndMountDropdown();
+  };
+
   const deleteCustomer = (_id) => {
     if (!confirm('هل انت متأكد انك تريد حذف بيانات الزبون ؟')) {
       return 0;
@@ -89,10 +93,22 @@ function CustomerView(props) {
             </div>
           </div>
 
-          {<_PurchasesList purchases={customer.purchases} />}
+          {
+            <_PurchasesList
+              setPurchases={(_purchases) => {
+                setCustomer((_customer) => {
+                  return { ..._customer, purchases: _purchases };
+                });
+              }}
+              purchases={customer.purchases}
+            />
+          }
           <div className="customer-view_action-btns_container">
             <PrintCustomer customer={customer} printSettings={printSettings} />
-            <Btn className="customer-view_action-btns_container_save-data unclickable">
+            <Btn
+              className="customer-view_action-btns_container_save-data"
+              onClick={savePurchases}
+            >
               حفظ التعديلات
             </Btn>
             <Btn

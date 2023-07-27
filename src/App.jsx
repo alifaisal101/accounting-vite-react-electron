@@ -117,12 +117,20 @@ function App() {
           _id={customerId}
           unmountContentContainer={() => {
             contentHandler('');
+            setCustomerId('');
             setTimeout(() => {
               contentHandler('customersMenu');
             }, 250);
           }}
           unmountDropdown={() => {
             cancelDropdownHandler();
+            setCustomerId('');
+          }}
+          unmountAndMountDropdown={() => {
+            cancelDropdownHandler();
+            setTimeout(() => {
+              dropdownHandler('view-customer');
+            }, 250);
           }}
         />
       );

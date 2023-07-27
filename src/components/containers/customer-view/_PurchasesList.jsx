@@ -43,6 +43,7 @@ function _PurchasesList(props) {
       }
       return [..._purchases];
     });
+    props.setPurchases(purchases);
   };
 
   const paidUpHandler = (newPaidUpValue, purchaseId, paymentId) => {
@@ -57,6 +58,7 @@ function _PurchasesList(props) {
               _purchases[i].payments[y].paidUp = newPaidUpValue;
 
               if (newPaidUpValue == 0) {
+                _purchases[i].payments[y].paidUp = 0;
                 _purchases[i].payments[y].status = 'unpaid';
               } else if (newPaidUpValue < _payment.amount) {
                 _purchases[i].payments[y].status = 'partial';
@@ -71,6 +73,7 @@ function _PurchasesList(props) {
       }
       return [..._purchases];
     });
+    props.setPurchases(purchases);
   };
 
   const PurchasesRowsComponents = [];
