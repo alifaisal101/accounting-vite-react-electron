@@ -1,3 +1,6 @@
+import { mappayPeriodType } from './../../../../../electron/utils/locale';
+import { mapPaymentPayStatus } from './../../../../../electron/utils/locale';
+
 function _CustomerPurchases(props) {
   const CustomerPurchasesComponents = [];
 
@@ -50,7 +53,7 @@ function _CustomerPurchases(props) {
 
         PaymentsStatusComponents.push(
           <div className="printed-customer_purchases_list_cell_payment-status-item">
-            {_payment.status}
+            {mapPaymentPayStatus(_payment.status)}
           </div>
         );
       }
@@ -83,7 +86,7 @@ function _CustomerPurchases(props) {
             {_purchase.periodicalPaymentAmount}
           </div>
           <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-8">
-            {_purchase.payPeriodType}
+            {mappayPeriodType(_purchase.payPeriodType)}
           </div>
           <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-9">
             <div className="printed-customer_purchases_list_cell_payment-amount-list">

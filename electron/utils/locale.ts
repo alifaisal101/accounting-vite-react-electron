@@ -9,3 +9,15 @@ export const mappayPeriodType = (
 
   return payPeriodTypes[payPeriodType];
 };
+
+export const mapPaymentPayStatus = (
+  paymentStatus: 'unpaid' | 'partial' | 'full'
+) => {
+  const paymentStatusTypes = {
+    unpaid: 'غير مدفوع',
+    partial: 'مدفوع جزئيا',
+    full: 'مدفوع كاملا',
+  };
+
+  return paymentStatusTypes[paymentStatus];
+};

@@ -27,7 +27,7 @@ export interface InPurchase {
   purchaseDate: Date;
   payStartDate: Date;
   upFrontPaymentAmount: number;
-  payPeriodType: string;
+  payPeriodType: string; // weekly, monthly or yearly
   periodicalPaymentAmount: number;
 }
 

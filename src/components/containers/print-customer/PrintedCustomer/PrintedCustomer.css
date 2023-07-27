@@ -140,7 +140,7 @@
 
 .printed-customer_purchases_list_cell_col-2,
 .printed-customer_purchases_list_cell_col-8 {
-  width: 7%;
+  width: 6.1%;
 }
 
 .printed-customer_purchases_list_cell_col-3,
@@ -153,6 +153,10 @@
 .printed-customer_purchases_list_cell_col-11,
 .printed-customer_purchases_list_cell_col-12 {
   width: 7.8%;
+}
+
+.printed-customer_purchases_list_cell_col-10 {
+  width: 8.2%;
 }
 
 .printed-customer_purchases_list_cell_product-list,
