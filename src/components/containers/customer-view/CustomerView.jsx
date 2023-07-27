@@ -45,7 +45,6 @@ function CustomerView(props) {
           let totalDebt = 0;
           for (let i = 0; i < result.purchases.length; i++) {
             const _purchase = result.purchases[i];
-            console.log(_purchase);
             totalPurchasesCosts += _purchase.totalCost;
             totalDebt += _purchase.debt;
           }

@@ -4,9 +4,75 @@ import { mappayPeriodType } from './../../../../electron/utils/locale';
 import { mapPaymentPayStatus } from './../../../../electron/utils/locale';
 
 import { useState } from 'react';
+import moment from 'moment/moment';
 
 function _PurchasesList(props) {
   const [purchases, setPurchases] = useState(props.purchases);
+
+  const calculateDebt = (payments) => {
+    let debt = 0;
+    for (let i = 0; i < payments.length; i++) {
+      const _payment = payments[i];
+      debt += _payment.amount - _payment.paidUp;
+    }
+    return debt;
+  };
+
+  const paymentStatusHandler = (newPaymentStatus, purchaseId, paymentId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          for (let y = 0; y < _purchase.payments.length; y++) {
+            const _payment = _purchase.payments[y];
+            if (_payment._id == paymentId) {
+              _purchases[i].payments[y].status = newPaymentStatus;
+
+              if (newPaymentStatus == 'full') {
+                _purchases[i].payments[y].paidUp = _payment.amount;
+              }
+
+              if (newPaymentStatus == 'unpaid') {
+                _purchases[i].payments[y].paidUp = 0;
+              }
+            }
+          }
+        }
+        purchases[i].debt = calculateDebt(_purchase.payments);
+      }
+      return [..._purchases];
+    });
+  };
+
+  const paidUpHandler = (newPaidUpValue, purchaseId, paymentId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          for (let y = 0; y < _purchase.payments.length; y++) {
+            const _payment = _purchase.payments[y];
+            if (_payment._id == paymentId) {
+              _purchases[i].payments[y].paidUp = newPaidUpValue;
+
+              if (newPaidUpValue == 0) {
+                _purchases[i].payments[y].status = 'unpaid';
+              } else if (newPaidUpValue < _payment.amount) {
+                _purchases[i].payments[y].status = 'partial';
+              } else if (newPaidUpValue >= _payment.amount) {
+                _purchases[i].payments[y].paidUp = _payment.amount;
+                _purchases[i].payments[y].status = 'full';
+              }
+            }
+          }
+        }
+        purchases[i].debt = calculateDebt(_purchase.payments);
+      }
+      return [..._purchases];
+    });
+  };
+
   const PurchasesRowsComponents = [];
 
   if (purchases?.length > 0) {
@@ -67,16 +133,55 @@ function _PurchasesList(props) {
             className="customer-view_purchases-list_row_cell_payment-item"
             key={_payment._id}
           >
-            {_payment.paidUp}
+            <input
+              type="text"
+              value={_payment.paidUp}
+              onChange={(e) => {
+                paidUpHandler(e.target.value, _purchase._id, _payment._id);
+              }}
+            />
           </div>
         );
 
+        let paymentStatusClass = '';
+        switch (_payment.status) {
+          case 'unpaid':
+            if (moment(_payment.date).isSameOrBefore(new Date())) {
+              paymentStatusClass = 'payment-status_unpaid';
+            }
+            break;
+          case 'partial':
+            paymentStatusClass = 'payment-status_partial';
+            break;
+          case 'full':
+            paymentStatusClass = 'payment-status_full';
+            break;
+        }
+
         PaymentsStatusComponents.push(
           <div
-            className="customer-view_purchases-list_row_cell_payment-item"
+            className={
+              'customer-view_purchases-list_row_cell_payment-item customer-view_purchases-list_row_cell_payment-item_paymentStatus ' +
+              paymentStatusClass
+            }
             key={_payment._id}
           >
-            {mapPaymentPayStatus(_payment.status)}
+            <select
+              name="payment_status"
+              id={`payment_status_${_payment._id}`}
+              value={_payment.status}
+              onChange={(e) => {
+                paymentStatusHandler(
+                  e.target.value,
+                  _purchase._id,
+                  _payment._id
+                );
+              }}
+            >
+              <option value="unpaid">غير مدفوع</option>
+              <option value="partial">مدفوع جزئيا</option>
+              <option value="full">مدفوع كاملا</option>
+            </select>
           </div>
         );
       }

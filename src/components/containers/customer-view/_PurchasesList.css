@@ -80,4 +80,38 @@
   padding: 10px 0px;
   margin: 0;
   border: 0;
+  text-align: center;
+}
+
+.payment-status_unpaid select {
+  font-weight: 600;
+  color: white;
+  background-color: rgb(194, 62, 62);
+}
+
+.payment-status_partial select {
+  font-weight: 600;
+  color: white;
+  background-color: rgb(204, 159, 63);
+}
+
+.payment-status_full select {
+  font-weight: 600;
+  background-color: rgb(115, 187, 0);
+  color: white;
+}
+
+.customer-view_purchases-list_row_cell_payment-item_paymentStatus {
+}
+
+.customer-view_purchases-list_row_cell_payment-item_paymentStatus select {
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-size: smaller;
+}
+
+.customer-view_purchases-list_row_cell_payment-item_paymentStatus option {
+  background-color: white !important;
+  color: black !important;
 }

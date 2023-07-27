@@ -77,10 +77,10 @@ function Products(props) {
           {product.payPeriodType}
         </div>
         <div className="col col-6" data-label="Periodical Payment">
-          Pending
+          {product.periodicalPaymentAmount}
         </div>
         <div className="col col-7" data-label="Up Front Payment Amount">
-          Pending
+          {product.upFrontPaymentAmount}
         </div>
         <div className="col col-8" data-label="Created At">
           {moment(product.createdAt).format('YYYY/MM/DD')}

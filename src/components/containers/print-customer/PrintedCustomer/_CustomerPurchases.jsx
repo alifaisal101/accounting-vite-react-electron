@@ -77,11 +77,11 @@ function _CustomerPurchases(props) {
       }
 
       CustomerPurchasesComponents.push(
-        <div className="printed-customer_purchases_list_row">
-          <div
-            className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-1"
-            key={1}
-          >
+        <div
+          className="printed-customer_purchases_list_row"
+          key={_purchase._id}
+        >
+          <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-1">
             <div className="printed-customer_purchases_list_cell_product-list">
               {ProductItemsComponents}
             </div>
@@ -137,7 +137,7 @@ function _CustomerPurchases(props) {
   return (
     <div className="printed-customer_purchases">
       <div className="printed-customer_purchases_list">
-        <div className="printed-customer_purchases_list_row">
+        <div className="printed-customer_purchases_list_row" key={1}>
           <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-1">
             السلع
           </div>
