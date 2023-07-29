@@ -36,8 +36,8 @@ function Customers(props) {
 
   const dateHandler = (date) => {
     const momentDayObj = moment(date._d);
-
     setDate(momentDayObj);
+    setLoading(true);
     e_customers.fetchOnDates(momentDayObj.toISOString(), (err, result) => {
       if (err) {
         return alert('فشل سحب الزبائن');
@@ -50,6 +50,7 @@ function Customers(props) {
             return { ...customer, id: customer._id };
           }
         });
+        setLoading(false);
         return setCustomers(result);
       }
     });

@@ -63,10 +63,10 @@ export const saveCustomer = async (customer: any) => {
     }
 
     purchase.purchaseDate = new Date(
-      moment(purchase.purchaseDate).add(1, 'd').toISOString()
+      moment(purchase.purchaseDate).toISOString()
     );
     purchase.payStartDate = new Date(
-      moment(purchase.payStartDate).add(1, 'd').toISOString()
+      moment(purchase.payStartDate).toISOString()
     );
     purchase.debt = purchase.totalCost - purchase.upFrontPaymentAmount;
 
@@ -157,12 +157,15 @@ export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
 };
 
 export const fetchCustomersOnDate = async (date: any) => {
-  console.log(date);
-  const dateObject = new Date(
-    moment(moment(date).add(1, 'd').format('YYYY-MM-DD')).toISOString()
+  const dateObject_before = new Date(
+    moment(date).subtract(1, 'd').toISOString()
   );
+  const dateObject_after = new Date(moment(date).add(1, 'd').toISOString());
+
   const purchasesIds = [];
-  const purchases = await PurchaseModel.find({ 'payments.date': dateObject });
+  const purchases = await PurchaseModel.find({
+    'payments.date': { $gte: dateObject_before, $lt: dateObject_after },
+  });
   for (let i = 0; i < purchases.length; i++) {
     purchasesIds.push(purchases[i]._id);
   }
