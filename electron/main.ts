@@ -247,6 +247,14 @@ const bootstrap = async () => {
       event.reply('failed-save-purchases');
     }
   });
+
+  // Input can't be focued after alert/confirm, fix
+
+  ipcMain.on('focus-fix', () => {
+    console.log('epic');
+    win.blur();
+    win.focus();
+  });
 };
 
 bootstrap();

@@ -76,6 +76,31 @@ function _PurchasesList(props) {
     props.setPurchases(purchases);
   };
 
+  const paymentDateHandler = (newPaymentDate, purchaseId, paymentId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          for (let y = 0; y < _purchase.payments.length; y++) {
+            const _payment = _purchase.payments[y];
+            if (_payment._id == paymentId) {
+              if (
+                moment(newPaymentDate).isBefore(moment(_purchases.purchaseDate))
+              ) {
+                alert('لا يمكن تسجيل تاريخ الدفع قبل تاريخ الشراء');
+              } else {
+                _purchases[i].payments[y].date = newPaymentDate;
+              }
+            }
+          }
+        }
+      }
+      return [..._purchases];
+    });
+    props.setPurchases(purchases);
+  };
+
   const PurchasesRowsComponents = [];
 
   if (purchases?.length > 0) {
@@ -127,7 +152,15 @@ function _PurchasesList(props) {
             className="customer-view_purchases-list_row_cell_payment-item"
             key={_payment._id}
           >
-            {_payment.date}
+            <input
+              type="date"
+              name={_payment._id + '_date'}
+              id={_payment._id + '_date'}
+              value={_payment.date}
+              onChange={(e) => {
+                paymentDateHandler(e.target.value, _purchase._id, _payment._id);
+              }}
+            />
           </div>
         );
 

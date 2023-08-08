@@ -288,3 +288,19 @@ contextBridge.exposeInMainWorld('e_print', {
     });
   },
 });
+
+contextBridge.exposeInMainWorld('e_util', {
+  // Replacing the alert and confirm function with new ones, fixing the input focus issue
+
+  alert: (msg?: string) => {
+    const res = window.alert(msg);
+    ipcRenderer.send('focus-fix');
+    return res;
+  },
+
+  confirm: (msg?: string) => {
+    const res = window.confirm(msg);
+    ipcRenderer.send('focus-fix');
+    return res;
+  },
+});
