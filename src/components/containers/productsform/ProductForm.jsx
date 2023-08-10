@@ -137,11 +137,19 @@ function ProductForm(props) {
                 type="number"
                 id="price"
                 name="price"
+                step={5000}
                 value={product.price}
                 className={!product.price && triedToAdd ? 'unvalid' : ''}
                 onChange={(e) => {
+                  console.log();
                   setProduct((_product) => {
-                    return { ...product, price: Number(e.target.value) };
+                    return {
+                      ...product,
+                      price:
+                        10000000000 > +e.target.value && +e.target.value >= 0
+                          ? +e.target.value
+                          : _product.price,
+                    };
                   });
                 }}
               />
@@ -170,6 +178,7 @@ function ProductForm(props) {
               <label htmlFor="upFrontPaymentAmount">المقدم: </label>
               <input
                 type="number"
+                step={5000}
                 id="upFrontPaymentAmount"
                 name="upFrontPaymentAmount"
                 value={product.upFrontPaymentAmount}
@@ -183,7 +192,10 @@ function ProductForm(props) {
                   setProduct((_product) => {
                     return {
                       ...product,
-                      upFrontPaymentAmount: Number(e.target.value),
+                      upFrontPaymentAmount:
+                        10000000000 > +e.target.value && +e.target.value >= 0
+                          ? +e.target.value
+                          : _product.upFrontPaymentAmount,
                     };
                   });
                 }}
@@ -233,6 +245,7 @@ function ProductForm(props) {
                 type="number"
                 id="periodicalPaymentAmount"
                 name="periodicalPaymentAmount"
+                step={5000}
                 value={product.periodicalPaymentAmount}
                 className={
                   (!product.periodicalPaymentAmount && triedToAdd) ||
@@ -244,7 +257,10 @@ function ProductForm(props) {
                   setProduct((_product) => {
                     return {
                       ...product,
-                      periodicalPaymentAmount: Number(e.target.value),
+                      periodicalPaymentAmount:
+                        10000000000 > +e.target.value && +e.target.value >= 0
+                          ? +e.target.value
+                          : _product.periodicalPaymentAmount,
                     };
                   });
                 }}

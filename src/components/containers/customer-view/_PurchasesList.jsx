@@ -18,6 +18,17 @@ function _PurchasesList(props) {
     return debt;
   };
 
+  const calculateTotalPrice = (products) => {
+    let totalPrice = 0;
+    for (let i = 0; i < products.length; i++) {
+      const _product = products[i];
+      totalPrice += +_product.price;
+    }
+    return totalPrice;
+  };
+
+  // Payments Modifing //
+
   const paymentStatusHandler = (newPaymentStatus, purchaseId, paymentId) => {
     setPurchases((_purchases) => {
       for (let i = 0; i < purchases.length; i++) {
@@ -76,6 +87,26 @@ function _PurchasesList(props) {
     props.setPurchases(purchases);
   };
 
+  const paymentAmountHandler = (newPaymentAmount, purchaseId, paymentId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          for (let y = 0; y < _purchase.payments.length; y++) {
+            const _payment = _purchase.payments[y];
+            if (_payment._id == paymentId) {
+              _purchases[i].payments[y].amount = newPaymentAmount;
+            }
+          }
+        }
+        purchases[i].debt = calculateDebt(_purchase.payments);
+      }
+      return [..._purchases];
+    });
+    props.setPurchases(purchases);
+  };
+
   const paymentDateHandler = (newPaymentDate, purchaseId, paymentId) => {
     setPurchases((_purchases) => {
       for (let i = 0; i < purchases.length; i++) {
@@ -101,6 +132,49 @@ function _PurchasesList(props) {
     props.setPurchases(purchases);
   };
 
+  // Products Modifing //
+
+  const productNameHandler = (newProductName, purchaseId, productId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          for (let y = 0; y < _purchase.purchasedProducts.length; y++) {
+            const _product = _purchase.purchasedProducts[y];
+            if (_product._id == productId) {
+              _product.title = newProductName;
+            }
+          }
+        }
+      }
+      return [..._purchases];
+    });
+    props.setPurchases(purchases);
+  };
+
+  const productPriceHandler = (newProductPrice, purchaseId, productId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          for (let y = 0; y < _purchase.purchasedProducts.length; y++) {
+            const _product = _purchase.purchasedProducts[y];
+            if (_product._id == productId) {
+              _product.price = newProductPrice;
+              _purchase.totalCost = calculateTotalPrice(
+                _purchase.purchasedProducts
+              );
+            }
+          }
+        }
+      }
+      return [..._purchases];
+    });
+    props.setPurchases(purchases);
+  };
+
   const PurchasesRowsComponents = [];
 
   if (purchases?.length > 0) {
@@ -116,7 +190,20 @@ function _PurchasesList(props) {
             className="customer-view_purchases-list_row_cell_product-item"
             key={_purchasdProduct._id}
           >
-            {_purchasdProduct.title}
+            <input
+              type="text"
+              name={_purchasdProduct._id + '_title'}
+              id={_purchasdProduct._id + '_title'}
+              value={_purchasdProduct.title}
+              className="no-border"
+              onChange={(e) => {
+                productNameHandler(
+                  e.target.value,
+                  _purchase._id,
+                  _purchasdProduct._id
+                );
+              }}
+            />
           </div>
         );
 
@@ -125,7 +212,19 @@ function _PurchasesList(props) {
             className="customer-view_purchases-list_row_cell_product-price-item"
             key={_purchasdProduct._id}
           >
-            {_purchasdProduct.price}
+            <input
+              type="number"
+              name={_purchasdProduct._id + '_productprice'}
+              id={_purchasdProduct._id + '_productprice'}
+              value={_purchasdProduct.price}
+              onChange={(e) => {
+                productPriceHandler(
+                  e.target.value,
+                  _purchase._id,
+                  _purchasdProduct._id
+                );
+              }}
+            />
           </div>
         );
       }
@@ -143,7 +242,19 @@ function _PurchasesList(props) {
             className="customer-view_purchases-list_row_cell_payment-item"
             key={_payment._id}
           >
-            {_payment.amount}
+            <input
+              type="number"
+              name={_payment._id + '_amount'}
+              id={_payment._id + '_amount'}
+              value={_payment.amount}
+              onChange={(e) => {
+                paymentAmountHandler(
+                  e.target.value,
+                  _purchase._id,
+                  _payment._id
+                );
+              }}
+            />
           </div>
         );
 
