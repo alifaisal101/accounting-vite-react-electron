@@ -552,12 +552,19 @@ function CustomerForm(props) {
               <input
                 type="number"
                 id="productPrice"
+                step={5000}
                 name="productPrice"
                 className={!product.price && triedToAddProduct ? 'unvalid' : ''}
                 value={product.price}
                 onChange={(e) => {
                   setProduct((_product) => {
-                    return { ..._product, price: +e.target.value };
+                    return {
+                      ..._product,
+                      price:
+                        10000000000 > +e.target.value && +e.target.value >= 0
+                          ? +e.target.value
+                          : _product.price,
+                    };
                   });
                 }}
               />
@@ -587,11 +594,18 @@ function CustomerForm(props) {
                 }
                 type="number"
                 id="totalcost"
+                step={5000}
                 name="totalcost"
                 value={purchase.totalCost}
                 onChange={(e) => {
                   setPurchase((_purchase) => {
-                    return { ..._purchase, totalCost: +e.target.value };
+                    return {
+                      ..._purchase,
+                      totalCost:
+                        10000000000 > +e.target.value && +e.target.value >= 0
+                          ? +e.target.value
+                          : _purchase.totalCost,
+                    };
                   });
                 }}
               />
@@ -607,7 +621,8 @@ function CustomerForm(props) {
                     ? 'unvalid'
                     : ''
                 }
-                type="text"
+                step={5000}
+                type="number"
                 id="upFrontPaymentAmount"
                 name="upFrontPaymentAmount"
                 value={purchase.upFrontPaymentAmount}
@@ -615,7 +630,10 @@ function CustomerForm(props) {
                   setPurchase((_purchase) => {
                     return {
                       ..._purchase,
-                      upFrontPaymentAmount: +e.target.value,
+                      upFrontPaymentAmount:
+                        10000000000 > +e.target.value && +e.target.value >= 0
+                          ? +e.target.value
+                          : _purchase.upFrontPaymentAmount,
                     };
                   });
                 }}
@@ -631,15 +649,19 @@ function CustomerForm(props) {
                     ? 'unvalid'
                     : ''
                 }
-                type="text"
+                type="number"
                 id="periodicalPaymentAmount"
+                step={5000}
                 name="periodicalPaymentAmount"
                 value={purchase.periodicalPaymentAmount}
                 onChange={(e) => {
                   setPurchase((_purchase) => {
                     return {
                       ..._purchase,
-                      periodicalPaymentAmount: +e.target.value,
+                      periodicalPaymentAmount:
+                        10000000000 > +e.target.value && +e.target.value >= 0
+                          ? +e.target.value
+                          : _purchase.periodicalPaymentAmount,
                     };
                   });
                 }}
