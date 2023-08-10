@@ -3,8 +3,9 @@ import './_PurchasesList.css';
 import { mappayPeriodType } from './../../../../electron/utils/locale';
 import { mapPaymentPayStatus } from './../../../../electron/utils/locale';
 
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import moment from 'moment/moment';
+import Btn from '../../ui/btn/Btn';
 
 function _PurchasesList(props) {
   const [purchases, setPurchases] = useState(props.purchases);
@@ -66,14 +67,17 @@ function _PurchasesList(props) {
           for (let y = 0; y < _purchase.payments.length; y++) {
             const _payment = _purchase.payments[y];
             if (_payment._id == paymentId) {
-              _purchases[i].payments[y].paidUp = newPaidUpValue;
+              _purchases[i].payments[y].paidUp =
+                10000000000 > +newPaidUpValue && +newPaidUpValue >= 0
+                  ? +newPaidUpValue
+                  : +_purchases[i].payments[y].paidUp;
 
-              if (newPaidUpValue == 0) {
+              if (_purchases[i].payments[y].paidUp == 0) {
                 _purchases[i].payments[y].paidUp = 0;
                 _purchases[i].payments[y].status = 'unpaid';
-              } else if (newPaidUpValue < _payment.amount) {
+              } else if (_purchases[i].payments[y].paidUp < _payment.amount) {
                 _purchases[i].payments[y].status = 'partial';
-              } else if (newPaidUpValue >= _payment.amount) {
+              } else if (_purchases[i].payments[y].paidUp >= _payment.amount) {
                 _purchases[i].payments[y].paidUp = _payment.amount;
                 _purchases[i].payments[y].status = 'full';
               }
@@ -88,6 +92,7 @@ function _PurchasesList(props) {
   };
 
   const paymentAmountHandler = (newPaymentAmount, purchaseId, paymentId) => {
+    let _paidUp;
     setPurchases((_purchases) => {
       for (let i = 0; i < purchases.length; i++) {
         const _purchase = purchases[i];
@@ -96,7 +101,12 @@ function _PurchasesList(props) {
           for (let y = 0; y < _purchase.payments.length; y++) {
             const _payment = _purchase.payments[y];
             if (_payment._id == paymentId) {
-              _purchases[i].payments[y].amount = newPaymentAmount;
+              _purchases[i].payments[y].amount =
+                10000000000 > +newPaymentAmount && +newPaymentAmount >= 0
+                  ? +newPaymentAmount
+                  : _purchases[i].payments[y].amount;
+
+              _paidUp = _purchases[i].payments[y].paidUp;
             }
           }
         }
@@ -104,6 +114,7 @@ function _PurchasesList(props) {
       }
       return [..._purchases];
     });
+    paidUpHandler(_paidUp, purchaseId, paymentId);
     props.setPurchases(purchases);
   };
 
@@ -116,8 +127,11 @@ function _PurchasesList(props) {
           for (let y = 0; y < _purchase.payments.length; y++) {
             const _payment = _purchase.payments[y];
             if (_payment._id == paymentId) {
+              console.log(
+                moment(newPaymentDate).isBefore(moment(_purchase.purchaseDate))
+              );
               if (
-                moment(newPaymentDate).isBefore(moment(_purchases.purchaseDate))
+                moment(newPaymentDate).isBefore(moment(_purchase.purchaseDate))
               ) {
                 alert('لا يمكن تسجيل تاريخ الدفع قبل تاريخ الشراء');
               } else {
@@ -162,11 +176,35 @@ function _PurchasesList(props) {
           for (let y = 0; y < _purchase.purchasedProducts.length; y++) {
             const _product = _purchase.purchasedProducts[y];
             if (_product._id == productId) {
-              _product.price = newProductPrice;
+              _product.price =
+                10000000000 > +newProductPrice && +newProductPrice >= 0
+                  ? +newProductPrice
+                  : _product.price;
+
               _purchase.totalCost = calculateTotalPrice(
                 _purchase.purchasedProducts
               );
             }
+          }
+        }
+      }
+      return [..._purchases];
+    });
+    props.setPurchases(purchases);
+  };
+
+  // Purchase Modifing //
+
+  const purchaseDateHandler = (newPurchaseDate, purchaseId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          if (moment(newPurchaseDate)) {
+            _purchases[i].purchaseDate = newPurchaseDate;
+          } else {
+            _purchases[i].purchaseDate = newPurchaseDate;
           }
         }
       }
@@ -214,6 +252,7 @@ function _PurchasesList(props) {
           >
             <input
               type="number"
+              step={5000}
               name={_purchasdProduct._id + '_productprice'}
               id={_purchasdProduct._id + '_productprice'}
               value={_purchasdProduct.price}
@@ -244,6 +283,7 @@ function _PurchasesList(props) {
           >
             <input
               type="number"
+              step={5000}
               name={_payment._id + '_amount'}
               id={_payment._id + '_amount'}
               value={_payment.amount}
@@ -281,7 +321,8 @@ function _PurchasesList(props) {
             key={_payment._id}
           >
             <input
-              type="text"
+              type="number"
+              step={5000}
               value={_payment.paidUp}
               onChange={(e) => {
                 paidUpHandler(e.target.value, _purchase._id, _payment._id);
@@ -334,56 +375,69 @@ function _PurchasesList(props) {
       }
 
       PurchasesRowsComponents.push(
-        <div className="customer-view_purchases-list_row" key={_purchase._id}>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-1">
-            <div className="customer-view_purchases-list_row_cell_products-list">
-              {ProductItemsComponents}
+        <Fragment key={_purchase._id}>
+          <div className="customer-view_purchases-list_row" key={_purchase._id}>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-1">
+              <div className="customer-view_purchases-list_row_cell_products-list">
+                {ProductItemsComponents}
+              </div>
+            </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-2">
+              <div className="customer-view_purchases-list_row_cell_products-prices-list">
+                {ProductPricesComponents}
+              </div>
+            </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-3">
+              {_purchase.totalCost}
+            </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-4">
+              {_purchase.debt}
+            </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-5">
+              <input
+                type="date"
+                name={_purchase._id + '_date'}
+                id={_purchase._id + '_date'}
+                value={_purchase.purchaseDate}
+                onChange={(e) => {
+                  purchaseDateHandler(e.target.value, _purchase._id);
+                }}
+              />
+            </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-6">
+              {_purchase.upFrontPaymentAmount}
+            </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-7">
+              {_purchase.periodicalPaymentAmount}
+            </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-8">
+              {mappayPeriodType(_purchase.payPeriodType)}
+            </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-9">
+              <div className="customer-view_purchases-list_row_cell_payments-list">
+                {PaymentsAmountsComponents}
+              </div>
+            </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-10">
+              <div className="customer-view_purchases-list_row_cell_payments-list">
+                {PaymentsPayDateComponents}
+              </div>
+            </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-11">
+              <div className="customer-view_purchases-list_row_cell_payments-list">
+                {PaymentsPaidUpComponents}
+              </div>
+            </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-12">
+              <div className="customer-view_purchases-list_row_cell_payments-list">
+                {PaymentsStatusComponents}
+              </div>
             </div>
           </div>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-2">
-            <div className="customer-view_purchases-list_row_cell_products-prices-list">
-              {ProductPricesComponents}
-            </div>
+          <div className="add-new-payment-btn_container">
+            <Btn className="add-new-payment-btn">+</Btn>
           </div>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-3">
-            {_purchase.totalCost}
-          </div>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-4">
-            {_purchase.debt}
-          </div>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-5">
-            {_purchase.purchaseDate}
-          </div>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-6">
-            {_purchase.upFrontPaymentAmount}
-          </div>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-7">
-            {_purchase.periodicalPaymentAmount}
-          </div>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-8">
-            {mappayPeriodType(_purchase.payPeriodType)}
-          </div>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-9">
-            <div className="customer-view_purchases-list_row_cell_payments-list">
-              {PaymentsAmountsComponents}
-            </div>
-          </div>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-10">
-            <div className="customer-view_purchases-list_row_cell_payments-list">
-              {PaymentsPayDateComponents}
-            </div>
-          </div>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-11">
-            <div className="customer-view_purchases-list_row_cell_payments-list">
-              {PaymentsPaidUpComponents}
-            </div>
-          </div>
-          <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-12">
-            <div className="customer-view_purchases-list_row_cell_payments-list">
-              {PaymentsStatusComponents}
-            </div>
-          </div>
-        </div>
+        </Fragment>
       );
     }
   }

@@ -115,3 +115,19 @@
   background-color: white !important;
   color: black !important;
 }
+
+.add-new-payment-btn_container {
+  margin: 6px 0px;
+  margin-bottom: 25px;
+  width: 33%;
+  display: flex;
+  align-self: last baseline;
+  flex-direction: column;
+}
+
+.add-new-payment-btn {
+  background-color: rgb(205, 239, 154);
+  padding: 6px 6px;
+  width: 2em;
+  align-self: center;
+}
