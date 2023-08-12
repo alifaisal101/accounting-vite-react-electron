@@ -30,6 +30,31 @@ function _PurchasesList(props) {
 
   // Payments Modifing //
 
+  const addNewPaymentHandler = (purchaseId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          const lastPayment =
+            _purchase.payments?.length > 0
+              ? _purchase.payments[_purchase.payments.length - 1]
+              : null;
+          _purchase.payments.push({
+            amount: lastPayment ? lastPayment.amount : 0,
+            date: lastPayment
+              ? moment(lastPayment.date).add(1, 'M').format('yyyy-MM-DD')
+              : moment().add(1, 'M').format('yyyy-MM-DD'),
+            paidUp: 0,
+            status: 'unpaid',
+          });
+        }
+      }
+      return [..._purchases];
+    });
+    props.setPurchases(purchases);
+  };
+
   const paymentStatusHandler = (newPaymentStatus, purchaseId, paymentId) => {
     setPurchases((_purchases) => {
       for (let i = 0; i < purchases.length; i++) {
@@ -435,7 +460,14 @@ function _PurchasesList(props) {
             </div>
           </div>
           <div className="add-new-payment-btn_container">
-            <Btn className="add-new-payment-btn">+</Btn>
+            <Btn
+              onClick={() => {
+                addNewPaymentHandler(_purchase._id);
+              }}
+              className="add-new-payment-btn"
+            >
+              +
+            </Btn>
           </div>
         </Fragment>
       );
