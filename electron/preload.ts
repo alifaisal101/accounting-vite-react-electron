@@ -303,4 +303,17 @@ contextBridge.exposeInMainWorld('e_util', {
     ipcRenderer.send('focus-fix');
     return res;
   },
+
+  genNewMongoIdStr: (cb: Function) => {
+    ipcRenderer.send('gen-new-mongo-id-str');
+    ipcRenderer.on('gen-new-mongo-id-str-result', (_event, result) => {
+      cb(null, result);
+      ipcRenderer.removeAllListeners('gen-new-mongo-id-str-result');
+    });
+
+    ipcRenderer.on('gen-new-mongo-id-str-failed', () => {
+      cb(new Error('Failed to gen ID'), null);
+      ipcRenderer.removeAllListeners('gen-new-mongo-id-str-failed');
+    });
+  },
 });

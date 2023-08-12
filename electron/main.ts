@@ -255,6 +255,15 @@ const bootstrap = async () => {
     win.blur();
     win.focus();
   });
+
+  ipcMain.on('gen-new-mongo-id-str', (event) => {
+    try {
+      const newMongoId = new mongoose.mongo.ObjectId();
+      event.reply('gen-new-mongo-id-str-result', newMongoId);
+    } catch (err) {
+      event.reply('gen-new-mongo-id-str-failed');
+    }
+  });
 };
 
 bootstrap();
