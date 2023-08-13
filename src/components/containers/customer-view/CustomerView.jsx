@@ -130,9 +130,8 @@ function CustomerView(props) {
                 });
               }}
               className="customer-view_notes-container_notes"
-            >
-              {customer.notes}
-            </textarea>
+              value={customer.notes}
+            ></textarea>
           </div>
           <div className="customer-view_action-btns_container">
             <PrintCustomer customer={customer} printSettings={printSettings} />
