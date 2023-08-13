@@ -111,3 +111,8 @@
 .unmodifiable {
   background-color: rgb(204, 204, 204);
 }
+
+.customer_notes {
+  width: 73%;
+  margin-bottom: 20px;
+}

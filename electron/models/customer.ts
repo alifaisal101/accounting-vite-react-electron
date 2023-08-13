@@ -1,5 +1,9 @@
 import { ObjectId, Schema, model } from 'mongoose';
-import { requiredDate, requiredString } from '../utils/mongoose-options';
+import {
+  requiredDate,
+  requiredString,
+  unRequiredString,
+} from '../utils/mongoose-options';
 
 // Document interface
 export interface InCustomer {
@@ -7,6 +11,7 @@ export interface InCustomer {
   phoneNumber: string;
   createdAt: Date;
   purchasesIds?: ObjectId[];
+  notes?: string;
 }
 
 const schema = new Schema<InCustomer>({
@@ -23,6 +28,7 @@ const schema = new Schema<InCustomer>({
     ],
   },
   createdAt: requiredDate,
+  notes: unRequiredString,
 });
 
 const CustomerModel = model('Customer', schema);

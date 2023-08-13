@@ -15,6 +15,7 @@ function CustomerForm(props) {
     _id: '',
     name: '',
     phoneNumber: '',
+    notes: '',
   };
   const [customer, setCustomer] = useState(customer_inital);
 
@@ -734,6 +735,21 @@ function CustomerForm(props) {
               <div className="products-list">{PurchasesList_component}</div>
             </ul>
           </div>
+          <h3 className="header">الملاحظات</h3>
+
+          <textarea
+            name="notes"
+            id="notes"
+            className="customer_notes"
+            rows="10"
+            onChange={(e) => {
+              setCustomer((_customer) => {
+                return { ..._customer, notes: e.target.value };
+              });
+            }}
+          >
+            {customer.notes}
+          </textarea>
           <Btn onClick={addCustoemr} className="customersform_add-product-btn">
             اضافة الزبون
           </Btn>

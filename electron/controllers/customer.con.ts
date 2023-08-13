@@ -46,7 +46,7 @@ export const fetchCustomer = async (_id: string, full: boolean) => {
 };
 
 export const saveCustomer = async (customer: any) => {
-  const { _id, name, phoneNumber, purchases } = customer;
+  const { _id, name, phoneNumber, purchases, notes } = customer;
   const customerPurchasesIds = [];
 
   const purchases_data = [];
@@ -110,6 +110,7 @@ export const saveCustomer = async (customer: any) => {
         name,
         phoneNumber,
         purchasesIds: customerPurchasesIds.concat(purchasesIds),
+        notes,
       },
       { new: true }
     );
@@ -119,6 +120,7 @@ export const saveCustomer = async (customer: any) => {
       phoneNumber,
       purchasesIds,
       createdAt: new Date(),
+      notes,
     });
   }
 
