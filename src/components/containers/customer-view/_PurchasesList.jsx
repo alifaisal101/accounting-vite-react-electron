@@ -248,6 +248,40 @@ function _PurchasesList(props) {
 
   // Purchase Modifing //
 
+  const totalCostHandler = (newTotalCost, purchaseId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          _purchases[i].totalCost =
+            10000000000 > +newTotalCost && +newTotalCost >= 0
+              ? +newTotalCost
+              : _purchases[i].totalCost;
+        }
+      }
+      return [..._purchases];
+    });
+    props.setPurchases(purchases);
+  };
+
+  const debtHandler = (newDebt, purchaseId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          _purchases[i].debt =
+            10000000000 > +newDebt && +newDebt >= 0
+              ? +newDebt
+              : _purchases[i].debt;
+        }
+      }
+      return [..._purchases];
+    });
+    props.setPurchases(purchases);
+  };
+
   const purchaseDateHandler = (newPurchaseDate, purchaseId) => {
     setPurchases((_purchases) => {
       for (let i = 0; i < purchases.length; i++) {
@@ -459,10 +493,28 @@ function _PurchasesList(props) {
               </div>
             </div>
             <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-3">
-              {_purchase.totalCost}
+              <input
+                type="number"
+                name={_purchase._id + '_totalCost'}
+                id={_purchase._id + '_totalCost'}
+                step={5000}
+                value={_purchase.totalCost}
+                onChange={(e) => {
+                  totalCostHandler(e.target.value, _purchase._id);
+                }}
+              />
             </div>
             <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-4">
-              {_purchase.debt}
+              <input
+                type="number"
+                name={_purchase._id + '_debt'}
+                id={_purchase._id + '_debt'}
+                step={5000}
+                value={_purchase.debt}
+                onChange={(e) => {
+                  debtHandler(e.target.value, _purchase._id);
+                }}
+              />
             </div>
             <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-5">
               <input
