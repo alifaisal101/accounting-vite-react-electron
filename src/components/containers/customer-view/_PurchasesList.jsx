@@ -12,11 +12,11 @@ import Btn from '../../ui/btn/Btn';
 function _PurchasesList(props) {
   const [purchases, setPurchases] = useState(props.purchases);
 
-  const calculateDebt = (payments) => {
-    let debt = 0;
-    for (let i = 0; i < payments.length; i++) {
-      const _payment = payments[i];
-      debt += _payment.amount - _payment.paidUp;
+  const calculateDebt = (_purchase) => {
+    let debt = _purchase.totalCost - _purchase.upFrontPaymentAmount;
+    for (let i = 0; i < _purchase.payments.length; i++) {
+      const _payment = _purchase.payments[i];
+      debt -= _payment.paidUp;
     }
     return debt;
   };
@@ -73,7 +73,7 @@ function _PurchasesList(props) {
             const _payment = _purchase.payments[y];
             if (_payment._id == paymentId) {
               purchases[i].payments.splice(y, 1);
-              purchases[i].debt = calculateDebt(purchases[i].payments);
+              purchases[i].debt = calculateDebt(purchases[i]);
             }
           }
         }
@@ -104,7 +104,7 @@ function _PurchasesList(props) {
             }
           }
         }
-        purchases[i].debt = calculateDebt(_purchase.payments);
+        purchases[i].debt = calculateDebt(_purchase);
       }
       return [..._purchases];
     });
@@ -137,7 +137,7 @@ function _PurchasesList(props) {
             }
           }
         }
-        purchases[i].debt = calculateDebt(purchases[i].payments);
+        purchases[i].debt = calculateDebt(purchases[i]);
       }
       return [..._purchases];
     });
@@ -163,7 +163,7 @@ function _PurchasesList(props) {
             }
           }
         }
-        purchases[i].debt = calculateDebt(_purchase.payments);
+        purchases[i].debt = calculateDebt(_purchase);
       }
       return [..._purchases];
     });
