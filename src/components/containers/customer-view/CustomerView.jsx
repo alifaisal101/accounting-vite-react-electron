@@ -17,7 +17,13 @@ function CustomerView(props) {
       }
 
       if (result) {
-        return props.unmountAndMountDropdown();
+        e_customers.addCustomer({ ...customer }, (err, result) => {
+          if (err) {
+            return alert('فشل حفظ البيانات');
+          }
+
+          return props.unmountAndMountDropdown();
+        });
       }
     });
   };
@@ -43,7 +49,6 @@ function CustomerView(props) {
       }
     });
   };
-
   useEffect(() => {
     setLoading(true);
     e_customers.fetchCustomer(true, props._id, (err, result) => {
@@ -111,11 +116,31 @@ function CustomerView(props) {
               purchases={customer.purchases}
             />
           }
+
+          <h3>الملاحظات</h3>
+
+          <div className="customer-view_notes-container">
+            <textarea
+              name="notes"
+              id="notes"
+              rows="10"
+              onChange={(e) => {
+                setCustomer((_customer) => {
+                  return { ..._customer, notes: e.target.value };
+                });
+              }}
+              className="customer-view_notes-container_notes"
+            >
+              {customer.notes}
+            </textarea>
+          </div>
           <div className="customer-view_action-btns_container">
             <PrintCustomer customer={customer} printSettings={printSettings} />
             <Btn
               className="customer-view_action-btns_container_save-data"
-              onClick={savePurchases}
+              onClick={() => {
+                savePurchases();
+              }}
             >
               حفظ التعديلات
             </Btn>

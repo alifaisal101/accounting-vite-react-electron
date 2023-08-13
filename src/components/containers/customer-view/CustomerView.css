@@ -55,3 +55,11 @@
   align-items: center;
   font-size: 15px;
 }
+
+.customer-view_notes-container {
+  width: 100%;
+}
+
+.customer-view_notes-container .customer-view_notes-container_notes {
+  width: 100%;
+}
