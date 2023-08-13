@@ -1,0 +1,74 @@
+version 1.0.1:
+
+- 5a633c1 added ts config, version release
+- b967d49 added purchases update
+- ee2b981 sending purchases from list to customer view, added remount dropdown to customer view
+- beed101 added paidup and paymentstatus handlers
+- bee6397 added purchases display, fixed unique key issue
+- 0d14d07 added english to arabic mapping in printing
+- 603af12 added fetch based on payments date
+- b38fd58 added delete customer
+- 4a64031 fixed printing issues
+- 96ef2f6 added purchase delete
+- 2abbcec fixed errors added product delete in customer form
+- e175e7a handled customer after adding
+- 740a050 fixed date get's incremented by one when converting from string to iso object with moment
+- 4b84381 fixed image get's removed issue when sending setprintsettings. Issue was due to preloader function trying to conver arraybuffer into json, when the image is already json
+- e767070 Implemented customer view
+- cc6cba4 added purchases list in printing
+- d9e8b47 finished printing
+- 8a9b52d added print customer component. Added office logo
+- 71507f1 modified fetch customer
+- c45d55f added print-customer component, customer view...
+- 1fa7054 added add customer fix
+- 93d03ab added purchase controller
+- bb62a2a added customer controller to add cutomer
+- 7524ef5 added purchase form inputs
+- 43a3c1e did a lot of things
+- c667f38 added fetch product function, events and controller
+- 7afaa6a added event for fetching customers names and added fetching customersnames in useeffect customers form
+- 082cc83 added customer controller, added get customersnames controller
+- b4fdf14 added print settings
+- 6455534 added things
+- cc91621 added remove image handling, image converting functions
+- 929bbeb added onsaveproduct handling
+- 7ee2058 added image base64 encoding
+- 9b388d9 added locale function
+- c8ee92b added table for product
+- 0638938 added fetch products controller
+- ad32977 finished add product form
+- 4db1b93 added models
+- 0442cbd finished product creation
+- 48c3e11 added upfrontpayment to product
+- 2bfbb8e added IPC listeners to add product
+- 45bb869 added image functionality, styled product add form, added validation to product add form
+- 607f9f2 added product form
+- 88a0df8 added stuff
+- 4fabd0a removed mongodb-client-encryption aka cancer, from the dependencies
+- f4c0881 added the react frontend to the application
+- d20e90a redid the activation to be based on exposed machine id on the client side only. Fucking electron
+- f07ee4f I FUCKING DID ITgit add .git add .!
+- 119ce47 please kill me
+- f5c2c8e added connection to the database
+- d135d42 added licence and .env
+- cb35798 added icon and modified build config
+- b718f0a inital commit
+
+version 1.0.2:
+
+- fixed textarea value prop
+- ee99bee added textarea value in value prop
+- 4da6c17 added notes in customer view
+- 5eaba1a added notes in customer model, controller and in customer form
+- cded77c added periodicalpayment handler
+- 45a6e8e modified debt calculator
+- 80b21b8 added totalcost handler, debt handler
+- 66690a7 added delete icon for payments delete, added debt calculator after delete payment
+- e669b59 added payment delete handler
+- 0a102af added events for mongodb generator
+- ba688db added payment adder in customer view
+- d43dc9e fixed a lot of things
+- d37d555 fixed inputs in customer form
+- 58df9df configured modifing for puchaseslists products, fixed inputs in productsform
+- 046ce63 fixed the input focus issue on windows
+- 7254f02 1.0.2 fixed date issues
