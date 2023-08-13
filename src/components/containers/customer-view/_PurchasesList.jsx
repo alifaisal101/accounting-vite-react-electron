@@ -73,6 +73,7 @@ function _PurchasesList(props) {
             const _payment = _purchase.payments[y];
             if (_payment._id == paymentId) {
               purchases[i].payments.splice(y, 1);
+              purchases[i].debt = calculateDebt(purchases[i].payments);
             }
           }
         }
@@ -136,7 +137,7 @@ function _PurchasesList(props) {
             }
           }
         }
-        purchases[i].debt = calculateDebt(_purchase.payments);
+        purchases[i].debt = calculateDebt(purchases[i].payments);
       }
       return [..._purchases];
     });
