@@ -742,14 +742,13 @@ function CustomerForm(props) {
             id="notes"
             className="customer_notes"
             rows="10"
+            value={customer.notes}
             onChange={(e) => {
               setCustomer((_customer) => {
                 return { ..._customer, notes: e.target.value };
               });
             }}
-          >
-            {customer.notes}
-          </textarea>
+          ></textarea>
           <Btn onClick={addCustoemr} className="customersform_add-product-btn">
             اضافة الزبون
           </Btn>
