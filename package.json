@@ -1,7 +1,7 @@
 {
   "name": "al-muhandis-for-accounting",
   "private": true,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
@@ -17,7 +17,8 @@
     "node-machine-id": "^1.1.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-dropzone": "^14.2.3"
+    "react-dropzone": "^14.2.3",
+    "saslprep": "^1.0.3"
   },
   "devDependencies": {
     "@mui/material": "^5.14.0",
