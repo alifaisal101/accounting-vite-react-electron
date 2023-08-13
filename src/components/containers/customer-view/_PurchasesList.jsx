@@ -258,6 +258,8 @@ function _PurchasesList(props) {
             10000000000 > +newTotalCost && +newTotalCost >= 0
               ? +newTotalCost
               : _purchases[i].totalCost;
+
+          _purchase.debt = calculateDebt(_purchase);
         }
       }
       return [..._purchases];
@@ -293,6 +295,42 @@ function _PurchasesList(props) {
           } else {
             _purchases[i].purchaseDate = newPurchaseDate;
           }
+        }
+      }
+      return [..._purchases];
+    });
+    props.setPurchases(purchases);
+  };
+
+  const upFrontPaymentHandler = (newUpfrontPayment, purchaseId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          _purchases[i].upFrontPaymentAmount =
+            10000000000 > +newUpfrontPayment && +newUpfrontPayment >= 0
+              ? +newUpfrontPayment
+              : _purchases[i].upFrontPaymentAmount;
+
+          _purchase.debt = calculateDebt(_purchase);
+        }
+      }
+      return [..._purchases];
+    });
+    props.setPurchases(purchases);
+  };
+
+  const periodicalPaymentAmountHandler = (newPeriodicalPayment, purchaseId) => {
+    setPurchases((_purchases) => {
+      for (let i = 0; i < purchases.length; i++) {
+        const _purchase = purchases[i];
+
+        if (_purchase._id == purchaseId) {
+          _purchases[i].periodicalPaymentAmount =
+            10000000000 > +newPeriodicalPayment && +newPeriodicalPayment >= 0
+              ? +newPeriodicalPayment
+              : _purchases[i].periodicalPaymentAmount;
         }
       }
       return [..._purchases];
@@ -528,10 +566,28 @@ function _PurchasesList(props) {
               />
             </div>
             <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-6">
-              {_purchase.upFrontPaymentAmount}
+              <input
+                type="number"
+                name={_purchase._id + '_upfrontPay'}
+                id={_purchase._id + '_upfrontPay'}
+                step={5000}
+                value={_purchase.upFrontPaymentAmount}
+                onChange={(e) => {
+                  upFrontPaymentHandler(e.target.value, _purchase._id);
+                }}
+              />
             </div>
             <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-7">
-              {_purchase.periodicalPaymentAmount}
+              <input
+                type="number"
+                name={_purchase._id + '_periodicalPaymentAmount'}
+                id={_purchase._id + '_periodicalPaymentAmount'}
+                step={5000}
+                value={_purchase.periodicalPaymentAmount}
+                onChange={(e) => {
+                  periodicalPaymentAmountHandler(e.target.value, _purchase._id);
+                }}
+              />
             </div>
             <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-8">
               {mappayPeriodType(_purchase.payPeriodType)}
