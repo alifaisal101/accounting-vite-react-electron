@@ -46,6 +46,10 @@
   width: 7.8%;
 }
 
+.customer-view_purchases-list_row_cell_col-13 {
+  width: 3%;
+}
+
 .customer-view_purchases-list_row_cell_products-list,
 .customer-view_purchases-list_row_cell_products-prices-list,
 .customer-view_purchases-list_row_cell_payments-list {
@@ -130,4 +134,10 @@
   padding: 6px 6px;
   width: 2em;
   align-self: center;
+}
+
+.customer-view_purchases-list_row_cell_payments-list
+  .customer-view_purchases-list_row_cell_payment-item_paymentDelete
+  img {
+  cursor: pointer;
 }

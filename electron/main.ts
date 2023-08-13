@@ -258,7 +258,7 @@ const bootstrap = async () => {
 
   ipcMain.on('gen-new-mongo-id-str', (event) => {
     try {
-      const newMongoId = new mongoose.mongo.ObjectId();
+      const newMongoId = new mongoose.mongo.ObjectId().toString();
       event.reply('gen-new-mongo-id-str-result', newMongoId);
     } catch (err) {
       event.reply('gen-new-mongo-id-str-failed');

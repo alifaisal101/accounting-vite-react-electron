@@ -3,6 +3,8 @@ import './_PurchasesList.css';
 import { mappayPeriodType } from './../../../../electron/utils/locale';
 import { mapPaymentPayStatus } from './../../../../electron/utils/locale';
 
+import deleteBtn from './../../../assets/Delete-button.svg';
+
 import { Fragment, useState } from 'react';
 import moment from 'moment/moment';
 import Btn from '../../ui/btn/Btn';
@@ -31,23 +33,48 @@ function _PurchasesList(props) {
   // Payments Modifing //
 
   const addNewPaymentHandler = (purchaseId) => {
+    e_util.genNewMongoIdStr((err, idResult) => {
+      if (err) {
+        return alert('فشلت الاضافة');
+      }
+      setPurchases((_purchases) => {
+        for (let i = 0; i < purchases.length; i++) {
+          const _purchase = purchases[i];
+
+          if (_purchase._id == purchaseId) {
+            const lastPayment =
+              _purchase.payments?.length > 0
+                ? _purchase.payments[_purchase.payments.length - 1]
+                : null;
+            _purchase.payments.push({
+              _id: idResult,
+              amount: lastPayment ? lastPayment.amount : 0,
+              date: lastPayment
+                ? moment(lastPayment.date).add(1, 'M').format('yyyy-MM-DD')
+                : moment().add(1, 'M').format('yyyy-MM-DD'),
+              paidUp: 0,
+              status: 'unpaid',
+            });
+          }
+        }
+        return [..._purchases];
+      });
+      props.setPurchases(purchases);
+    });
+  };
+
+  const paymentDeleteHandler = (purchaseId, paymentId) => {
     setPurchases((_purchases) => {
       for (let i = 0; i < purchases.length; i++) {
         const _purchase = purchases[i];
 
         if (_purchase._id == purchaseId) {
-          const lastPayment =
-            _purchase.payments?.length > 0
-              ? _purchase.payments[_purchase.payments.length - 1]
-              : null;
-          _purchase.payments.push({
-            amount: lastPayment ? lastPayment.amount : 0,
-            date: lastPayment
-              ? moment(lastPayment.date).add(1, 'M').format('yyyy-MM-DD')
-              : moment().add(1, 'M').format('yyyy-MM-DD'),
-            paidUp: 0,
-            status: 'unpaid',
-          });
+          for (let y = 0; y < _purchase.payments.length; y++) {
+            const _payment = _purchase.payments[y];
+            if (_payment._id == paymentId) {
+              purchases[i].payments.splice(y, 1);
+            }
+          }
         }
       }
       return [..._purchases];
@@ -297,6 +324,7 @@ function _PurchasesList(props) {
       const PaymentsPayDateComponents = [];
       const PaymentsPaidUpComponents = [];
       const PaymentsStatusComponents = [];
+      const PaymentsDeleteComponents = [];
 
       for (let y = 0; y < _purchase.payments.length; y++) {
         const _payment = _purchase.payments[y];
@@ -397,6 +425,23 @@ function _PurchasesList(props) {
             </select>
           </div>
         );
+
+        PaymentsDeleteComponents.push(
+          <div
+            className={
+              'customer-view_purchases-list_row_cell_payment-item customer-view_purchases-list_row_cell_payment-item_paymentDelete'
+            }
+            key={_payment._id}
+          >
+            <img
+              src={deleteBtn}
+              onClick={() => {
+                paymentDeleteHandler(_purchase._id, _payment._id);
+              }}
+              alt="X"
+            />{' '}
+          </div>
+        );
       }
 
       PurchasesRowsComponents.push(
@@ -458,6 +503,11 @@ function _PurchasesList(props) {
                 {PaymentsStatusComponents}
               </div>
             </div>
+            <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-13">
+              <div className="customer-view_purchases-list_row_cell_payments-list">
+                {PaymentsDeleteComponents}
+              </div>
+            </div>
           </div>
           <div className="add-new-payment-btn_container">
             <Btn
@@ -515,6 +565,9 @@ function _PurchasesList(props) {
         </div>
         <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-12">
           الحالة
+        </div>
+        <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-13">
+          حذف
         </div>
       </div>
       {PurchasesRowsComponents}
