@@ -84,7 +84,8 @@ function Customers(props) {
         <Loader />
       ) : (
         <Fragment>
-          <div className="date-reload-container">
+          {/* Specfic payment date fetching, deprected, will be moved to a larger filtering*/}
+          {/* <div className="date-reload-container">
             <div className="reload-icon-container">
               <img
                 src={reloadIcon}
@@ -97,7 +98,7 @@ function Customers(props) {
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DatePicker value={dateValue} onChange={dateHandler} />
             </LocalizationProvider>{' '}
-          </div>
+          </div> */}
           {customers.length == 0 ? (
             <h1>لم يتم العثور على اي زبائن</h1>
           ) : (
