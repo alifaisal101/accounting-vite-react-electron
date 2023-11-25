@@ -164,17 +164,22 @@ export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
       const purchase = _customer.purchases[y];
       for (let x = 0; x < purchase.payments.length; x++) {
         const payment = purchase.payments[x];
+        const unpaid =
+          payment.status == 'partial' || payment.status == 'unpaid';
         // Check if the payment is unpaid or paid partially, and if the payment date is today or behind
         if (
-          (payment.status == 'partial' || payment.status == 'unpaid') &&
+          unpaid &&
           moment(payment.date).isBefore(moment(moment().format('YYYY-MM-DD')))
         ) {
           unFulfilledPayment = true;
         }
         // Adding the earliest payment date
-        if (!earliestPaymentDate) {
+        if (!earliestPaymentDate && unpaid) {
           earliestPaymentDate = payment.date;
-        } else if (moment(earliestPaymentDate).isAfter(moment(payment.date))) {
+        } else if (
+          moment(earliestPaymentDate).isAfter(moment(payment.date)) &&
+          unpaid
+        ) {
           earliestPaymentDate = payment.date;
         }
       }
