@@ -167,7 +167,7 @@ export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
         // Check if the payment is unpaid or paid partially, and if the payment date is today or behind
         if (
           (payment.status == 'partial' || payment.status == 'unpaid') &&
-          moment(payment.date).isSameOrBefore(moment())
+          moment(payment.date).isBefore(moment(moment().format('YYYY-MM-DD')))
         ) {
           unFulfilledPayment = true;
         }

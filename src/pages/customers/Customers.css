@@ -40,3 +40,11 @@
 
 .notlate-payment-cellitem {
 }
+
+.late-pay-date {
+  background-color: rgb(218, 134, 134);
+}
+
+.today-pay-date {
+  background-color: rgb(228, 255, 185);
+}
