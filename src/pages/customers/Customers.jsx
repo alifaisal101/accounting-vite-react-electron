@@ -13,19 +13,32 @@ const columns = [
     field: 'name',
     headerName: 'الأسم',
     width: 300,
+    type: 'text',
     editable: false,
   },
   {
     field: 'phoneNumber',
     headerName: 'رقم الهاتف',
     width: 180,
-    editable: true,
+    type: 'string',
+    editable: false,
   },
   {
     field: 'createdAt',
     headerName: 'تاريخ الاضافة',
     type: 'date',
-    width: 110,
+    width: 150,
+  },
+  {
+    field: 'unFulfilledPayment',
+    headerName: 'متأخر عن الدفع',
+    type: 'boolean',
+    width: 150,
+    cellClassName: (rowObj) => {
+      return rowObj.row.unFulfilledPayment
+        ? 'late-for-payment-cellitem '
+        : 'notlate-payment-cellitem';
+    },
   },
 ];
 
@@ -70,7 +83,6 @@ function Customers(props) {
             return { ...customer, id: customer._id };
           }
         });
-
         return setCustomers(result);
       }
     });

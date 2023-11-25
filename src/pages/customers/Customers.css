@@ -32,3 +32,11 @@
   height: 70%;
   cursor: pointer;
 }
+
+.late-for-payment-cellitem {
+  color: red;
+  background-color: rgb(218, 134, 134);
+}
+
+.notlate-payment-cellitem {
+}
