@@ -156,9 +156,11 @@ export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
   for (let i = 0; i < result.length; i++) {
     const _customer = result[i];
 
-    // unFulfilled Payments processing
+    // unFulfilled Payments | earliest payment date processing
     let unFulfilledPayment = false;
-    purchasesLoop: for (let y = 0; y < _customer.purchases.length; y++) {
+    let earliestPaymentDate = 0;
+
+    for (let y = 0; y < _customer.purchases.length; y++) {
       const purchase = _customer.purchases[y];
       for (let x = 0; x < purchase.payments.length; x++) {
         const payment = purchase.payments[x];
@@ -168,13 +170,19 @@ export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
           moment(payment.date).isSameOrBefore(moment())
         ) {
           unFulfilledPayment = true;
-          break purchasesLoop;
+        }
+        // Adding the earliest payment date
+        if (!earliestPaymentDate) {
+          earliestPaymentDate = payment.date;
+        } else if (moment(earliestPaymentDate).isAfter(moment(payment.date))) {
+          earliestPaymentDate = payment.date;
         }
       }
     }
 
     _customer._id = _customer._id.toString();
     _customer.unFulfilledPayment = unFulfilledPayment;
+    _customer.earliestPaymentDate = earliestPaymentDate;
     delete _customer.purchases;
 
     _customers.push(_customer);
