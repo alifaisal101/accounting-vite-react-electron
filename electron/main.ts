@@ -138,7 +138,6 @@ const bootstrap = async () => {
       const productResult = await createProduct(product);
       event.reply('add-product-result', productResult);
     } catch (err) {
-      console.log(err);
       event.reply('failed-add-product');
     }
   });
@@ -186,7 +185,6 @@ const bootstrap = async () => {
       const result = await getCustomersNames();
       event.reply('get-customers-names-result', result);
     } catch (err) {
-      console.log(err);
       event.reply('failed-get-customers-names');
     }
   });
@@ -196,7 +194,6 @@ const bootstrap = async () => {
       const result = await fetchCustomer(_id, full);
       event.reply('fetch-customer-result', result);
     } catch (err) {
-      console.log(err);
       event.reply('failed-fetch-customer');
     }
   });
@@ -224,7 +221,6 @@ const bootstrap = async () => {
       const result = await saveCustomer(customer);
       event.reply('add-customer-result', result);
     } catch (err) {
-      console.log(err);
       event.reply('failed-add-customer');
     }
   });
@@ -251,7 +247,6 @@ const bootstrap = async () => {
   // Input can't be focued after alert/confirm, fix
 
   ipcMain.on('focus-fix', () => {
-    console.log('epic');
     win.blur();
     win.focus();
   });

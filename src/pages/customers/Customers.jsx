@@ -13,19 +13,49 @@ const columns = [
     field: 'name',
     headerName: 'الأسم',
     width: 300,
+    type: 'text',
     editable: false,
   },
   {
     field: 'phoneNumber',
     headerName: 'رقم الهاتف',
-    width: 180,
-    editable: true,
+    width: 150,
+    type: 'string',
+    editable: false,
   },
   {
     field: 'createdAt',
     headerName: 'تاريخ الاضافة',
     type: 'date',
-    width: 110,
+    width: 130,
+  },
+  {
+    field: 'earliestPaymentDate',
+    headerName: 'موعد الدفع',
+    type: 'date',
+    width: 100,
+    cellClassName: (rowObj) => {
+      const currentDate = moment(moment().format('YYYY-MM-DD'));
+      const earliestPaymentDate = moment(
+        moment(rowObj.row.earliestPaymentDate).format('YYYY-MM-DD')
+      );
+      if (earliestPaymentDate.isBefore(currentDate)) {
+        return 'late-pay-date';
+      } else if (earliestPaymentDate.isSame(currentDate)) {
+        return 'today-pay-date';
+      }
+    },
+  },
+  {
+    field: 'unFulfilledPayment',
+    headerName: 'متأخر عن الدفع',
+    type: 'boolean',
+    width: 150,
+    cellClassName: (rowObj) => {
+      return rowObj.row.unFulfilledPayment
+        ? 'late-for-payment-cellitem '
+        : 'notlate-payment-cellitem';
+    },
   },
 ];
 
@@ -70,7 +100,6 @@ function Customers(props) {
             return { ...customer, id: customer._id };
           }
         });
-
         return setCustomers(result);
       }
     });

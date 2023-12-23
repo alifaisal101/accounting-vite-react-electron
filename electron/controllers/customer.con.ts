@@ -138,20 +138,58 @@ export const saveCustomer = async (customer: any) => {
 };
 
 export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
-  const result = await CustomerModel.find();
+  const result = await CustomerModel.aggregate([
+    { $match: {} },
+    {
+      $lookup: {
+        from: 'purchases',
+        localField: 'purchasesIds',
+        foreignField: '_id',
+        as: 'purchases',
+      },
+    },
+    { $project: { purchasesIds: 0 } },
+  ]);
+
+  // Filtering: converting the objId -> string; deleting purchases; adding unFulfilled Payment
   const _customers = [];
-
   for (let i = 0; i < result.length; i++) {
-    //@ts-ignore
-    const _customer = result[i]._doc;
-    _customer._id = _customer._id.toString();
+    const _customer = result[i];
 
-    const _purchasesIds = [];
-    for (let i = 0; i < _customer.purchasesIds.length; i++) {
-      _purchasesIds.push(_customer.purchasesIds[0].toString());
+    // unFulfilled Payments | earliest payment date processing
+    let unFulfilledPayment = false;
+    let earliestPaymentDate = 0;
+
+    for (let y = 0; y < _customer.purchases.length; y++) {
+      const purchase = _customer.purchases[y];
+      for (let x = 0; x < purchase.payments.length; x++) {
+        const payment = purchase.payments[x];
+        const unpaid =
+          payment.status == 'partial' || payment.status == 'unpaid';
+        // Check if the payment is unpaid or paid partially, and if the payment date is today or behind
+        if (
+          unpaid &&
+          moment(payment.date).isBefore(moment(moment().format('YYYY-MM-DD')))
+        ) {
+          unFulfilledPayment = true;
+        }
+        // Adding the earliest payment date
+        if (!earliestPaymentDate && unpaid) {
+          earliestPaymentDate = payment.date;
+        } else if (
+          moment(earliestPaymentDate).isAfter(moment(payment.date)) &&
+          unpaid
+        ) {
+          earliestPaymentDate = payment.date;
+        }
+      }
     }
 
-    _customer.purchasesIds = _purchasesIds;
+    _customer._id = _customer._id.toString();
+    _customer.unFulfilledPayment = unFulfilledPayment;
+    _customer.earliestPaymentDate = earliestPaymentDate;
+    delete _customer.purchases;
+
     _customers.push(_customer);
   }
 
