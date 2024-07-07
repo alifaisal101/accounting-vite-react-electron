@@ -317,3 +317,59 @@ contextBridge.exposeInMainWorld('e_util', {
     });
   },
 });
+
+contextBridge.exposeInMainWorld('e_backups', {
+  fetchBackups: (cb: Function) => {
+    ipcRenderer.send('fetch-backups');
+
+    ipcRenderer.on('fetch-backups-result', (_event, backups) => {
+      cb(null, backups);
+      ipcRenderer.removeAllListeners('fetch-backups-result');
+    });
+
+    ipcRenderer.on('failed-fetch-backups', () => {
+      cb(new Error('failed to fetch'), null);
+      ipcRenderer.removeAllListeners('failed-fetch-backups');
+    });
+  },
+
+  addBackup: (backup: object, cb: Function) => {
+    ipcRenderer.send('add-backup', backup);
+
+    ipcRenderer.on('add-backup-result', (_event, backup) => {
+      cb(null, backup);
+      ipcRenderer.removeAllListeners('add-backup-result');
+    });
+
+    ipcRenderer.on('failed-add-backup', () => {
+      cb(new Error('failed to add'), null);
+      ipcRenderer.removeAllListeners('failed-add-backup');
+    });
+  },
+
+  updateBackup: (modifiedBackup: object, cb: Function) => {
+    ipcRenderer.send('update-backup', modifiedBackup);
+
+    ipcRenderer.on('update-backup-result', (_event, modifiedBackup) => {
+      cb(null, modifiedBackup);
+      ipcRenderer.removeAllListeners('update-backup-result');
+    });
+
+    ipcRenderer.on('failed-update-backup', () => {
+      cb(new Error('failed to update'), null);
+      ipcRenderer.removeAllListeners('failed-update-backup');
+    });
+  },
+
+  deleteBackup: (_id: string, cb: Function) => {
+    ipcRenderer.send('delete-backup', _id);
+    ipcRenderer.on('delete-backup-result', (_event, deleteResult) => {
+      cb(null, deleteResult);
+      ipcRenderer.removeAllListeners('delete-backup-result');
+    });
+    ipcRenderer.on('failed-delete-backup', (_event) => {
+      cb(new Error('Failed to delete backup'), null);
+      ipcRenderer.removeAllListeners('failed-delete-backup');
+    });
+  },
+});
