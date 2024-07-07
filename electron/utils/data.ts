@@ -25,3 +25,11 @@ export const jsonToBase64Url = (json: string) => {
   const imageUrl = `data:image/jpg;base64, ` + base64String;
   return imageUrl;
 };
+
+// Convert Mongo's Object ID from an Object to a string, in all records in an array
+export const convertIdInRecords = (records: Array<any>) => {
+  return records.map((record) => {
+    record._id = record._id.toString();
+    return record;
+  });
+};

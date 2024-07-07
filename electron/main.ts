@@ -25,6 +25,12 @@ import {
   saveCustomer,
 } from './controllers/customer.con';
 import { savePurchases } from './controllers/purchase.con';
+import {
+  createBackup,
+  deleteBackup,
+  fetchBackups,
+  updateBackup,
+} from './controllers/backups.con';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // const rootFs = dirname(__dirname);
@@ -244,7 +250,44 @@ const bootstrap = async () => {
     }
   });
 
-  // Input can't be focued after alert/confirm, fix
+  // Backups Events handling
+  ipcMain.on('fetch-backups', async (event) => {
+    try {
+      const result = await fetchBackups();
+      event.reply('fetch-backups-result', result);
+    } catch (err) {
+      event.reply('failed-fetch-backups');
+    }
+  });
+
+  ipcMain.on('add-backup', async (event, backup) => {
+    try {
+      const result = await createBackup(backup);
+      event.reply('add-backup-result', result);
+    } catch (err) {
+      event.reply('failed-add-backup');
+    }
+  });
+
+  ipcMain.on('update-backup', async (event, backup) => {
+    try {
+      const result = await updateBackup(backup);
+      event.reply('update-backup-result', result);
+    } catch (err) {
+      event.reply('failed-update-backup');
+    }
+  });
+
+  ipcMain.on('delete-backup', async (event, backupId) => {
+    try {
+      const result = await deleteBackup(backupId);
+      event.reply('delete-backup-result', result);
+    } catch (err) {
+      event.reply('failed-delete-backup');
+    }
+  });
+
+  // Input can't be focused after alert/confirm, fix
 
   ipcMain.on('focus-fix', () => {
     win.blur();
