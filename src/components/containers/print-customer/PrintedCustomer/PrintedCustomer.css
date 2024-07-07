@@ -200,3 +200,12 @@
 .printed-customer_purchases_list_cell_payment-status-item {
   width: 100%;
 }
+
+.printed-customer_notes {
+  padding: 0px 60px 0 10px;
+  font-family: readex;
+  margin: 0;
+  margin-bottom: 20px;
+  font-weight: normal !important;
+  font-size: 0.6em !important ;
+}

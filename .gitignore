@@ -30,3 +30,6 @@ sandbox.js
 
 #initals
 .define.*
+
+#Drawio
+*.drawio.bkp

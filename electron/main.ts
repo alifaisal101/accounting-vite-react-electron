@@ -57,13 +57,13 @@ const bootstrap = async () => {
       try {
         const key = await InitalModel.findOne({ define: 'key' });
 
-        // If key does not exist than send an activation request
-        if (!key) {
-          await activationReqest();
-        }
+        // // If key does not exist than send an activation request
+        // if (!key) {
+        //   await activationReqest();
+        // }
 
-        // Check activation status
-        await activation();
+        // // Check activation status
+        // await activation();
       } catch (err) {
         failedToActivate = true;
       }
