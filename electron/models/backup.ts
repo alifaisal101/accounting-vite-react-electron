@@ -6,6 +6,7 @@ export interface InBackup {
   name: string;
   path: string;
   deleteDuration: number;
+  os: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,6 +18,7 @@ export type BackupDocument = Document<unknown, {}, InBackup> &
 
 export const schema = new Schema<InBackup>({
   name: requiredString,
+  os: requiredString,
   path: requiredString,
   deleteDuration: requiredNumber,
   createdAt: Date,

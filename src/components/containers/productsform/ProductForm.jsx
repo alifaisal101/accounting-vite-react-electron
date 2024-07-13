@@ -7,7 +7,7 @@ import Btn from '../../ui/btn/Btn';
 import Loader from '../../ui/loader/Loader';
 
 function ProductForm(props) {
-  const initalProduct = {
+  const initialProduct = {
     title: '',
     price: 0,
     payPeriodType: 'monthly',
@@ -16,7 +16,7 @@ function ProductForm(props) {
     desc: '',
     image: null,
   };
-  const [product, setProduct] = useState(initalProduct);
+  const [product, setProduct] = useState(initialProduct);
 
   const [imageName, setImageName] = useState('');
   const [triedToAdd, setTriedToAdd] = useState(false);
@@ -84,7 +84,7 @@ function ProductForm(props) {
     setLoading(true);
 
     return e_products.addProduct(product, (err, result) => {
-      setProduct(initalProduct);
+      setProduct(initialProduct);
       setImageName('');
       setLoading(false);
       setTriedToAdd(false);

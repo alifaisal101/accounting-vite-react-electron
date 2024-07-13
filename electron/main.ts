@@ -1,8 +1,9 @@
 import 'dotenv/config';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import path from 'node:path';
 import mongoose from 'mongoose';
 import InitalModel from './models/inital';
+import os from 'os';
 // import { dirname } from 'path';
 
 import activationReqest from './activation-request';
@@ -287,11 +288,32 @@ const bootstrap = async () => {
     }
   });
 
+  ipcMain.on('open-directory', async (event, backupId) => {
+    try {
+      const result = await dialog.showOpenDialog({
+        properties: ['openDirectory'],
+        // Add any additional dialog options here
+      });
+      event.reply('open-directory-result', result);
+    } catch (err) {
+      event.reply('failed-open-directory');
+    }
+  });
+
   // Input can't be focused after alert/confirm, fix
 
   ipcMain.on('focus-fix', () => {
     win.blur();
     win.focus();
+  });
+
+  ipcMain.on('get-os', async (event) => {
+    try {
+      const platform = os.platform();
+      event.reply('get-os-result', platform);
+    } catch (err) {
+      event.reply('failed-get-os');
+    }
   });
 
   ipcMain.on('gen-new-mongo-id-str', (event) => {

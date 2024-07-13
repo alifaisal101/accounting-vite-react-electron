@@ -316,6 +316,18 @@ contextBridge.exposeInMainWorld('e_util', {
       ipcRenderer.removeAllListeners('gen-new-mongo-id-str-failed');
     });
   },
+
+  getOsPlatform: (cb: Function) => {
+    ipcRenderer.send('get-os');
+    ipcRenderer.on('get-os-result', (_event, result) => {
+      cb(null, result);
+      ipcRenderer.removeAllListeners('get-os-result');
+    });
+    ipcRenderer.on('failed-get-os', () => {
+      cb(new Error('Failed to get OS'), null);
+      ipcRenderer.removeAllListeners('failed-get-os');
+    });
+  },
 });
 
 contextBridge.exposeInMainWorld('e_backups', {
@@ -370,6 +382,18 @@ contextBridge.exposeInMainWorld('e_backups', {
     ipcRenderer.on('failed-delete-backup', (_event) => {
       cb(new Error('Failed to delete backup'), null);
       ipcRenderer.removeAllListeners('failed-delete-backup');
+    });
+  },
+
+  openDirectory: (cb: Function) => {
+    ipcRenderer.send('open-directory');
+    ipcRenderer.on('open-directory-result', (_event, path) => {
+      cb(null, path);
+      ipcRenderer.removeAllListeners('open-directory-result');
+    });
+    ipcRenderer.on('open-directory-failed', (_event) => {
+      cb(new Error('Failed to select folder.'), null);
+      ipcRenderer.removeAllListeners('open-directory-failed');
     });
   },
 });

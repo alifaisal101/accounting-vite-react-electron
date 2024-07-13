@@ -14,13 +14,31 @@ import Customers from './pages/customers/Customers';
 // components dropdown
 import CustomersForm from './components/containers/customersform/CustomersForm';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DropdownContainer from './components/ui/dropdown-container/DropdownContainer';
 import ProductForm from './components/containers/productsform/ProductForm';
 import PrintSettings from './pages/print-settings/PrintSettings';
 import CustomerView from './components/containers/customer-view/CustomerView';
+import Backups from './pages/backups/Backups';
+import BackupForm from './components/containers/backup-form/BackupForm';
+import { useRecoilState } from 'recoil';
+import { osPlatformState } from './store/os.store';
 
 function App() {
+  const [osPlatform, setOsPlatform] = useRecoilState(osPlatformState);
+
+  // Set the OS platform global state
+  useEffect(() => {
+    e_util.getOsPlatform((err, result) => {
+      if (err) {
+        return alert(
+          'فشل سحب نوع نظام التشغيل في الكومبيوتر. غالبا سيعطل هذا الخطا عمليات النسخ الاحتياطي'
+        );
+      }
+      setOsPlatform(result);
+    });
+  }, []);
+
   // Page Handling
   const [showContent, setShowContent] = useState(false);
   const [page, setPage] = useState('');
@@ -65,6 +83,10 @@ function App() {
 
     case 'printSettings':
       PageComp = <PrintSettings />;
+      break;
+
+    case 'backups':
+      PageComp = <Backups action={() => dropdownHandler('add-backup')} />;
       break;
   }
 
@@ -135,6 +157,8 @@ function App() {
         />
       );
       break;
+    case 'add-backup':
+      DropdownContentComp = <BackupForm />;
   }
 
   return (
