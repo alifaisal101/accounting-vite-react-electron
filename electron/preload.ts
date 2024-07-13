@@ -316,4 +316,84 @@ contextBridge.exposeInMainWorld('e_util', {
       ipcRenderer.removeAllListeners('gen-new-mongo-id-str-failed');
     });
   },
+
+  getOsPlatform: (cb: Function) => {
+    ipcRenderer.send('get-os');
+    ipcRenderer.on('get-os-result', (_event, result) => {
+      cb(null, result);
+      ipcRenderer.removeAllListeners('get-os-result');
+    });
+    ipcRenderer.on('failed-get-os', () => {
+      cb(new Error('Failed to get OS'), null);
+      ipcRenderer.removeAllListeners('failed-get-os');
+    });
+  },
+});
+
+contextBridge.exposeInMainWorld('e_backups', {
+  fetchBackups: (cb: Function) => {
+    ipcRenderer.send('fetch-backups');
+
+    ipcRenderer.on('fetch-backups-result', (_event, backups) => {
+      cb(null, backups);
+      ipcRenderer.removeAllListeners('fetch-backups-result');
+    });
+
+    ipcRenderer.on('failed-fetch-backups', () => {
+      cb(new Error('failed to fetch'), null);
+      ipcRenderer.removeAllListeners('failed-fetch-backups');
+    });
+  },
+
+  addBackup: (backup: object, cb: Function) => {
+    ipcRenderer.send('add-backup', backup);
+
+    ipcRenderer.on('add-backup-result', (_event, backup) => {
+      cb(null, backup);
+      ipcRenderer.removeAllListeners('add-backup-result');
+    });
+
+    ipcRenderer.on('failed-add-backup', () => {
+      cb(new Error('failed to add'), null);
+      ipcRenderer.removeAllListeners('failed-add-backup');
+    });
+  },
+
+  updateBackup: (modifiedBackup: object, cb: Function) => {
+    ipcRenderer.send('update-backup', modifiedBackup);
+
+    ipcRenderer.on('update-backup-result', (_event, modifiedBackup) => {
+      cb(null, modifiedBackup);
+      ipcRenderer.removeAllListeners('update-backup-result');
+    });
+
+    ipcRenderer.on('failed-update-backup', () => {
+      cb(new Error('failed to update'), null);
+      ipcRenderer.removeAllListeners('failed-update-backup');
+    });
+  },
+
+  deleteBackup: (_id: string, cb: Function) => {
+    ipcRenderer.send('delete-backup', _id);
+    ipcRenderer.on('delete-backup-result', (_event, deleteResult) => {
+      cb(null, deleteResult);
+      ipcRenderer.removeAllListeners('delete-backup-result');
+    });
+    ipcRenderer.on('failed-delete-backup', (_event) => {
+      cb(new Error('Failed to delete backup'), null);
+      ipcRenderer.removeAllListeners('failed-delete-backup');
+    });
+  },
+
+  openDirectory: (cb: Function) => {
+    ipcRenderer.send('open-directory');
+    ipcRenderer.on('open-directory-result', (_event, path) => {
+      cb(null, path);
+      ipcRenderer.removeAllListeners('open-directory-result');
+    });
+    ipcRenderer.on('open-directory-failed', (_event) => {
+      cb(new Error('Failed to select folder.'), null);
+      ipcRenderer.removeAllListeners('open-directory-failed');
+    });
+  },
 });

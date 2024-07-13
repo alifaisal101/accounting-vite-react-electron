@@ -1,0 +1,23 @@
+.duration-slider {
+  display: flex;
+}
+
+.slider-container {
+  display: flex;
+}
+
+.slider-range-text {
+  min-width: fit-content;
+  margin: 0px 30px;
+  display: flex;
+  align-items: center;
+}
+
+.slider {
+  color: #ffba4c !important;
+  min-width: 12rem;
+}
+
+.slider.disabled {
+  color: #535353 !important;
+}

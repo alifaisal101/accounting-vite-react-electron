@@ -1,0 +1,23 @@
+.backups-page {
+  height: 70vh;
+}
+
+.backups-page_header {
+  text-align: center;
+}
+
+.cellLtr {
+  direction: ltr;
+  text-align: center;
+}
+
+.backups-page_content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.backups-page_action-button {
+  margin: 20px 0 30px 0;
+  width: fit-content;
+}

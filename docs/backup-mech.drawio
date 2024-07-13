@@ -1,0 +1,180 @@
+<mxfile host="Electron" modified="2024-07-07T16:12:18.031Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.1.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="ZI5_jrSOFVTpW1vcmjVs" version="23.1.5" type="device">
+  <diagram name="Page-1" id="aUB3g0tVHQepJo11lSVc">
+    <mxGraphModel dx="4760" dy="2887" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="5000" pageHeight="1800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-1" value="Backup Mechanism" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=64;" vertex="1" parent="1">
+          <mxGeometry x="2138" y="70" width="725" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-2" target="_85hRrt5dcOIgrZqKlnH-42">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-2" value="App Runs" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1095" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-3" target="_85hRrt5dcOIgrZqKlnH-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-3" value="Checks Backup&#39;s Status" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1725" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-6" target="_85hRrt5dcOIgrZqKlnH-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-12" value="False" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_85hRrt5dcOIgrZqKlnH-10">
+          <mxGeometry x="0.0208" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-6" target="_85hRrt5dcOIgrZqKlnH-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-15" value="True" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_85hRrt5dcOIgrZqKlnH-11">
+          <mxGeometry x="-0.003" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-6" value="Does File exist" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1725" y="460" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-8" target="_85hRrt5dcOIgrZqKlnH-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-8" value="Backup Exec()" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1835" y="570" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-9" target="_85hRrt5dcOIgrZqKlnH-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-18" value="False" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_85hRrt5dcOIgrZqKlnH-17">
+          <mxGeometry x="0.0095" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-9" target="_85hRrt5dcOIgrZqKlnH-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-20" value="True" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_85hRrt5dcOIgrZqKlnH-19">
+          <mxGeometry x="-0.0873" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-9" value="Does it have today&#39;s date?" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1615" y="570" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-16" target="_85hRrt5dcOIgrZqKlnH-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-16" value="Checks Backup&#39;s file status" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1615" y="690" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-21" target="_85hRrt5dcOIgrZqKlnH-8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1895" y="830" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-28" value="False" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_85hRrt5dcOIgrZqKlnH-26">
+          <mxGeometry x="-0.5556" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-21" target="_85hRrt5dcOIgrZqKlnH-29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1675" y="910" />
+              <mxPoint x="2125" y="910" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-33" value="True" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_85hRrt5dcOIgrZqKlnH-32">
+          <mxGeometry x="-0.2857" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-21" value="Is backup corrupt" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1615" y="800" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-29" target="_85hRrt5dcOIgrZqKlnH-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-38" value="Runs Every 1 AM" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_85hRrt5dcOIgrZqKlnH-36">
+          <mxGeometry x="-0.0272" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-29" value="Run CRON" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2065" y="570" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-35" value="Backup Exec()" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2325" y="570" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-42" target="_85hRrt5dcOIgrZqKlnH-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-88" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-42" target="_85hRrt5dcOIgrZqKlnH-81">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-42" value="Pulls all BKs from DB" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1295" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-46" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-44" target="_85hRrt5dcOIgrZqKlnH-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-44" value="Loops through all BKs" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1495" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-49" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-47" target="_85hRrt5dcOIgrZqKlnH-48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-47" value="Backup Exec()" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2825" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-51" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-48" target="_85hRrt5dcOIgrZqKlnH-50">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-48" value="Pull the Database from the Cloud" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3055" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-53" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-50" target="_85hRrt5dcOIgrZqKlnH-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-50" value="Stores it where the path field points" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3285" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-55" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_85hRrt5dcOIgrZqKlnH-52" target="_85hRrt5dcOIgrZqKlnH-54">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-52" value="Creates a file with the name of the backup, storing the current date, and status of backup" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3515" y="340" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-54" value="If Status is not &quot;ok&quot; then it redoes the process" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3785" y="340" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-81" value="Backups (Main Document)" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="600" width="270" height="206" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-82" value="_id (objID_Main, unique)" style="text;strokeColor=default;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" vertex="1" parent="_85hRrt5dcOIgrZqKlnH-81">
+          <mxGeometry y="26" width="270" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-83" value="name (str)" style="text;strokeColor=default;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" vertex="1" parent="_85hRrt5dcOIgrZqKlnH-81">
+          <mxGeometry y="56" width="270" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-84" value="path (str, unique)" style="text;strokeColor=default;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" vertex="1" parent="_85hRrt5dcOIgrZqKlnH-81">
+          <mxGeometry y="86" width="270" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-85" value="deleteDuration (number)" style="text;strokeColor=default;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" vertex="1" parent="_85hRrt5dcOIgrZqKlnH-81">
+          <mxGeometry y="116" width="270" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-86" value="createdAt (date)&amp;nbsp;" style="text;strokeColor=default;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" vertex="1" parent="_85hRrt5dcOIgrZqKlnH-81">
+          <mxGeometry y="146" width="270" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_85hRrt5dcOIgrZqKlnH-87" value="updatedAt (date)" style="text;strokeColor=default;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" vertex="1" parent="_85hRrt5dcOIgrZqKlnH-81">
+          <mxGeometry y="176" width="270" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

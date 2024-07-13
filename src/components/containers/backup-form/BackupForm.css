@@ -1,0 +1,38 @@
+.backup-form_header {
+  text-align: center;
+}
+
+.backup-form_content {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-row {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.input-container {
+  display: flex;
+  justify-content: space-around;
+  min-width: 30rem;
+  align-items: center;
+  min-height: 3rem;
+  margin: 10px 0;
+}
+
+.input-container.short {
+  min-width: 6rem;
+}
+
+.input-container input,
+.input-container label {
+  margin: 0 5px;
+}
+
+.select-folder-input {
+  cursor: pointer;
+  min-width: 45rem;
+}

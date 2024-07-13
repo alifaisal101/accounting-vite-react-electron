@@ -1,8 +1,9 @@
 import 'dotenv/config';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import path from 'node:path';
 import mongoose from 'mongoose';
 import InitalModel from './models/inital';
+import os from 'os';
 // import { dirname } from 'path';
 
 import activationReqest from './activation-request';
@@ -25,6 +26,12 @@ import {
   saveCustomer,
 } from './controllers/customer.con';
 import { savePurchases } from './controllers/purchase.con';
+import {
+  createBackup,
+  deleteBackup,
+  fetchBackups,
+  updateBackup,
+} from './controllers/backups.con';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // const rootFs = dirname(__dirname);
@@ -57,13 +64,13 @@ const bootstrap = async () => {
       try {
         const key = await InitalModel.findOne({ define: 'key' });
 
-        // If key does not exist than send an activation request
-        if (!key) {
-          await activationReqest();
-        }
+        // // If key does not exist than send an activation request
+        // if (!key) {
+        //   await activationReqest();
+        // }
 
-        // Check activation status
-        await activation();
+        // // Check activation status
+        // await activation();
       } catch (err) {
         failedToActivate = true;
       }
@@ -244,11 +251,69 @@ const bootstrap = async () => {
     }
   });
 
-  // Input can't be focued after alert/confirm, fix
+  // Backups Events handling
+  ipcMain.on('fetch-backups', async (event) => {
+    try {
+      const result = await fetchBackups();
+      event.reply('fetch-backups-result', result);
+    } catch (err) {
+      event.reply('failed-fetch-backups');
+    }
+  });
+
+  ipcMain.on('add-backup', async (event, backup) => {
+    try {
+      const result = await createBackup(backup);
+      event.reply('add-backup-result', result);
+    } catch (err) {
+      event.reply('failed-add-backup');
+    }
+  });
+
+  ipcMain.on('update-backup', async (event, backup) => {
+    try {
+      const result = await updateBackup(backup);
+      event.reply('update-backup-result', result);
+    } catch (err) {
+      event.reply('failed-update-backup');
+    }
+  });
+
+  ipcMain.on('delete-backup', async (event, backupId) => {
+    try {
+      const result = await deleteBackup(backupId);
+      event.reply('delete-backup-result', result);
+    } catch (err) {
+      event.reply('failed-delete-backup');
+    }
+  });
+
+  ipcMain.on('open-directory', async (event, backupId) => {
+    try {
+      const result = await dialog.showOpenDialog({
+        properties: ['openDirectory'],
+        // Add any additional dialog options here
+      });
+      event.reply('open-directory-result', result);
+    } catch (err) {
+      event.reply('failed-open-directory');
+    }
+  });
+
+  // Input can't be focused after alert/confirm, fix
 
   ipcMain.on('focus-fix', () => {
     win.blur();
     win.focus();
+  });
+
+  ipcMain.on('get-os', async (event) => {
+    try {
+      const platform = os.platform();
+      event.reply('get-os-result', platform);
+    } catch (err) {
+      event.reply('failed-get-os');
+    }
   });
 
   ipcMain.on('gen-new-mongo-id-str', (event) => {
