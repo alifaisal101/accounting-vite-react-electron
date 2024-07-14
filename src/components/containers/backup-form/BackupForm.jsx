@@ -4,14 +4,20 @@ import './BackupForm.css';
 import DurationSlider from '../../ui/DurationSlider/DurationSlider';
 import ActionButton from '../action-button/ActionButton';
 import Btn from '../../ui/btn/Btn';
-import {isValidWindowsPath} from "./../../../../electron/utils/path";
-
+import {
+  isValidLinuxPath,
+  isValidWindowsPath,
+} from './../../../../electron/utils/path';
+import { useRecoilState } from 'recoil';
+import { osPlatformState } from '../../../store/os.store';
 
 const BackupForm = (props) => {
+  const [osPlatform, setOsPlatform] = useRecoilState(osPlatformState);
   const initialBackup = {
     name: '',
     path: 'اضغط ﻹختيار موقع',
-    duration: 0,
+    deleteDuration: 100,
+    os: osPlatform,
   };
 
   const [backup, setBackup] = useState(initialBackup);
@@ -42,9 +48,37 @@ const BackupForm = (props) => {
       return alert('يجب اضافة اسم');
     }
 
-    if (!backup.path || !isValidWindowsPath(backup.path)){
-      return alert("يجب اضافة عنوان للخزن");
+    if (!backup.deleteDuration || 0 > backup.deleteDuration > 120) {
+      return alert('فترة الحذف غير صحيحة');
     }
+
+    console.log(backup.os);
+
+    if (!backup.os || (backup.os != 'linux' && backup.os != 'win32')) {
+      return alert('خطا في التعرف على النظام');
+    }
+
+    let isPathValid;
+    if (backup.os == 'win32') {
+      isPathValid = isValidWindowsPath(backup.path);
+    } else if (backup.os == 'linux') {
+      isPathValid = isValidLinuxPath(backup.path);
+    }
+
+    if (!backup.path || !isPathValid) {
+      return alert('يجب اضافة عنوان للخزن');
+    }
+
+    e_backups.addBackup(backup, (err, result) => {
+      if (err) {
+        return alert('فشل اضافة حذف مؤقت');
+      }
+
+      if (result) {
+        props.onSaveBackup();
+        return alert('تم اضافة النسخ الاحتياطي');
+      }
+    });
   };
 
   return (
@@ -82,7 +116,7 @@ const BackupForm = (props) => {
                   const value = e.target.value == 'true' ? true : false;
                   if (!value) {
                     setBackup((_backup) => {
-                      return { ..._backup, duration: 0 };
+                      return { ..._backup, deleteDuration: 0 };
                     });
                   }
 
@@ -95,11 +129,11 @@ const BackupForm = (props) => {
             <div className="input-container">
               <label htmlFor="slider">فترة الحذف: </label>
               <DurationSlider
-                value={backup.duration}
+                value={backup.deleteDuration}
                 onChange={(e) => {
                   if (!e) return;
                   setBackup((_backup) => {
-                    return { ..._backup, duration: e.target.value };
+                    return { ..._backup, deleteDuration: e.target.value };
                   });
                 }}
                 disabled={isDurationDisabled}

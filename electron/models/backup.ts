@@ -18,7 +18,7 @@ export type BackupDocument = Document<unknown, {}, InBackup> &
 
 export const schema = new Schema<InBackup>({
   name: requiredString,
-  os: requiredString,
+  os: { ...requiredString, enum: ['win32', 'linux'] },
   path: requiredString,
   deleteDuration: requiredNumber,
   createdAt: Date,

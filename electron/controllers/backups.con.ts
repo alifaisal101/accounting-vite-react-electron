@@ -4,7 +4,7 @@ import { convertIdInRecords } from '../utils/data';
 
 export const fetchBackups = async () => {
   try {
-    const backups = convertIdInRecords(await BackupModel.find());
+    const backups = convertIdInRecords(await BackupModel.find().lean());
     return backups;
   } catch (err) {
     console.log(err);

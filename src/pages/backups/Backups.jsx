@@ -4,24 +4,9 @@ import Loader from '../../components/ui/loader/Loader';
 import { DataGrid, renderActionsCell } from '@mui/x-data-grid';
 import Btn from '../../components/ui/btn/Btn';
 import deleteBtn from './../../assets/Delete-button.svg';
-import editBtn from './../../assets/edit-button.svg';
 
 const Backups = (props) => {
-  const [backups, setBackups] = useState([
-    {
-      id: '21321312312',
-      name: 'bksdadsadas',
-      path: `C:\abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\\filename.txt`,
-      duration: '1' + ' يوم ',
-    },
-    {
-      id: '2132156562312',
-      name: 'bk2',
-      path: '/home/ali/Desktop/miki2',
-      duration: 2 + ' يوم ',
-      deleteBtn: '',
-    },
-  ]);
+  const [backups, setBackups] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -60,7 +45,7 @@ const Backups = (props) => {
       cellClassName: 'cellLtr',
     },
     {
-      field: 'duration',
+      field: 'deleteDuration',
       headerName: 'فترة الحذف',
       width: 150,
       type: 'text',
@@ -95,8 +80,9 @@ const Backups = (props) => {
       }
 
       if (result) {
+        console.log();
+        setBackups(result.map((backup) => ({ id: backup._id, ...backup })));
         setLoading(false);
-        console.log(result);
       }
     });
   }, []);

@@ -149,16 +149,25 @@ function App() {
             setCustomerId('');
           }}
           unmountAndMountDropdown={() => {
-            cancelDropdownHandler();
+            contentHandler('');
             setTimeout(() => {
-              dropdownHandler('view-customer');
+              contentHandler('backups');
             }, 250);
           }}
         />
       );
       break;
     case 'add-backup':
-      DropdownContentComp = <BackupForm />;
+      DropdownContentComp = (
+        <BackupForm
+          onSaveBackup={() => {
+            cancelDropdownHandler();
+            setTimeout(() => {
+              contentHandler('backups');
+            }, 250);
+          }}
+        />
+      );
   }
 
   return (
