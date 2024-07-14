@@ -66,25 +66,6 @@ const Backups = (props) => {
       type: 'text',
     },
     {
-      field: 'editBtn',
-      headerName: 'تعديل',
-      type: 'text',
-      align: 'center',
-      cellClassName: 'actionCell',
-      renderCell: (params) => {
-        return (
-          <div
-            className="col col-9 edit-btn "
-            onClick={() => {
-              deleteBackupHandler(params._id);
-            }}
-          >
-            <img src={editBtn} alt="Delete" />
-          </div>
-        );
-      },
-    },
-    {
       field: 'deleteBtn',
       headerName: 'حذف',
       type: 'text',
