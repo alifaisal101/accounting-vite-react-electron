@@ -1,32 +1,10 @@
 import { useEffect, useState } from 'react';
 import './Backups.css';
 import Loader from '../../components/ui/loader/Loader';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, renderActionsCell } from '@mui/x-data-grid';
 import Btn from '../../components/ui/btn/Btn';
-
-const columns = [
-  {
-    field: 'name',
-    headerName: 'الأسم',
-    width: 150,
-    type: 'text',
-    editable: false,
-  },
-  {
-    field: 'path',
-    headerName: 'عنوان النسخ',
-    width: 400,
-    type: 'text',
-    editable: false,
-    cellClassName: 'cellLtr',
-  },
-  {
-    field: 'duration',
-    headerName: 'فترة الحذف',
-    width: 150,
-    type: 'text',
-  },
-];
+import deleteBtn from './../../assets/Delete-button.svg';
+import editBtn from './../../assets/edit-button.svg';
 
 const Backups = (props) => {
   const [backups, setBackups] = useState([
@@ -41,9 +19,73 @@ const Backups = (props) => {
       name: 'bk2',
       path: '/home/ali/Desktop/miki2',
       duration: 2 + ' يوم ',
+      deleteBtn: '',
     },
   ]);
+
   const [loading, setLoading] = useState(false);
+
+  const deleteBackupHandler = (backupId) => {
+    if (!backupId) return;
+
+    e_backups.deleteBackup(backupId, (err, result) => {
+      if (err) {
+        console.log(err);
+        return alert('فشل الحذف');
+      }
+
+      if (result) {
+        alert('تم الحذف');
+        setBackups((_backups) =>
+          _backups.filter((backup) => backup.id !== backupId)
+        );
+      }
+    });
+  };
+
+  const columns = [
+    {
+      field: 'name',
+      headerName: 'الأسم',
+      width: 150,
+      type: 'text',
+      editable: false,
+    },
+    {
+      field: 'path',
+      headerName: 'عنوان النسخ',
+      width: 400,
+      type: 'text',
+      editable: false,
+      cellClassName: 'cellLtr',
+    },
+    {
+      field: 'duration',
+      headerName: 'فترة الحذف',
+      width: 150,
+      type: 'text',
+    },
+    {
+      field: 'deleteBtn',
+      headerName: 'حذف',
+      type: 'text',
+      align: 'center',
+      cellClassName: 'actionCell',
+      renderCell: (params) => {
+        return (
+          <div className="col col-9 delete-btn ">
+            <img
+              src={deleteBtn}
+              alt="Delete"
+              onClick={() => {
+                deleteBackupHandler(params.id);
+              }}
+            />
+          </div>
+        );
+      },
+    },
+  ];
 
   useEffect(() => {
     setLoading(true);

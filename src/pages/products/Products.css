@@ -10,11 +10,6 @@
   margin-bottom: 2em;
 }
 
-.delete-btn img {
-  transform: scale(1.2);
-  cursor: pointer;
-}
-
 .products-table {
   width: 100%;
   margin-left: auto;
