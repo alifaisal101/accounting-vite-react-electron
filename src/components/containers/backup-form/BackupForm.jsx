@@ -4,6 +4,8 @@ import './BackupForm.css';
 import DurationSlider from '../../ui/DurationSlider/DurationSlider';
 import ActionButton from '../action-button/ActionButton';
 import Btn from '../../ui/btn/Btn';
+import {isValidWindowsPath} from "./../../../../electron/utils/path";
+
 
 const BackupForm = (props) => {
   const initialBackup = {
@@ -36,12 +38,13 @@ const BackupForm = (props) => {
   };
 
   const submitHandler = () => {
-    console.log(backup);
     if (!backup.name) {
       return alert('يجب اضافة اسم');
     }
 
-    // if (!backup.path || ) {}
+    if (!backup.path || !isValidWindowsPath(backup.path)){
+      return alert("يجب اضافة عنوان للخزن");
+    }
   };
 
   return (
