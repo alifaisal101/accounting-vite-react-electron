@@ -161,6 +161,7 @@ function App() {
       DropdownContentComp = (
         <BackupForm
           onSaveBackup={() => {
+            contentHandler('');
             cancelDropdownHandler();
             setTimeout(() => {
               contentHandler('backups');

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import path from 'node:path';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import InitalModel from './models/inital';
 import os from 'os';
 // import { dirname } from 'path';
@@ -32,6 +32,7 @@ import {
   fetchBackups,
   updateBackup,
 } from './controllers/backups.con';
+import { InBackup } from './models/backup';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // const rootFs = dirname(__dirname);
@@ -77,6 +78,24 @@ const bootstrap = async () => {
     } catch (err) {
       failedToConnectToDB = true;
     }
+  }
+  // Handle backups
+  if (!failedToConnectToDB && !failedToActivate) {
+    fetchBackups()
+      .then((backups) => {
+        if (!backups || !backups?.length) return;
+
+        for (let i = 0; i < backups.length; i++) {
+          const backup: InBackup & { _id: Types.ObjectId } = backups[i];
+
+          if (backup.os == os.platform()) {
+            backup.path;
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   process.env.DIST = path.join(__dirname, '../dist');

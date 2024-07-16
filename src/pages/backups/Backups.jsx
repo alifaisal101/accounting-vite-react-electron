@@ -13,6 +13,14 @@ const Backups = (props) => {
   const deleteBackupHandler = (backupId) => {
     if (!backupId) return;
 
+    if (
+      !confirm(`هل انت متاكد من حذف النسخ الاحتياطي؟
+ستتوقف عمليات النسخ الاحياطي ولكن النسخ الاحتياطية السابقة لن تتأثر
+    `)
+    ) {
+      return;
+    }
+
     e_backups.deleteBackup(backupId, (err, result) => {
       if (err) {
         console.log(err);
