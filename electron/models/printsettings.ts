@@ -4,7 +4,7 @@ import {
   requiredNumber,
   requiredString,
   unRequiredString,
-} from '../utils/mongoose-options';
+} from '../utils/objects/mongoose-options';
 
 // Document interface
 export interface InPrintSettings {

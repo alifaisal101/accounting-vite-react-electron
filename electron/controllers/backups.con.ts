@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import BackupModel, { InBackup } from '../models/backup';
-import { convertIdInRecords } from '../utils/data';
+import { convertIdInRecords } from '../utils/functions/data';
 
 export const fetchBackups = async () => {
   try {

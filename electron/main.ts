@@ -3,8 +3,8 @@ import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import path from 'node:path';
 import mongoose, { Types } from 'mongoose';
 import InitalModel from './models/inital';
-import os from 'os';
 // import { dirname } from 'path';
+import os from 'os';
 
 import activationReqest from './activation-request';
 import activation from './activation';
@@ -32,7 +32,7 @@ import {
   fetchBackups,
   updateBackup,
 } from './controllers/backups.con';
-import { InBackup } from './models/backup';
+import { backupHandler } from './backups-handler';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // const rootFs = dirname(__dirname);
@@ -81,21 +81,7 @@ const bootstrap = async () => {
   }
   // Handle backups
   if (!failedToConnectToDB && !failedToActivate) {
-    fetchBackups()
-      .then((backups) => {
-        if (!backups || !backups?.length) return;
-
-        for (let i = 0; i < backups.length; i++) {
-          const backup: InBackup & { _id: Types.ObjectId } = backups[i];
-
-          if (backup.os == os.platform()) {
-            backup.path;
-          }
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    backupHandler();
   }
 
   process.env.DIST = path.join(__dirname, '../dist');
@@ -138,7 +124,7 @@ const bootstrap = async () => {
     win = null;
   });
 
-  app.whenReady().then(createWindow);
+  // app.whenReady().then(createWindow);
 
   ipcMain.on('ready', (event) => {
     if (!process.env.MONGODB_URI) {

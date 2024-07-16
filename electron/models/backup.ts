@@ -1,5 +1,8 @@
 import { Schema, Types, model } from 'mongoose';
-import { requiredNumber, requiredString } from '../utils/mongoose-options';
+import {
+  requiredNumber,
+  requiredString,
+} from '../utils/objects/mongoose-options';
 import { Document } from 'mongoose';
 
 export interface InBackup {

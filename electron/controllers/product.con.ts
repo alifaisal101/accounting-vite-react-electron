@@ -1,6 +1,6 @@
 import ProductModel, { InProduct } from '../models/product';
-import { arrayBufferToJson, jsonToBuffer } from '../utils/data';
-import { mappayPeriodType } from '../utils/locale';
+import { arrayBufferToJson, jsonToBuffer } from '../utils/functions/data';
+import { mappayPeriodType } from '../utils/functions/locale';
 
 export const createProduct = async (product_body: InProduct) => {
   const product_data = {

@@ -3,7 +3,7 @@ import {
   requiredDate,
   requiredNumber,
   requiredString,
-} from '../utils/mongoose-options';
+} from '../utils/objects/mongoose-options';
 
 export interface InPurchasedProduct {
   productId?: ObjectId;

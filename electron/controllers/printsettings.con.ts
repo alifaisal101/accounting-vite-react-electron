@@ -1,5 +1,5 @@
 import PrintSettingsModel, { InPrintSettings } from '../models/printsettings';
-import { arrayBufferToJson, jsonToBuffer } from '../utils/data';
+import { arrayBufferToJson, jsonToBuffer } from '../utils/functions/data';
 
 export const savePrintSettings = async (
   printsettings_data: InPrintSettings

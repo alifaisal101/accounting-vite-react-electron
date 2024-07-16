@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { InProduct } from './models/product';
-import { arrayBufferToJson, jsonToBase64Url } from './utils/data';
+import { arrayBufferToJson, jsonToBase64Url } from './utils/functions/data';
 import { InPrintSettings } from './models/printsettings';
 
 function domReady(
