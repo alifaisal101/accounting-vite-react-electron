@@ -7,7 +7,7 @@ import Btn from '../../ui/btn/Btn';
 import {
   isValidLinuxPath,
   isValidWindowsPath,
-} from './../../../../electron/utils/path';
+} from './../../../../electron/utils/functions/path';
 import { useRecoilState } from 'recoil';
 import { osPlatformState } from '../../../store/os.store';
 

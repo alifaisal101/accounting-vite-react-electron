@@ -33,6 +33,7 @@ import {
   updateBackup,
 } from './controllers/backups.con';
 import { backupHandler } from './backups-handler';
+import { MONGODB_URI } from './config';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // const rootFs = dirname(__dirname);
@@ -58,9 +59,9 @@ const bootstrap = async () => {
   let failedToConnectToDB = false;
   let failedToActivate = false;
 
-  if (process.env.MONGODB_URI) {
+  if (MONGODB_URI) {
     try {
-      await mongoose.connect(process.env.MONGODB_URI);
+      await mongoose.connect(MONGODB_URI);
 
       try {
         const key = await InitalModel.findOne({ define: 'key' });
@@ -127,7 +128,7 @@ const bootstrap = async () => {
   // app.whenReady().then(createWindow);
 
   ipcMain.on('ready', (event) => {
-    if (!process.env.MONGODB_URI) {
+    if (!MONGODB_URI) {
       event.reply('alert_exit_error', messages.noMongodbURIFound);
     }
 

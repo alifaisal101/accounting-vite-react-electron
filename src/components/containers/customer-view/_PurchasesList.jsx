@@ -1,7 +1,7 @@
 import './_PurchasesList.css';
 
-import { mappayPeriodType } from './../../../../electron/utils/locale';
-import { mapPaymentPayStatus } from './../../../../electron/utils/locale';
+import { mappayPeriodType } from './../../../../electron/utils/functions/locale';
+import { mapPaymentPayStatus } from './../../../../electron/utils/functions/locale';
 
 import deleteBtn from './../../../assets/Delete-button.svg';
 

@@ -1,5 +1,5 @@
-import { mappayPeriodType } from './../../../../../electron/utils/locale';
-import { mapPaymentPayStatus } from './../../../../../electron/utils/locale';
+import { mappayPeriodType } from './../../../../../electron/utils/functions/locale';
+import { mapPaymentPayStatus } from './../../../../../electron/utils/functions/locale';
 
 function _CustomerPurchases(props) {
   const CustomerPurchasesComponents = [];

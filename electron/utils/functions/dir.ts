@@ -29,7 +29,7 @@ export const checkDirectoryAccess = (
   });
 };
 
-function checkFileAccess(filePath: string): Promise<boolean> {
+export const checkFileAccess = (filePath: string): Promise<boolean> => {
   return new Promise<boolean>((resolve, reject) => {
     // Check if the file exists
     fs.access(filePath, fs.constants.F_OK, (err) => {
@@ -58,4 +58,4 @@ function checkFileAccess(filePath: string): Promise<boolean> {
       }
     });
   });
-}
+};
