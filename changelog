@@ -1,3 +1,26 @@
+version 1.1.0:
+
+* 9edb4f5 added auto delete for backup-handler
+* 903e32f added backups-handler
+* 993206f re-did the backup design. Moved some functions in utils, and added objects. Added the backup handler function
+* 9f017d3 fixed a display issue after creating a backup. Added user confirm to deleting a backup.
+* 026e7d2 added backup create handler
+* 0af59e8 added windows path validator
+*   4fc8f25 Merge branch 'master' of [SERVER]:/home/ali/git-server/almuhandis-accounting-vite into dev
+|\  
+| * f56de22 removed the backup edit column
+| * 77df593 added delete handler in backups datagrid
+* | 9f8af1a Merge [SERVER]:/home/ali/git-server/almuhandis-accounting-vite into dev
+|\| 
+| * 2990319 added backup form. Backup page. Slider input.
+| * 49ac08c added the preload functions for backup
+| * 0e95f77 added the ipc main event handlers, controllers for the backup model, and the backup model
+| * 3f43e65 added diagram for the database backup mechanism
+| * 46d4b3b added notes to be printed in the customer paper
+* | b3d7fd1 Merge https://github.com/alifaisal101/accounting-vite-react-electron into dev
+|\| 
+
+
 version 1.0.1:
 
 - 5a633c1 added ts config, version release
