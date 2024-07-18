@@ -125,7 +125,7 @@ const bootstrap = async () => {
     win = null;
   });
 
-  // app.whenReady().then(createWindow);
+  app.whenReady().then(createWindow);
 
   ipcMain.on('ready', (event) => {
     if (!MONGODB_URI) {

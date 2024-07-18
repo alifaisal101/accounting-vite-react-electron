@@ -48,11 +48,9 @@ const BackupForm = (props) => {
       return alert('يجب اضافة اسم');
     }
 
-    if (!backup.deleteDuration || 0 > backup.deleteDuration > 120) {
+    if (backup.deleteDuration == undefined || 0 > backup.deleteDuration > 120) {
       return alert('فترة الحذف غير صحيحة');
     }
-
-    console.log(backup.os);
 
     if (!backup.os || (backup.os != 'linux' && backup.os != 'win32')) {
       return alert('خطا في التعرف على النظام');

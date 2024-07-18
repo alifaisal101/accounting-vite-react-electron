@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { fetchBackups } from './controllers/backups.con';
 import { InBackup } from './models/backup';
 import { checkDirectoryAccess, checkFileAccess } from './utils/functions/dir';
@@ -7,35 +7,43 @@ import { errorLog, successLog, warnLog } from './utils/functions/log';
 import { join, basename, dirname } from 'path';
 import Datastore from '@seald-io/nedb';
 
-import { exec } from 'child_process';
-import { mkdirSync, writeFileSync } from 'fs';
-import { MONGODB_URI } from './config';
-
-import { schedule } from 'node-cron';
-import { MongoTools, MTOptions, MTCommand } from 'node-mongotools';
+import { mkdirSync, writeFileSync, existsSync, readFileSync, unlink } from 'fs';
 
 const verifyBackupFile = (filePath: string) => {
-  return new Promise((resolve, reject) => {
-    // Construct the command to verify the backup file
-    const command = `mongorestore --dryRun --archive=${filePath}`;
+  try {
+    // Check if the file exists
+    if (!existsSync(filePath)) {
+      throw new Error(`File not found: ${filePath}`);
+    }
 
-    // Execute the command
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
+    // Read file content
+    const fileContent = readFileSync(filePath, 'utf8');
 
-      // Check the output for errors or success messages
-      if (stderr) {
-        // If there's any error message in stderr, the file might be corrupt
-        reject(new Error(`Backup file ${filePath} is corrupt: ${stderr}`));
-      } else {
-        // If stdout is empty and no error, file is valid
-        resolve(`Backup file ${filePath} is valid.`);
-      }
-    });
-  });
+    // Parse JSON content
+    let jsonData = null;
+    try {
+      jsonData = JSON.parse(fileContent);
+    } catch (error) {
+      throw new Error(
+        `Invalid JSON format in file ${filePath}: ${error.message}`
+      );
+    }
+
+    // Example validation: Check for expected keys
+    if (!Array.isArray(jsonData)) {
+      throw new Error(
+        `Invalid JSON structure in file ${filePath}: Expected an array.`
+      );
+    }
+
+    // Additional checks based on your data structure
+
+    console.log(`Validation successful for file: ${filePath}`);
+    return true;
+  } catch (error) {
+    errorLog(`Validation failed for file ${filePath}: ${error.message}`);
+    return false;
+  }
 };
 
 const checkBkStatus = async (
@@ -54,8 +62,13 @@ const checkBkStatus = async (
       return false;
     }
 
-    const databaseBackupFileRAWAbsPath = join(absPath, backupStatus.fileName);
-    return await verifyBackupFile(databaseBackupFileRAWAbsPath);
+    const filePath = join(absPath, backupStatus.fileName);
+    // Check if the file exists
+    if (!existsSync(filePath)) {
+      throw new Error(`File not found: ${filePath}`);
+    }
+
+    return true;
   } catch (err) {
     errorLog(err);
     return false;
@@ -91,7 +104,7 @@ const createBackupDir = async (dirPath: string) => {
 
 const backupExec = async (
   backupPath: string,
-  dumbFileName: string,
+  jsonBackupFile: string,
   date: string,
   backupId: Types.ObjectId,
   statusDb: any
@@ -101,35 +114,50 @@ const backupExec = async (
       date,
       backupId,
       status: 'null',
-      fileName: dumbFileName,
+      fileName: jsonBackupFile,
     };
 
-    const mongoTools = new MongoTools();
-    const result = await mongoTools.mongodump({
-      uri: MONGODB_URI,
-      path: backupPath,
-      fileName: dumbFileName,
-    });
-    // // Construct the mongodump command
-    // const command = `mongodump --uri="${MONGODB_URI}" --out="${backupPath}" --gzip --archive="${dumbFileName}"`;
+    // try to back up
 
-    // // Execute the mongodump command
-    // exec(command, (error, stdout, stderr) => {
-    //   if (error) {
-    //     errorLog(`Error executing mongodump: ${error.message}`);
-    //     statusDoc.status = 'error';
-    //     return;
-    //   }
-    //   if (stderr) {
-    //     errorLog(`mongodump stderr: ${stderr}`);
-    //     statusDoc.status = 'stderr';
-    //     return;
-    //   }
-    //   statusDoc.status = 'ok';
-    //   console.log(`mongodump stdout: ${stdout}`);
-    //   console.log(`Database backup completed successfully to ${backupPath}`);
-    // });
+    try {
+      // Ensure the connection is established
+      if (mongoose.connection.readyState !== 1) {
+        throw new Error('Mongoose connection is not established.');
+      }
 
+      // Get list of all collections in the database
+      const collections = await mongoose.connection.db.collections();
+
+      // Object to store all data from all collections
+      const backupData = {};
+
+      // Iterate over each collection
+      for (let collection of collections) {
+        // Get collection name
+        const collectionName = collection.collectionName;
+
+        // Access the collection
+        const dbCollection = mongoose.connection.collection(collectionName);
+
+        // Fetch all documents from the collection
+        const allDocuments = await dbCollection.find({}).toArray();
+
+        // Store documents under collection name
+        backupData[collectionName] = allDocuments;
+
+        console.log(`Backup successful for collection '${collectionName}'. `);
+      }
+      // Write the documents to a JSON file
+      const backupFilePath = `${backupPath}/${jsonBackupFile}`;
+      // Write the data to a JSON file
+      writeFileSync(backupFilePath, JSON.stringify(backupData, null, 2));
+
+      console.log(`Backup successful. Data saved to ${backupPath}`);
+    } catch (err) {
+      statusDoc.status = 'error';
+      errorLog(err);
+    }
+    statusDoc.status = 'ok';
     await statusDb.insertAsync(statusDoc);
   } catch (error) {
     console.error(error);
@@ -158,7 +186,7 @@ export const backupHandler = () => {
           backupStatusFilename
         );
 
-        const dumbFileName = `${backup._id}_${currentDate}.dumb`;
+        const jsonBackupFile = `${backup._id}_${currentDate}.json`;
 
         const logStart = `[Backup: ${backup._id}]:`;
 
@@ -178,7 +206,9 @@ export const backupHandler = () => {
         }
 
         const backupDirExists = await checkDirectoryAccess(backupDirAbsPath);
-        const statusDb = new Datastore({ filename: backupStatusFilename });
+        const statusDb = new Datastore({
+          filename: backupStatusFilenameAbsPath,
+        });
 
         if (backupDirExists) {
           const backupStatusFileExists = await checkFileAccess(
@@ -191,21 +221,59 @@ export const backupHandler = () => {
             } catch (err) {
               return errorLog(err);
             }
-            if (
-              !(await checkBkStatus(
-                statusDb,
-                currentDate,
-                backup,
-                backupDirAbsPath
-              ))
-            ) {
+            const backupJsonFileExists = await checkBkStatus(
+              statusDb,
+              currentDate,
+              backup,
+              backupDirAbsPath
+            );
+
+            if (!backupJsonFileExists) {
               await backupExec(
                 backupDirAbsPath,
-                dumbFileName,
+                jsonBackupFile,
                 currentDate,
                 backup._id,
                 statusDb
               );
+            }
+
+            if (backup.deleteDuration == 0) return;
+            const backupsFromStatusDb = await statusDb.findAsync({});
+            for (let i = 0; i < backupsFromStatusDb.length; i++) {
+              const backupRecord = backupsFromStatusDb[i];
+              const backupDate = new Date(backupRecord.date);
+
+              const durationPassed = Math.floor(
+                // @ts-ignore
+                (new Date(currentDate) - backupDate) / (1000 * 60 * 60 * 24)
+              );
+
+              if (durationPassed >= backup.deleteDuration) {
+                statusDb
+                  .removeAsync({ _id: backupRecord._id }, {})
+                  .then(() => {
+                    successLog(`Deleted backup with id: ${backupRecord._id}`);
+                  })
+                  .catch((err) => {
+                    errorLog(err);
+                  });
+                const absPathJsonDb = join(
+                  backupDirAbsPath,
+                  backupRecord.fileName
+                );
+                unlink(absPathJsonDb, (err) => {
+                  if (err) {
+                    console.error(
+                      `Error deleting file ${absPathJsonDb}: ${err.message}`
+                    );
+                    return;
+                  }
+                  console.log(
+                    `File ${absPathJsonDb} has been deleted successfully`
+                  );
+                });
+              }
             }
           } else {
             warnLog(
@@ -214,7 +282,7 @@ export const backupHandler = () => {
             await createBackupStatusFile(backupStatusFilenameAbsPath);
             await backupExec(
               backupDirAbsPath,
-              dumbFileName,
+              jsonBackupFile,
               currentDate,
               backup._id,
               statusDb
@@ -228,22 +296,12 @@ export const backupHandler = () => {
           await createBackupStatusFile(backupStatusFilenameAbsPath);
           await backupExec(
             backupDirAbsPath,
-            dumbFileName,
+            jsonBackupFile,
             currentDate,
             backup._id,
             statusDb
           );
         }
-
-        schedule('*/5 * * * *', async () => {
-          await backupExec(
-            backupDirAbsPath,
-            dumbFileName,
-            currentDate,
-            backup._id,
-            statusDb
-          );
-        });
       }
     })
     .catch((err) => {
