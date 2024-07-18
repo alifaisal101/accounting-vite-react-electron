@@ -1,6 +1,0 @@
-{
-    date: yyyy-mm-dd
-    fileName: [FILENAME]
-    backupId: [BACKUP-ID]
-    status: [STATUS]
-}
