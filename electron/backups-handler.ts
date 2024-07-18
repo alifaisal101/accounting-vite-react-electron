@@ -53,10 +53,12 @@ const checkBkStatus = async (
   absPath: string
 ) => {
   try {
+
     const backupStatus = await statusDb.findOneAsync({ date: currentDate });
     if (!backupStatus) {
       return false;
     }
+
 
     if (backupStatus.status !== 'ok') {
       return false;
@@ -165,6 +167,48 @@ const backupExec = async (
   }
 };
 
+const deleteOldBackups = async (statusDb: any, deleteDuration: number,backupDirAbsPath: string, currentDate: string ) => {
+  const backupsFromStatusDb = await statusDb.findAsync({});
+  for (let i = 0; i < backupsFromStatusDb.length; i++) {
+    const backupRecord = backupsFromStatusDb[i];
+    if (backupRecord.testItem || false) {
+      continue;
+    }
+    const backupDate = new Date(backupRecord.date);
+
+    const durationPassed = Math.floor(
+      // @ts-ignore
+      (new Date(currentDate) - backupDate) / (1000 * 60 * 60 * 24)
+    );
+
+    if (durationPassed >= deleteDuration) {
+      statusDb
+        .removeAsync({ _id: backupRecord._id }, {})
+        .then(() => {
+          successLog(`Deleted backup with id: ${backupRecord._id}`);
+        })
+        .catch((err) => {
+          errorLog(err);
+        });
+      const absPathJsonDb = join(
+        backupDirAbsPath,
+        backupRecord.fileName
+      );
+      unlink(absPathJsonDb, (err) => {
+        if (err) {
+          console.error(
+            `Error deleting file ${absPathJsonDb}: ${err.message}`
+          );
+          return;
+        }
+        console.log(
+          `File ${absPathJsonDb} has been deleted successfully`
+        );
+      });
+    }
+  }
+}
+
 export const backupHandler = () => {
   // Handle backups
   fetchBackups()
@@ -205,95 +249,41 @@ export const backupHandler = () => {
           );
         }
 
+        // If backup DIR doesn't exist, create it
         const backupDirExists = await checkDirectoryAccess(backupDirAbsPath);
-        const statusDb = new Datastore({
-          filename: backupStatusFilenameAbsPath,
-        });
-
-        if (backupDirExists) {
-          const backupStatusFileExists = await checkFileAccess(
-            backupStatusFilenameAbsPath
+        if(!backupDirExists) {
+          warnLog(
+            `${logStart} Failed to find backup status file. File ${backupStatusFilename} is either not found, or does not have read/write permissions. It will be created now.`
           );
+          await createBackupDir(backupDirAbsPath);
+        }
 
-          if (backupStatusFileExists) {
-            try {
-              await statusDb.loadDatabaseAsync();
-            } catch (err) {
-              return errorLog(err);
-            }
-            const backupJsonFileExists = await checkBkStatus(
-              statusDb,
-              currentDate,
-              backup,
-              backupDirAbsPath
-            );
-
-            if (!backupJsonFileExists) {
-              await backupExec(
-                backupDirAbsPath,
-                jsonBackupFile,
-                currentDate,
-                backup._id,
-                statusDb
-              );
-            }
-
-            if (backup.deleteDuration == 0) return;
-            const backupsFromStatusDb = await statusDb.findAsync({});
-            for (let i = 0; i < backupsFromStatusDb.length; i++) {
-              const backupRecord = backupsFromStatusDb[i];
-              const backupDate = new Date(backupRecord.date);
-
-              const durationPassed = Math.floor(
-                // @ts-ignore
-                (new Date(currentDate) - backupDate) / (1000 * 60 * 60 * 24)
-              );
-
-              if (durationPassed >= backup.deleteDuration) {
-                statusDb
-                  .removeAsync({ _id: backupRecord._id }, {})
-                  .then(() => {
-                    successLog(`Deleted backup with id: ${backupRecord._id}`);
-                  })
-                  .catch((err) => {
-                    errorLog(err);
-                  });
-                const absPathJsonDb = join(
-                  backupDirAbsPath,
-                  backupRecord.fileName
-                );
-                unlink(absPathJsonDb, (err) => {
-                  if (err) {
-                    console.error(
-                      `Error deleting file ${absPathJsonDb}: ${err.message}`
-                    );
-                    return;
-                  }
-                  console.log(
-                    `File ${absPathJsonDb} has been deleted successfully`
-                  );
-                });
-              }
-            }
-          } else {
-            warnLog(
-              `${logStart} Failed to find backup status file. File ${backupStatusFilename} is either not found, or does not have read/write permissions. It will be created now.`
-            );
-            await createBackupStatusFile(backupStatusFilenameAbsPath);
-            await backupExec(
-              backupDirAbsPath,
-              jsonBackupFile,
-              currentDate,
-              backup._id,
-              statusDb
-            );
-          }
-        } else {
+        // If statu DB doesn't exist, create it
+        const backupStatusFileExists = await checkFileAccess(
+          backupStatusFilenameAbsPath
+        );
+        if (!backupStatusFileExists) {
           warnLog(
             `${logStart} Failed to access backup directory. Path ${backupDirAbsPath} is either not found, or does not have read/write permissions. It will be created now.`
           );
-          await createBackupDir(backupDirAbsPath);
           await createBackupStatusFile(backupStatusFilenameAbsPath);
+        }
+
+        // Link the the NeDB to statusDb constant
+        const statusDb =  new Datastore({
+          filename: backupStatusFilenameAbsPath,
+        });
+
+        await statusDb.loadDatabaseAsync()
+        // Check if the JSON backup for today exists, if not, execute backupExec() to pull the data and backup for today
+        const checkJSONStatus = await checkBkStatus(
+          statusDb,
+          currentDate,
+          backup,
+          backupDirAbsPath
+        );
+
+        if (!checkJSONStatus) {
           await backupExec(
             backupDirAbsPath,
             jsonBackupFile,
@@ -301,6 +291,11 @@ export const backupHandler = () => {
             backup._id,
             statusDb
           );
+        }
+
+        // If the deleteDuration is not 0 (0 means don't delete old backups) then check the old backups and delete them
+        if (backup.deleteDuration !== 0){
+          await deleteOldBackups(statusDb, backup.deleteDuration, backupDirAbsPath, currentDate);
         }
       }
     })
