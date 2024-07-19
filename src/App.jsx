@@ -149,9 +149,9 @@ function App() {
             setCustomerId('');
           }}
           unmountAndMountDropdown={() => {
-            contentHandler('');
+            cancelDropdownHandler();
             setTimeout(() => {
-              contentHandler('backups');
+              dropdownHandler('view-customer');
             }, 250);
           }}
         />
