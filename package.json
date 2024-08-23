@@ -6,6 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
     "build:win:64": "tsc && vite build && electron-builder --win --x64",
+    "build:mac": "tsc && vite build && electron-builder --mac",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -13,6 +14,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@seald-io/nedb": "^4.0.4",
+    "dmg-builder": "^25.0.0-alpha.10",
     "dotenv": "^16.3.1",
     "mongoose": "^7.3.2",
     "node-cron": "^3.0.3",
@@ -50,5 +52,8 @@
     "vite-plugin-electron-renderer": "^0.14.5"
   },
   "author": "Ali Faisal",
-  "main": "dist-electron/main.js"
+  "main": "dist-electron/main.js",
+  "optionalDependencies": {
+    "dmg-license": "^1.0.11"
+  }
 }
