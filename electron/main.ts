@@ -72,7 +72,7 @@ const bootstrap = async () => {
         // }
 
         // Check activation status
-        await activation();
+        // await activation();
       } catch (err) {
         failedToActivate = true;
       }
