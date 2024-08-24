@@ -72,7 +72,7 @@ const BackupForm = (props) => {
 
     e_backups.addBackup(backup, (err, result) => {
       if (err) {
-        return alert('فشل اضافة حذف مؤقت');
+        return alert('فشل اضافة الخزن المؤقت');
       }
 
       if (result) {
