@@ -52,14 +52,17 @@ const BackupForm = (props) => {
       return alert('فترة الحذف غير صحيحة');
     }
 
-    if (!backup.os || (backup.os != 'linux' && backup.os != 'win32')) {
+    if (
+      !backup.os ||
+      (backup.os != 'linux' && backup.os != 'win32' && backup.os != 'darwin')
+    ) {
       return alert('خطا في التعرف على النظام');
     }
 
     let isPathValid;
     if (backup.os == 'win32') {
       isPathValid = isValidWindowsPath(backup.path);
-    } else if (backup.os == 'linux') {
+    } else if (backup.os == 'linux' || backup.os == 'darwin') {
       isPathValid = isValidLinuxPath(backup.path);
     }
 
