@@ -35,6 +35,7 @@ import {
 import { backupHandler } from './backups-handler';
 import { MONGODB_URI } from './config';
 import { GridFilterModel, GridSortModel } from './grid-models';
+import { getFinancesSummery } from './controllers/finances-summary.con';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // const rootFs = dirname(__dirname);
@@ -340,6 +341,15 @@ const bootstrap = async () => {
       event.reply('gen-new-mongo-id-str-result', newMongoId);
     } catch (err) {
       event.reply('gen-new-mongo-id-str-failed');
+    }
+  });
+
+  ipcMain.on('get-finances-summary', async (event) => {
+    try {
+      const result = await getFinancesSummery();
+      event.reply('get-finances-summary-result', result);
+    } catch (err) {
+      event.reply('get-finances-summary-error');
     }
   });
 };

@@ -404,3 +404,16 @@ contextBridge.exposeInMainWorld('e_backups', {
     });
   },
 });
+contextBridge.exposeInMainWorld('e_financesSummary', {
+  getFinancesSummary: (cb: Function) => {
+    ipcRenderer.send('get-finances-summary');
+    ipcRenderer.on('get-finances-summary-result', (_event, result) => {
+      cb(null, result);
+      ipcRenderer.removeAllListeners('get-finances-summary-result');
+    });
+    ipcRenderer.on('get-finances-summary-failed', (_event) => {
+      cb(new Error('Failed to get finances summary.'), null);
+      ipcRenderer.removeAllListeners('get-finances-summary-failed');
+    });
+  },
+});

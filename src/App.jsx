@@ -23,6 +23,7 @@ import Backups from './pages/backups/Backups';
 import BackupForm from './components/containers/backup-form/BackupForm';
 import { useRecoilState } from 'recoil';
 import { osPlatformState } from './store/os.store';
+import FinancesSummary from './pages/FinancesSummary/FinancesSummary';
 
 function App() {
   const [osPlatform, setOsPlatform] = useRecoilState(osPlatformState);
@@ -85,6 +86,9 @@ function App() {
       PageComp = <PrintSettings />;
       break;
 
+    case 'financeSummary':
+      PageComp = <FinancesSummary />;
+      break;
     case 'backups':
       PageComp = <Backups action={() => dropdownHandler('add-backup')} />;
       break;
