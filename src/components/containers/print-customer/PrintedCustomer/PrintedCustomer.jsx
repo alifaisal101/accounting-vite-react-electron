@@ -67,10 +67,10 @@ class PrintedCustomer extends React.PureComponent {
             مجموع الديون: {this.customer.totalDebt} دينار
           </div>
         </div>
-        <p className="printed-customer_sub-title">الملاحظات:</p>
-        <p className="printed-customer_notes">{this.customer.notes}</p>
         <p className="printed-customer_sub-title">المشتريات:</p>
         <CustomerPurchases purchases={this.customer.purchases} />
+        <p className="printed-customer_sub-title">الملاحظات:</p>
+        <p className="printed-customer_notes">{this.customer.notes}</p>
       </div>
     );
   }
