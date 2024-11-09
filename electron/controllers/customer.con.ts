@@ -3,7 +3,12 @@ import moment from 'moment';
 import CustomerModel from '../models/customer';
 import PurchaseModel from '../models/purchase';
 import { addPurchases, fetchPurchases } from './purchase.con';
-import mongoose from 'mongoose';
+import { getCustomersWithPurchases } from '../repositories/customer.repository';
+import { GridFilterModel, GridSortModel } from '../grid-models';
+import {
+  mapGridFilterModelToFilterQuery,
+  mapSortGridToSortQuery,
+} from '../mappers/gridModelsMapper';
 
 export const getCustomersNames = async () => {
   const customersNames = await CustomerModel.find({}, { _id: 1, name: 1 });
@@ -137,63 +142,17 @@ export const saveCustomer = async (customer: any) => {
   return result;
 };
 
-export const fetchCustomers = async (dates?: { start: Date; end: Date }) => {
-  const result = await CustomerModel.aggregate([
-    { $match: {} },
-    {
-      $lookup: {
-        from: 'purchases',
-        localField: 'purchasesIds',
-        foreignField: '_id',
-        as: 'purchases',
-      },
-    },
-    { $project: { purchasesIds: 0 } },
-  ]);
-
-  // Filtering: converting the objId -> string; deleting purchases; adding unFulfilled Payment
-  const _customers = [];
-  for (let i = 0; i < result.length; i++) {
-    const _customer = result[i];
-
-    // unFulfilled Payments | earliest payment date processing
-    let unFulfilledPayment = false;
-    let earliestPaymentDate = 0;
-
-    for (let y = 0; y < _customer.purchases.length; y++) {
-      const purchase = _customer.purchases[y];
-      for (let x = 0; x < purchase.payments.length; x++) {
-        const payment = purchase.payments[x];
-        const unpaid =
-          payment.status == 'partial' || payment.status == 'unpaid';
-        // Check if the payment is unpaid or paid partially, and if the payment date is today or behind
-        if (
-          unpaid &&
-          moment(payment.date).isBefore(moment(moment().format('YYYY-MM-DD')))
-        ) {
-          unFulfilledPayment = true;
-        }
-        // Adding the earliest payment date
-        if (!earliestPaymentDate && unpaid) {
-          earliestPaymentDate = payment.date;
-        } else if (
-          moment(earliestPaymentDate).isAfter(moment(payment.date)) &&
-          unpaid
-        ) {
-          earliestPaymentDate = payment.date;
-        }
-      }
-    }
-
-    _customer._id = _customer._id.toString();
-    _customer.unFulfilledPayment = unFulfilledPayment;
-    _customer.earliestPaymentDate = earliestPaymentDate;
-    delete _customer.purchases;
-
-    _customers.push(_customer);
-  }
-
-  return _customers;
+export const fetchCustomers = async (
+  take?: number,
+  skip?: number,
+  filterModel?: GridFilterModel,
+  sortModel?: GridSortModel
+) => {
+  take = take ?? 5;
+  skip = skip ?? 0;
+  const filterQuery = mapGridFilterModelToFilterQuery(filterModel);
+  const sortQuery = mapSortGridToSortQuery(sortModel);
+  return await getCustomersWithPurchases(filterQuery, sortQuery, take, skip);
 };
 
 export const fetchCustomersOnDate = async (date: any) => {

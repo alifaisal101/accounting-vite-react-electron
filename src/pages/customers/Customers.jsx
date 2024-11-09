@@ -1,11 +1,6 @@
 import './Customers.css';
 import React, { useEffect, useState, Fragment } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import Loader from './../../components/ui/loader/Loader';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import reloadIcon from './../../assets/reload.svg';
 import moment from 'moment';
 
 const columns = [
@@ -60,97 +55,101 @@ const columns = [
 ];
 
 function Customers(props) {
-  const [dateValue, setDate] = useState(moment());
   const [customers, setCustomers] = useState([]);
+  const [count, setCount] = useState(0);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 5,
+  });
+  const [searchModel, setSearchModel] = useState();
+  const [sortModel, setSortModel] = useState([
+    {
+      field: 'createdAt',
+      sort: 'desc',
+    },
+  ]);
   const [loading, setLoading] = useState(false);
-
-  const dateHandler = (date) => {
-    const momentDayObj = moment(date._d);
-    setDate(momentDayObj);
-    setLoading(true);
-    e_customers.fetchOnDates(momentDayObj.toISOString(), (err, result) => {
-      if (err) {
-        return alert('فشل سحب الزبائن');
+  // Handle filter model change
+  const handleFilterModelChange = (newFilterModel) => {
+    const updatedItems = newFilterModel.items.map((filter) => {
+      // Check if the field is a date and the operator is 'is'
+      if (
+        (filter.field === 'createdAt' ||
+          filter.field === 'earliestPaymentDate') &&
+        filter.operator === 'is'
+      ) {
+        return {
+          ...filter,
+          operator: 'at', // Change 'is' to 'at' for date fields
+        };
       }
+      return filter;
+    });
 
-      if (result) {
-        setLoading(false);
-        result = result.map((customer) => {
-          {
-            return { ...customer, id: customer._id };
-          }
-        });
-        setLoading(false);
-        return setCustomers(result);
-      }
+    setSearchModel({
+      ...newFilterModel,
+      items: updatedItems,
     });
   };
-
   useEffect(() => {
     setLoading(true);
-    e_customers.fetchCustomers({}, (err, result) => {
-      if (err) {
-        return alert('فشل سحب الزبائن');
+    let take = paginationModel.pageSize;
+    let skip = paginationModel.page * paginationModel.pageSize;
+    e_customers.fetchCustomers(
+      take,
+      skip,
+      searchModel,
+      sortModel,
+      (err, result) => {
+        if (err) {
+          return alert('فشل سحب الزبائن');
+        }
+        setLoading(false);
+        if (result) {
+          result.data = result.data.map((customer) => {
+            {
+              return { ...customer, id: customer._id };
+            }
+          });
+          setCount(result.totalCount);
+          return setCustomers(result.data);
+        }
       }
-
-      setLoading(false);
-      if (result) {
-        result = result.map((customer) => {
-          {
-            return { ...customer, id: customer._id };
-          }
-        });
-        return setCustomers(result);
-      }
-    });
-  }, []);
+    );
+  }, [paginationModel, searchModel, sortModel]);
 
   return (
     <div className="customers-list" dir="rtl">
       <h1>قائمة الزبائن</h1>
 
-      {loading ? (
-        <Loader />
-      ) : (
-        <Fragment>
-          {/* Specfic payment date fetching, deprected, will be moved to a larger filtering*/}
-          {/* <div className="date-reload-container">
-            <div className="reload-icon-container">
-              <img
-                src={reloadIcon}
-                alt="Reload"
-                onClick={() => {
-                  props.unmountContentContainer();
-                }}
-              />
-            </div>
-            <LocalizationProvider dateAdapter={AdapterMoment}>
-              <DatePicker value={dateValue} onChange={dateHandler} />
-            </LocalizationProvider>{' '}
-          </div> */}
-          {customers.length == 0 ? (
-            <h1>لم يتم العثور على اي زبائن</h1>
-          ) : (
-            <div className="data-grid-container">
-              <DataGrid
-                onRowClick={(data) => {
-                  props.action(data.id);
-                }}
-                rows={customers}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 6,
-                    },
-                  },
-                }}
-                pageSizeOptions={[6]}
-              />
-            </div>
-          )}
-        </Fragment>
-      )}
+      <Fragment>
+        <div className="data-grid-container">
+          <DataGrid
+            onRowClick={(data) => {
+              props.action(data.id);
+            }}
+            initialState={{
+              pagination: {
+                paginationModel,
+              },
+            }}
+            pageSizeOptions={[5, 10, 20]}
+            rows={customers}
+            rowCount={count}
+            columns={columns}
+            loading={loading}
+            pagination
+            sortingMode="server"
+            filterMode="server"
+            paginationMode="server"
+            pageSize={paginationModel.pageSize}
+            onPaginationModelChange={setPaginationModel}
+            page={paginationModel.page}
+            onSortModelChange={setSortModel}
+            onFilterModelChange={handleFilterModelChange}
+          />
+        </div>
+      </Fragment>
     </div>
   );
 }

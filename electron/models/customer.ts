@@ -4,6 +4,7 @@ import {
   requiredString,
   unRequiredString,
 } from '../utils/objects/mongoose-options';
+import { InPurchase } from './purchase';
 
 // Document interface
 export interface InCustomer {
@@ -12,6 +13,12 @@ export interface InCustomer {
   createdAt: Date;
   purchasesIds?: ObjectId[];
   notes?: string;
+}
+
+export interface InCustomerWithPurchases extends InCustomer {
+  purchases: InPurchase[];
+  unFulfilledPayment?: boolean;
+  earliestPaymentDate?: Date;
 }
 
 const schema = new Schema<InCustomer>({

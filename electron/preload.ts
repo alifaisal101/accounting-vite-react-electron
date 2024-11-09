@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 import { InProduct } from './models/product';
 import { arrayBufferToJson, jsonToBase64Url } from './utils/functions/data';
 import { InPrintSettings } from './models/printsettings';
+import { GridFilterModel, GridSortModel } from './grid-models';
 
 function domReady(
   condition: DocumentReadyState[] = ['complete', 'interactive']
@@ -185,8 +186,14 @@ contextBridge.exposeInMainWorld('e_customers', {
     });
   },
 
-  fetchCustomers: (dates: any, cb: Function) => {
-    ipcRenderer.send('fetch-customers');
+  fetchCustomers: (
+    take: number,
+    skip: number,
+    filterModel: GridFilterModel,
+    sortModel: GridSortModel,
+    cb: Function
+  ) => {
+    ipcRenderer.send('fetch-customers', take, skip, filterModel, sortModel);
     ipcRenderer.on('fetch-customers-result', (_event, result) => {
       cb(null, result);
       ipcRenderer.removeAllListeners('fetch-customers-result');

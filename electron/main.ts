@@ -34,6 +34,7 @@ import {
 } from './controllers/backups.con';
 import { backupHandler } from './backups-handler';
 import { MONGODB_URI } from './config';
+import { GridFilterModel, GridSortModel } from './grid-models';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // const rootFs = dirname(__dirname);
@@ -56,6 +57,7 @@ const messages = {
 };
 
 const bootstrap = async () => {
+  const isDevelopment = !app.isPackaged;
   let failedToConnectToDB = false;
   let failedToActivate = false;
 
@@ -113,7 +115,7 @@ const bootstrap = async () => {
       );
     });
 
-    if (VITE_DEV_SERVER_URL) {
+    if (isDevelopment) {
       win.loadURL(VITE_DEV_SERVER_URL);
     } else {
       // win.loadFile('dist/index.html')
@@ -211,14 +213,24 @@ const bootstrap = async () => {
     }
   });
 
-  ipcMain.on('fetch-customers', async (event) => {
-    try {
-      const result = await fetchCustomers();
-      event.reply('fetch-customers-result', result);
-    } catch (err) {
-      event.reply('failed-fetch-customers');
+  ipcMain.on(
+    'fetch-customers',
+    async (
+      event,
+      take?,
+      skip?,
+      filterModel?: GridFilterModel,
+      sortModel?: GridSortModel
+    ) => {
+      try {
+        const result = await fetchCustomers(take, skip, filterModel, sortModel);
+        event.reply('fetch-customers-result', result);
+      } catch (err) {
+        console.log(err);
+        event.reply('failed-fetch-customers');
+      }
     }
-  });
+  );
 
   ipcMain.on('fetch-ondate', async (event, date) => {
     try {
