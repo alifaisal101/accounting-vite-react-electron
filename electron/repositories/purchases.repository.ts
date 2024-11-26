@@ -26,15 +26,138 @@ export async function calculateFinancesSummary() {
       $group: {
         _id: null, // Aggregate across all purchases
 
-        totalSells: { $sum: '$payments.amount' },
-        totalDebt: { $sum: '$debt' },
-        totalPaidUp: { $sum: '$payments.paidUp' },
-
+        totalSells: {
+          $sum: {
+            $let: {
+              vars: {
+                amount: '$payments.amount',
+              },
+              in: {
+                $cond: [
+                  // Check if amount is a string of 5 digits or more and ends with "000"
+                  {
+                    $and: [
+                      { $gt: [{ $strLenBytes: { $toString: '$$amount' } }, 4] }, // More than 4 digits
+                      { $eq: [{ $mod: ['$payments.amount', 1000] }, 0] }, // Ends with 000
+                    ],
+                  },
+                  // If it ends with 000 and has more than 4 digits, divide by 1000
+                  { $divide: ['$payments.amount', 1000] },
+                  // Otherwise, use the amount as is
+                  '$payments.amount',
+                ],
+              },
+            },
+          },
+        },
+        totalDebt: {
+          $sum: {
+            $let: {
+              vars: {
+                amount: '$payments.amount',
+                paidUp: '$payments.paidUp',
+              },
+              in: {
+                $subtract: [
+                  // Check if the amount ends with "000" and has more than 4 digits
+                  {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$amount' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.amount', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      // If the condition is met, divide the amount by 1000
+                      { $divide: ['$payments.amount', 1000] },
+                      // Otherwise, use the amount as is
+                      '$payments.amount',
+                    ],
+                  },
+                  // Check if the paidUp amount ends with "000" and has more than 4 digits
+                  {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$paidUp' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      // If the condition is met, divide the paidUp by 1000
+                      { $divide: ['$payments.paidUp', 1000] },
+                      // Otherwise, use the paidUp amount as is
+                      '$payments.paidUp',
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        },
+        totalPaidUp: {
+          $sum: {
+            $let: {
+              vars: {
+                paidUp: '$payments.paidUp',
+              },
+              in: {
+                $cond: [
+                  // Check if the paidUp amount has more than 4 digits and ends with "000"
+                  {
+                    $and: [
+                      { $gt: [{ $strLenBytes: { $toString: '$$paidUp' } }, 4] }, // More than 4 digits
+                      { $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0] }, // Ends with 000
+                    ],
+                  },
+                  // If the condition is met, divide the paidUp by 1000
+                  { $divide: ['$payments.paidUp', 1000] },
+                  // Otherwise, use the paidUp amount as is
+                  '$payments.paidUp',
+                ],
+              },
+            },
+          },
+        },
         currentYearSells: {
           $sum: {
             $cond: [
               { $eq: [{ $year: '$payments.date' }, currentYear] },
-              '$payments.amount',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$amount' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.amount', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      // If the condition is met, divide by 1000
+                      { $divide: ['$payments.amount', 1000] },
+                      // Otherwise, use the amount as is
+                      '$payments.amount',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
@@ -43,17 +166,88 @@ export async function calculateFinancesSummary() {
           $sum: {
             $cond: [
               { $eq: [{ $year: '$payments.date' }, lastYear] },
-              '$payments.amount',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$amount' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.amount', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      { $divide: ['$payments.amount', 1000] },
+                      '$payments.amount',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
         },
-
         currentYearDebt: {
           $sum: {
             $cond: [
               { $eq: [{ $year: '$payments.date' }, currentYear] },
-              '$debt',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $subtract: [
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$amount' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.amount', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.amount', 1000] },
+                          '$payments.amount',
+                        ],
+                      },
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$paidUp' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.paidUp', 1000] },
+                          '$payments.paidUp',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
@@ -62,17 +256,88 @@ export async function calculateFinancesSummary() {
           $sum: {
             $cond: [
               { $eq: [{ $year: '$payments.date' }, lastYear] },
-              '$debt',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $subtract: [
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$amount' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.amount', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.amount', 1000] },
+                          '$payments.amount',
+                        ],
+                      },
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$paidUp' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.paidUp', 1000] },
+                          '$payments.paidUp',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
         },
-
         currentYearPaidUp: {
           $sum: {
             $cond: [
               { $eq: [{ $year: '$payments.date' }, currentYear] },
-              '$payments.paidUp',
+              {
+                $let: {
+                  vars: {
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$paidUp' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      { $divide: ['$payments.paidUp', 1000] },
+                      '$payments.paidUp',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
@@ -81,12 +346,34 @@ export async function calculateFinancesSummary() {
           $sum: {
             $cond: [
               { $eq: [{ $year: '$payments.date' }, lastYear] },
-              '$payments.paidUp',
+              {
+                $let: {
+                  vars: {
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$paidUp' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      { $divide: ['$payments.paidUp', 1000] },
+                      '$payments.paidUp',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
         },
-
         currentMonthSells: {
           $sum: {
             $cond: [
@@ -96,7 +383,30 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$payments.amount',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$amount' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.amount', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      { $divide: ['$payments.amount', 1000] },
+                      '$payments.amount',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
@@ -110,12 +420,34 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$payments.amount',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$amount' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.amount', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      { $divide: ['$payments.amount', 1000] },
+                      '$payments.amount',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
         },
-
         currentMonthDebt: {
           $sum: {
             $cond: [
@@ -125,7 +457,56 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$debt',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $subtract: [
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$amount' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.amount', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.amount', 1000] },
+                          '$payments.amount',
+                        ],
+                      },
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$paidUp' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.paidUp', 1000] },
+                          '$payments.paidUp',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
@@ -139,12 +520,60 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$debt',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $subtract: [
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$amount' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.amount', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.amount', 1000] },
+                          '$payments.amount',
+                        ],
+                      },
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$paidUp' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.paidUp', 1000] },
+                          '$payments.paidUp',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
         },
-
         currentMonthPaidUp: {
           $sum: {
             $cond: [
@@ -154,7 +583,30 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$payments.paidUp',
+              {
+                $let: {
+                  vars: {
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$paidUp' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      { $divide: ['$payments.paidUp', 1000] },
+                      '$payments.paidUp',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
@@ -168,12 +620,34 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$payments.paidUp',
+              {
+                $let: {
+                  vars: {
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$paidUp' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      { $divide: ['$payments.paidUp', 1000] },
+                      '$payments.paidUp',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
         },
-
         currentDaySells: {
           $sum: {
             $cond: [
@@ -183,11 +657,35 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$payments.amount',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$amount' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.amount', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      { $divide: ['$payments.amount', 1000] },
+                      '$payments.amount',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
         },
+
         lastDaySells: {
           $sum: {
             $cond: [
@@ -197,12 +695,34 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$payments.amount',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$amount' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.amount', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      { $divide: ['$payments.amount', 1000] },
+                      '$payments.amount',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
         },
-
         currentDayDebt: {
           $sum: {
             $cond: [
@@ -212,11 +732,61 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$debt',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $subtract: [
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$amount' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.amount', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.amount', 1000] },
+                          '$payments.amount',
+                        ],
+                      },
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$paidUp' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.paidUp', 1000] },
+                          '$payments.paidUp',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
         },
+
         lastDayDebt: {
           $sum: {
             $cond: [
@@ -226,12 +796,60 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$debt',
+              {
+                $let: {
+                  vars: {
+                    amount: '$payments.amount',
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $subtract: [
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$amount' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.amount', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.amount', 1000] },
+                          '$payments.amount',
+                        ],
+                      },
+                      {
+                        $cond: [
+                          {
+                            $and: [
+                              {
+                                $gt: [
+                                  { $strLenBytes: { $toString: '$$paidUp' } },
+                                  4,
+                                ],
+                              }, // More than 4 digits
+                              {
+                                $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0],
+                              }, // Ends with 000
+                            ],
+                          },
+                          { $divide: ['$payments.paidUp', 1000] },
+                          '$payments.paidUp',
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
         },
-
         currentDayPaidUp: {
           $sum: {
             $cond: [
@@ -241,7 +859,30 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$payments.paidUp',
+              {
+                $let: {
+                  vars: {
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$paidUp' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      { $divide: ['$payments.paidUp', 1000] },
+                      '$payments.paidUp',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },
@@ -255,7 +896,30 @@ export async function calculateFinancesSummary() {
                   { $eq: [{ $year: '$payments.date' }, currentYear] },
                 ],
               },
-              '$payments.paidUp',
+              {
+                $let: {
+                  vars: {
+                    paidUp: '$payments.paidUp',
+                  },
+                  in: {
+                    $cond: [
+                      {
+                        $and: [
+                          {
+                            $gt: [
+                              { $strLenBytes: { $toString: '$$paidUp' } },
+                              4,
+                            ],
+                          }, // More than 4 digits
+                          { $eq: [{ $mod: ['$payments.paidUp', 1000] }, 0] }, // Ends with 000
+                        ],
+                      },
+                      { $divide: ['$payments.paidUp', 1000] },
+                      '$payments.paidUp',
+                    ],
+                  },
+                },
+              },
               0,
             ],
           },

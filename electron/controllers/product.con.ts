@@ -1,6 +1,6 @@
 import ProductModel, { InProduct } from '../models/product';
 import { arrayBufferToJson, jsonToBuffer } from '../utils/functions/data';
-import { mappayPeriodType } from '../utils/functions/locale';
+import { mappedPeriodType } from '../utils/functions/locale';
 
 export const createProduct = async (product_body: InProduct) => {
   const product_data = {
@@ -21,7 +21,7 @@ export const createProduct = async (product_body: InProduct) => {
   const result = { ...(await product.save())._doc };
 
   result._id = result._id.toString();
-  result.payPeriodType = mappayPeriodType(result.payPeriodType);
+  result.payPeriodType = mappedPeriodType(result.payPeriodType);
 
   if (result.image) {
     // @ts-ignore
@@ -38,7 +38,7 @@ export const fetchProducts = async () => {
   for (let i = 0; i < result.length; i++) {
     //@ts-ignore
     const product = { ...result[i]._doc, _id: result[i]._id.toString() };
-    product.payPeriodType = mappayPeriodType(product.payPeriodType);
+    product.payPeriodType = mappedPeriodType(product.payPeriodType);
 
     if (product.image) {
       //@ts-ignore

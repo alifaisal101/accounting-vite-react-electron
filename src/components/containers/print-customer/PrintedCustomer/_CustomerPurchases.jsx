@@ -1,4 +1,7 @@
-import { mappayPeriodType } from './../../../../../electron/utils/functions/locale';
+import {
+  mapMoneyAmount,
+  mappedPeriodType,
+} from './../../../../../electron/utils/functions/locale';
 import { mapPaymentPayStatus } from './../../../../../electron/utils/functions/locale';
 
 function _CustomerPurchases(props) {
@@ -11,22 +14,22 @@ function _CustomerPurchases(props) {
       const ProductItemsComponents = [];
       const ProductPricesComponents = [];
       for (let y = 0; y < _purchase.purchasedProducts.length; y++) {
-        const _purchasdProduct = _purchase.purchasedProducts[y];
+        const _purchasedProduct = _purchase.purchasedProducts[y];
         ProductItemsComponents.push(
           <div
             className="printed-customer_purchases_list_cell_product-item"
-            key={_purchasdProduct._id}
+            key={_purchasedProduct._id}
           >
-            {_purchasdProduct.title}
+            {_purchasedProduct.title}
           </div>
         );
 
         ProductPricesComponents.push(
           <div
             className="printed-customer_purchases_list_cell_product-item"
-            key={_purchasdProduct._id}
+            key={_purchasedProduct._id}
           >
-            {_purchasdProduct.price}
+            {mapMoneyAmount(_purchasedProduct.price)}
           </div>
         );
       }
@@ -44,7 +47,7 @@ function _CustomerPurchases(props) {
             className="printed-customer_purchases_list_cell_payment-amount-item"
             key={_payment._id}
           >
-            {_payment.amount}
+            {mapMoneyAmount(_payment.amount)}
           </div>
         );
 
@@ -62,7 +65,7 @@ function _CustomerPurchases(props) {
             className="printed-customer_purchases_list_cell_payment-paidup-item"
             key={_payment._id}
           >
-            {_payment.paidUp}
+            {mapMoneyAmount(_payment.paidUp)}
           </div>
         );
 
@@ -92,22 +95,22 @@ function _CustomerPurchases(props) {
             </div>
           </div>
           <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-3">
-            {_purchase.totalCost}
+            {mapMoneyAmount(_purchase.totalCost)}
           </div>
           <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-4">
-            {_purchase.debt}
+            {mapMoneyAmount(_purchase.debt)}
           </div>
           <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-5">
             {_purchase.purchaseDate}
           </div>
           <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-6">
-            {_purchase.upFrontPaymentAmount}
+            {mapMoneyAmount(_purchase.upFrontPaymentAmount)}
           </div>
           <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-7">
-            {_purchase.periodicalPaymentAmount}
+            {mapMoneyAmount(_purchase.periodicalPaymentAmount)}
           </div>
           <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-8">
-            {mappayPeriodType(_purchase.payPeriodType)}
+            {mappedPeriodType(_purchase.payPeriodType)}
           </div>
           <div className="printed-customer_purchases_list_cell printed-customer_purchases_list_cell_col-9">
             <div className="printed-customer_purchases_list_cell_payment-amount-list">

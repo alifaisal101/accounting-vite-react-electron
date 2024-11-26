@@ -1,7 +1,6 @@
 import './_PurchasesList.css';
 
-import { mappayPeriodType } from './../../../../electron/utils/functions/locale';
-import { mapPaymentPayStatus } from './../../../../electron/utils/functions/locale';
+import { mappedPeriodType } from './../../../../electron/utils/functions/locale';
 
 import deleteBtn from './../../../assets/Delete-button.svg';
 
@@ -590,7 +589,7 @@ function _PurchasesList(props) {
               />
             </div>
             <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-8">
-              {mappayPeriodType(_purchase.payPeriodType)}
+              {mappedPeriodType(_purchase.payPeriodType)}
             </div>
             <div className="customer-view_purchases-list_row_cell customer-view_purchases-list_row_cell_col-9">
               <div className="customer-view_purchases-list_row_cell_payments-list">

@@ -2,6 +2,7 @@ import './PrintedCustomer.css';
 
 import React from 'react';
 import CustomerPurchases from './_CustomerPurchases';
+import { mapMoneyAmount } from '../../../../../electron/utils/functions/locale';
 
 class PrintedCustomer extends React.PureComponent {
   constructor(props) {
@@ -61,10 +62,11 @@ class PrintedCustomer extends React.PureComponent {
             الهاتف: {this.customer.phoneNumber}
           </div>
           <div className="printed-customer_customerInfo_item">
-            مجموع كلفة المشتريات: {this.customer.totalPurchasesCosts} دينار
+            مجموع كلفة المشتريات:{' '}
+            {mapMoneyAmount(this.customer.totalPurchasesCosts)} دينار
           </div>
           <div className="printed-customer_customerInfo_item">
-            مجموع الديون: {this.customer.totalDebt} دينار
+            مجموع الديون: {mapMoneyAmount(this.customer.totalDebt)} دينار
           </div>
         </div>
         <p className="printed-customer_sub-title">المشتريات:</p>

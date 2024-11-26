@@ -17,6 +17,23 @@ const columns = [
     sortable: false,
     editable: false,
     filterable: false,
+    valueGetter: (params) => {
+      let amount = params.row.amount;
+
+      // Check if amount is a string and contains commas
+      if (typeof amount === 'string') {
+        // Remove commas and convert to a number
+        amount = parseFloat(amount.replace(/,/g, ''));
+      }
+
+      // Multiply the amount by 1000 if it's a valid number
+      if (!isNaN(amount)) {
+        // Multiply by 1000 and format with commas
+        return (amount * 1000).toLocaleString();
+      } else {
+        return '0'; // Default to 0 if it's not a valid number
+      }
+    },
   },
   {
     headerName: 'الزمن',
@@ -135,13 +152,16 @@ function mapFinancesSummaryData(financesSummaryData) {
 }
 
 const FinancesSummary = () => {
+  const [loading, setLoading] = useState(false);
   const [financesSummaryRows, setFinancesSummaryRows] = useState([]);
   useEffect(() => {
+    setLoading(true);
     e_financesSummary.getFinancesSummary((err, result) => {
       if (err) {
         return alert('فشل سحب بيانات الملخص المالي');
       }
       setFinancesSummaryRows(mapFinancesSummaryData(result[0]));
+      setLoading(false);
     });
   }, []);
   return (
@@ -152,6 +172,7 @@ const FinancesSummary = () => {
         rows={financesSummaryRows}
         columns={columns}
         pageSizeOptions={[]}
+        loading={loading}
       ></DataGrid>
     </div>
   );
