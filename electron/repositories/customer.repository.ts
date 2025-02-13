@@ -23,7 +23,6 @@ export async function getCustomersWithPurchases(
     { $match: {} }, // Match all documents (you can add conditions here for filtering)
     lookupPurchases(),
     ...unwindPurchasesAndPayments(),
-    matchOnlyUnpaidOrPartialPayments(),
     groupByCustomerCalculateEarliestPaymentDatePushPurchasesPayments(),
     projectCalculateEarliestPaymentAndUnfulfilledPayment(),
     calculateEarliestPaymentDateAndPushPurchasesAndPayments(),
@@ -34,16 +33,14 @@ export async function getCustomersWithPurchases(
     convertIdToStringAndReshapeData(),
   ]);
 
-  // If the result is empty (no customers found), return a default structure
-  if (result.length === 0) {
-    return {
-      data: [],
-      totalCount: 0,
-    };
+  if (result[0]?.data?.length > 0) {
+    return result[0];
   }
 
-  // Return the result with the paginated data and total count
-  return result[0];
+  return {
+    data: [],
+    totalCount: 0,
+  };
 }
 function lookupPurchases() {
   return {
@@ -68,14 +65,6 @@ function unwindPurchasesAndPayments() {
     },
   ];
 }
-
-function matchOnlyUnpaidOrPartialPayments() {
-  return {
-    $match: {
-      'purchases.payments.status': { $in: ['unpaid', 'partial'] },
-    },
-  };
-}
 function groupByCustomerCalculateEarliestPaymentDatePushPurchasesPayments() {
   return {
     $group: {
@@ -99,7 +88,18 @@ function projectCalculateEarliestPaymentAndUnfulfilledPayment() {
       purchases: 1,
       payments: 1,
       earliestPaymentDate: {
-        $min: '$payments.date', // Get the earliest payment date
+        $let: {
+          vars: {
+            filteredPayments: {
+              $filter: {
+                input: '$payments',
+                as: 'payment',
+                cond: { $ne: ['$$payment.status', 'full'] },
+              },
+            },
+          },
+          in: { $min: '$$filteredPayments.date' },
+        },
       },
     },
   };
